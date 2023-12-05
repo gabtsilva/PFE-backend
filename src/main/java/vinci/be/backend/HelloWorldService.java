@@ -18,7 +18,6 @@ public class HelloWorldService {
      */
     @Transactional
     public Iterable<TextHelloWorld> readAll() {
-        System.out.println("élément(s) : " + repository.findAll());
         return repository.findAll();
     }
 

@@ -16,7 +16,6 @@ import lombok.ToString;
 @Table(name = "texte")
 public class TextHelloWorld {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column(name = "text")
