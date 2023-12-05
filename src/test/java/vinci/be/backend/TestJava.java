@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /** The Spring Cicd Demo Application Tests. */
-@SpringBootTest(classes = ClasseTest.class)
+@SpringBootTest(classes = TextHelloWorld.class)
 class TestJava {
     @Test
     void contextLoads() {
