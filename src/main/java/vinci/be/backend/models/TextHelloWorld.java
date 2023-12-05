@@ -1,4 +1,4 @@
-package vinci.be.backend;
+package vinci.be.backend.models;
 
 
 import jakarta.persistence.*;

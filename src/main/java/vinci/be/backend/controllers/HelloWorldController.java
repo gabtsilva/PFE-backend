@@ -1,9 +1,11 @@
-package vinci.be.backend;
+package vinci.be.backend.controllers;
 
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import vinci.be.backend.services.HelloWorldService;
+import vinci.be.backend.models.TextHelloWorld;
 
 @RestController
 public class HelloWorldController {
