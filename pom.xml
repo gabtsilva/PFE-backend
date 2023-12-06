@@ -85,6 +85,12 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<source>17</source>
+					<target>17</target>
+					<compilerArgs>
+						<arg>--release</arg>
+						<arg>17</arg>
+					</compilerArgs>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
