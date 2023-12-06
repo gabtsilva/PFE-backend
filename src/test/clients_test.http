@@ -1,0 +1,37 @@
+###
+### Basé sur le cript SQL
+###
+
+### Read all
+GET http://localhost:8080/client
+### Get One
+GET http://localhost:8080/client/1
+
+
+### Create One
+POST http://localhost:8080/client
+Content-Type: application/json
+
+{
+  "client_id": 10,
+  "address": "123 Main St, City1",
+  "name": "Client Three",
+  "phone_number": "111222333",
+  "children_quantity": 2,
+  "tour": 1
+}
+
+
+
+### Update One
+PUT http://localhost:8080/client
+Content-Type: application/json
+
+{
+  "client_id": 10,
+  "address": "123 Main St, City1",
+  "name": "Client Four",
+  "phone_number": "111222333",
+  "children_quantity": 2,
+  "tour": 1
+}

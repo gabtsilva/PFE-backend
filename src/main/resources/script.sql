@@ -69,5 +69,60 @@ CREATE TABLE snappies.clients_orders(
                                         client_order integer NOT NULL CHECK ( client_order > 0 ),
                                         delivered boolean NOT NULL DEFAULT false,
                                         client_id integer NOT NULL REFERENCES snappies.clients(client_id)
-)
+);
 
+
+--Script test--
+-- Insertion des utilisateurs
+INSERT INTO snappies.users(email, password, name, phone_number, is_admin)
+VALUES
+    ('admin@example.com', 'admin_password', 'Admin User', '123456789', true),
+    ('user1@example.com', 'user1_password', 'User One', '987654321', false);
+
+-- Insertion des tours
+INSERT INTO snappies.tours(tour_name) VALUES
+                                          ('Tour A'),
+                                          ('Tour B');
+
+-- Insertion des clients
+INSERT INTO snappies.clients(client_address, client_name, phone_number, children_quantity, tour)
+VALUES
+    ('123 Main St, City1', 'Client One', '111222333', 2, 1),
+    ('456 Oak St, City2', 'Client Two', '444555666', 3, 2);
+
+-- Insertion des véhicules
+INSERT INTO snappies.vehicles(vehicle_name, plate, max_quantity)
+VALUES
+    ('Van A', 'ABC123', 10),
+    ('Truck B', 'XYZ789', 15);
+
+-- Insertion des exécutions de tour
+INSERT INTO snappies.tours_executions(execution_date, state, delivery_person, vehicle_id, tour_id)
+VALUES
+    ('2023-01-01', 'prévu', 'admin@example.com', 1, 1),
+    ('2023-02-01', 'commencé', 'user1@example.com', 2, 2);
+
+-- Insertion des commandes
+INSERT INTO snappies.commandes(client_id, tour_execution)
+VALUES
+    (1, 1),
+    (2, 2);
+
+-- Insertion des articles
+INSERT INTO snappies.articles(article_name) VALUES
+                                                ('Article 1'),
+                                                ('Article 2');
+
+-- Insertion des lignes de commande
+INSERT INTO snappies.commandesLines(commande_id, article_id, planned_quantity, delivered_quantity)
+VALUES
+    (1, 1, 5, 3),
+    (1, 2, 10, 8),
+    (2, 1, 8, 6),
+    (2, 2, 15, 12);
+
+-- Insertion des commandes clients
+INSERT INTO snappies.clients_orders(client_order, delivered, client_id)
+VALUES
+    (101, false, 1),
+    (102, true, 2);
