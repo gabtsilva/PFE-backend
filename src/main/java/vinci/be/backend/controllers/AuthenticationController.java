@@ -18,15 +18,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<UnsafeCredentials> connect(@RequestBody UnsafeCredentials credentials) {
+    public ResponseEntity<String> connect(@RequestBody UnsafeCredentials credentials) {
         if (credentials.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        UnsafeCredentials token =  service.connect(credentials);
-
-        if (token == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        String jwtToken =  service.connect(credentials);
+        if (jwtToken == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(jwtToken, HttpStatus.OK);
     }
-/*
+
     @PostMapping("/auth/verify")
     public ResponseEntity<String> verify(@RequestBody String token) {
         String pseudo = service.verify(token);
@@ -35,7 +34,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(pseudo, HttpStatus.OK);
     }
 
-
+/*
     @PostMapping("/auth/{pseudo}")
     public ResponseEntity<Void> createOne(@PathVariable String pseudo, @RequestBody UnsafeCredentials credentials) {
         if (!Objects.equals(credentials.getPseudo(), pseudo)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
