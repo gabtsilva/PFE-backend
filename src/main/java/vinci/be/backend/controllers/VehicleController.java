@@ -4,7 +4,6 @@ package vinci.be.backend.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vinci.be.backend.models.Client;
 import vinci.be.backend.models.Vehicle;
 import vinci.be.backend.services.VehicleService;
 

@@ -2,7 +2,6 @@ package vinci.be.backend.services;
 
 
 import org.springframework.stereotype.Service;
-import vinci.be.backend.models.Client;
 import vinci.be.backend.models.Vehicle;
 import vinci.be.backend.repositories.VehicleRepository;
 
@@ -68,6 +67,8 @@ public class VehicleService {
      * @param vehicle The vehicle object to be deleted.
      * @return true if the vehicle is successfully deleted, false if the vehicle with the provided ID does not exist.
      */
+    /*TODO réfléchir à la logique de suppression : si on supprime un véhicule, il ne doit pas avoir de relations restantes*/
+    //Devons-nous réellement implémenter les routes de delete ?
     public boolean deleteOne(Vehicle vehicle) {
         if (!vehicleRepository.existsById(vehicle.getVehicle_id())) return false;
         vehicleRepository.delete(vehicle);
