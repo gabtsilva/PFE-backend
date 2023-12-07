@@ -60,7 +60,17 @@ CREATE TABLE snappies.commandesLines(
                                         article_id integer NOT NULL REFERENCES snappies.articles(article_id),
                                         planned_quantity integer NOT NULL CHECK (planned_quantity > 0),
                                         delivered_quantity integer NOT NULL CHECK (delivered_quantity >= 0),
+                                        added_quantity integer NOT NULL CHECK (commandesLines.added_quantity >= 0),
                                         PRIMARY KEY (commande_id, article_id)
+);
+
+CREATE TABLE snappies.surplus(
+                                 article_id integer NOT NULL REFERENCES snappies.articles(article_id),
+                                 tour_execution_id integer NOT NULL REFERENCES snappies.tours_executions(tour_execution_id),
+                                 percentage integer NOT NULL CHECK (percentage >=0),
+                                 PRIMARY KEY (article_id, tour_execution_id)
+
+
 );
 
 
@@ -114,15 +124,24 @@ INSERT INTO snappies.articles(article_name) VALUES
                                                 ('Article 2');
 
 -- Insertion des lignes de commande
-INSERT INTO snappies.commandesLines(commande_id, article_id, planned_quantity, delivered_quantity)
+INSERT INTO snappies.commandesLines(commande_id, article_id, planned_quantity, delivered_quantity, added_quantity)
 VALUES
-    (1, 1, 5, 3),
-    (1, 2, 10, 8),
-    (2, 1, 8, 6),
-    (2, 2, 15, 12);
+    (1, 1, 5, 3, 2),
+    (1, 2, 10, 8, 3),
+    (2, 1, 8, 6, 1),
+    (2, 2, 15, 12, 4);
 
 -- Insertion des commandes clients
 INSERT INTO snappies.clients_orders(client_order, delivered, client_id)
 VALUES
     (101, false, 1),
     (102, true, 2);
+
+
+-- Insertion des lignes de surplus
+INSERT INTO snappies.surplus(article_id, tour_execution_id, percentage)
+VALUES
+    (1, 1, 5),
+    (2, 1, 8),
+    (1, 2, 3),
+    (2, 2, 6);
