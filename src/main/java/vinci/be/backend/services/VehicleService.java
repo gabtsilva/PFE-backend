@@ -18,7 +18,7 @@ public class VehicleService {
     /**
      * Reads all vehicles in repository
      *
-     * @return all videos
+     * @return all vehicles
      */
     public List<Vehicle> readAll() {
         return vehicleRepository.findAll();
@@ -61,19 +61,6 @@ public class VehicleService {
     }
 
 
-    /**
-     * Deletes an existing vehicle in the repository if the provided vehicle ID already exists.
-     *
-     * @param vehicle The vehicle object to be deleted.
-     * @return true if the vehicle is successfully deleted, false if the vehicle with the provided ID does not exist.
-     */
-    /*TODO réfléchir à la logique de suppression : si on supprime un véhicule, il ne doit pas avoir de relations restantes*/
-    //Devons-nous réellement implémenter les routes de delete ?
-    public boolean deleteOne(Vehicle vehicle) {
-        if (!vehicleRepository.existsById(vehicle.getVehicle_id())) return false;
-        vehicleRepository.delete(vehicle);
-        return true;
-    }
 
 
 }
