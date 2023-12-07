@@ -41,8 +41,6 @@ public class AuthenticationService {
      * @return The JWT token, or null if the user couldn't be connected
      */
     public String connect(UnsafeCredentials unsafeCredentials) {
-        System.out.println(unsafeCredentials.getMail());
-        System.out.println(unsafeCredentials.getPassword());
         SafeCredentials credentials = repository.findById(unsafeCredentials.getMail()).orElse(null);
         if(credentials == null || (!BCrypt.checkpw(unsafeCredentials.getPassword(), credentials.getHashedPassword()))) return null;
         return JWT.create().withIssuer("auth0").withClaim("mail", unsafeCredentials.getMail()).sign(this.algorithm);
