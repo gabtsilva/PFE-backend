@@ -17,7 +17,7 @@ public class ArticleService {
     /**
      * Reads all articles in repository
      *
-     * @return all videos
+     * @return all articles
      */
     public List<Article> readAll() {
         return articleRepository.findAll();
@@ -60,19 +60,6 @@ public class ArticleService {
     }
 
 
-    /**
-     * Deletes an existing article in the repository if the provided article ID already exists.
-     *
-     * @param article The article object to be deleted.
-     * @return true if the article is successfully deleted, false if the article with the provided ID does not exist.
-     */
-    /*TODO réfléchir à la logique de suppression : si on supprime un article, il ne doit pas avoir de relations restantes*/
-    //Devons-nous réellement implémenter les routes de delete ?
-    public boolean deleteOne(Article article) {
-        if (!articleRepository.existsById(article.getArticle_id())) return false;
-        articleRepository.delete(article);
-        return true;
-    }
 
 
 }

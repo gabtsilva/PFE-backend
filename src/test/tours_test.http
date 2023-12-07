@@ -1,0 +1,22 @@
+### Read All Tours
+GET http://localhost:8080/tour
+
+### Get One Tour
+GET http://localhost:8080/tour/1
+
+### Create One Tour
+POST http://localhost:8080/tour
+Content-Type: application/json
+
+{
+  "name": "Tour Three"
+}
+
+### Update One Tour
+PUT http://localhost:8080/tour/1
+Content-Type: application/json
+
+{
+  "tour_id" : 1,
+  "name": "Tour Four"
+}

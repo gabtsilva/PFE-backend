@@ -19,7 +19,7 @@ public class ClientService {
     /**
      * Reads all clients in repository
      *
-     * @return all videos
+     * @return all clients
      */
     public List<Client> readAll() {
         return clientRepository.findAll();
