@@ -1,10 +1,12 @@
+//à lancer après le script test users
+
 ### LOGIN
 POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "email": "gab@test.com",
-  "password": "Sup3rS3cur3!"
+  "mail": "steven@gmail.com",
+  "password": "passwordtest"
 }
 
 ### VERIFY TOKEN
