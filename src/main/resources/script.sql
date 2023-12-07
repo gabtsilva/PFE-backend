@@ -2,8 +2,7 @@ DROP SCHEMA IF EXISTS snappies CASCADE;
 CREATE SCHEMA snappies;
 
 CREATE TABLE snappies.users(
-                               email VARCHAR(50) PRIMARY KEY CHECK (email<>''),
-                               password VARCHAR(50) NOT NULL CHECK (password<>''),
+                               mail VARCHAR(50) PRIMARY KEY CHECK (mail<>''),
                                firstname VARCHAR(50) NOT NULL CHECK (firstname<>''),
                                lastname VARCHAR(50) NOT NULL CHECK (lastname<>''),
                                phone_number VARCHAR(15) NOT NULL CHECK (users.phone_number<>''),
@@ -13,8 +12,8 @@ CREATE TABLE snappies.users(
 
 
 CREATE TABLE snappies.credentials(
-                                     email VARCHAR(50) PRIMARY KEY CHECK (email<>''),
-                                     password VARCHAR(50) NOT NULL CHECK (password<>'')
+                                     mail VARCHAR(50) PRIMARY KEY CHECK (mail<>''),
+                                     password VARCHAR(200) NOT NULL CHECK (password<>'')
 );
 
 CREATE TABLE snappies.tours(
@@ -43,7 +42,7 @@ CREATE TABLE snappies.tours_executions(
                                           tour_execution_id SERIAL PRIMARY KEY,
                                           execution_date date NOT NULL,
                                           state varchar(20) NOT NULL  CHECK ( state in ('prévu', 'commencé', 'finie') ),
-                                          delivery_person varchar(50) NOT NULL REFERENCES snappies.users(email),
+                                          delivery_person varchar(50) NOT NULL REFERENCES snappies.users(mail),
                                           vehicle_id integer NOT NULL REFERENCES snappies.vehicles(vehicle_id),
                                           tour_id integer NOT NULL REFERENCES snappies.tours(tour_id)
 );
@@ -92,10 +91,10 @@ CREATE TABLE snappies.clients_orders(
 
 --Script test--
 -- Insertion des utilisateurs
-INSERT INTO snappies.users(email, password, firstname, lastname, phone_number, is_admin)
+INSERT INTO snappies.users(mail, firstname, lastname, phone_number, is_admin)
 VALUES
-    ('admin@example.com', 'admin_password', 'Admin',  'User', '123456789', true),
-    ('user1@example.com', 'user1_password', 'User',  'One', '987654321', false);
+    ('admin@example.com', 'Admin',  'User', '123456789', true),
+    ('user1@example.com', 'User',  'One', '987654321', false);
 
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES
