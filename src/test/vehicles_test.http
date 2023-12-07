@@ -15,23 +15,14 @@ Content-Type: application/json
 }
 
 ### Update One
-PUT http://localhost:8080/vehicle
+PUT http://localhost:8080/vehicle/1
 Content-Type: application/json
 
 {
-  "vehicle_id": 5,
+  "vehicle_id": 1,
   "name": "Vehicle Four",
   "plate": "ABC123",
   "max_quantity": 5
 }
 
-### Delete One
-DELETE http://localhost:8080/vehicle
-Content-Type: application/json
 
-{
-  "vehicle_id": 5,
-  "name": "Vehicle Four",
-  "plate": "ABC123",
-  "max_quantity": 5
-}

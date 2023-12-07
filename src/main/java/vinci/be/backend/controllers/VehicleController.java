@@ -51,8 +51,9 @@ public class VehicleController {
     }
 
 
-    @PutMapping("/vehicle")
-    public ResponseEntity<Void> updateOne(@RequestBody Vehicle vehicle) {
+    @PutMapping("/vehicle/{vehicleId}")
+    public ResponseEntity<Void> updateOne(@PathVariable int vehicleId, @RequestBody Vehicle vehicle) {
+        if (vehicleId != vehicle.getVehicle_id()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (vehicle.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = vehicleService.updateOne(vehicle);
         if (found) {
@@ -62,15 +63,4 @@ public class VehicleController {
 
     }
 
-
-    @DeleteMapping("/vehicle")
-    public ResponseEntity<Void> deleteOne(@RequestBody Vehicle vehicle) {
-        if (vehicle.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        boolean found  = vehicleService.deleteOne(vehicle);
-        if (found) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-    }
 }

@@ -52,8 +52,9 @@ public class ArticleController {
     }
 
 
-    @PutMapping("/article")
-    public ResponseEntity<Void> updateOne(@RequestBody Article article) {
+    @PutMapping("/article/{articleId}")
+    public ResponseEntity<Void> updateOne(@PathVariable int articleId, @RequestBody Article article) {
+        if (article.getArticle_id() != articleId) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (article.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = articleService.updateOne(article);
         if (found) {
@@ -63,15 +64,4 @@ public class ArticleController {
 
     }
 
-
-    @DeleteMapping("/article")
-    public ResponseEntity<Void> deleteOne(@RequestBody Article article) {
-        if (article.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        boolean found  = articleService.deleteOne(article);
-        if (found) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-    }
 }

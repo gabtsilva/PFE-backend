@@ -23,11 +23,11 @@ Content-Type: application/json
 
 
 ### Update One
-PUT http://localhost:8080/client
+PUT http://localhost:8080/client/1
 Content-Type: application/json
 
 {
-  "client_id": 5,
+  "client_id": 1,
   "address": "123 Main St, City1",
   "name": "Client Four",
   "phone_number": "111222333",
