@@ -4,9 +4,17 @@ CREATE SCHEMA snappies;
 CREATE TABLE snappies.users(
                                email VARCHAR(50) PRIMARY KEY CHECK (email<>''),
                                password VARCHAR(50) NOT NULL CHECK (password<>''),
-                               name VARCHAR(50) NOT NULL CHECK (name<>''),
+                               firstname VARCHAR(50) NOT NULL CHECK (firstname<>''),
+                               lastname VARCHAR(50) NOT NULL CHECK (lastname<>''),
                                phone_number VARCHAR(15) NOT NULL CHECK (users.phone_number<>''),
                                is_admin BOOLEAN NOT NULL DEFAULT false
+);
+
+
+
+CREATE TABLE snappies.credentials(
+                                     email VARCHAR(50) PRIMARY KEY CHECK (email<>''),
+                                     password VARCHAR(50) NOT NULL CHECK (password<>'')
 );
 
 CREATE TABLE snappies.tours(
@@ -84,10 +92,10 @@ CREATE TABLE snappies.clients_orders(
 
 --Script test--
 -- Insertion des utilisateurs
-INSERT INTO snappies.users(email, password, name, phone_number, is_admin)
+INSERT INTO snappies.users(email, password, firstname, lastname, phone_number, is_admin)
 VALUES
-    ('admin@example.com', 'admin_password', 'Admin User', '123456789', true),
-    ('user1@example.com', 'user1_password', 'User One', '987654321', false);
+    ('admin@example.com', 'admin_password', 'Admin',  'User', '123456789', true),
+    ('user1@example.com', 'user1_password', 'User',  'One', '987654321', false);
 
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES

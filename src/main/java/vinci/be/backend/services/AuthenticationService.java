@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import vinci.be.backend.models.AuthenticationProperties;
+import vinci.be.backend.models.SafeCredentials;
 import vinci.be.backend.models.UnsafeCredentials;
 import vinci.be.backend.repositories.AuthenticationRepository;
 
@@ -40,9 +41,9 @@ public class AuthenticationService {
      * @return The JWT token, or null if the user couldn't be connected
      */
     public String connect(UnsafeCredentials unsafeCredentials) {
-        UnsafeCredentials credentials = repository.findById(unsafeCredentials.getEmail()).orElse(null);
-        if(credentials == null || (!credentials.getPassword().equals(unsafeCredentials.getPassword()))) return null;
-        return JWT.create().withIssuer("auth0").withClaim("email", unsafeCredentials.getEmail()).sign(this.algorithm);
+        SafeCredentials credentials = repository.findById(unsafeCredentials.getMail()).orElse(null);
+        if(credentials == null || (!credentials.getHashedPassword().equals(unsafeCredentials.getPassword()))) return null;
+        return JWT.create().withIssuer("auth0").withClaim("mail", unsafeCredentials.getMail()).sign(this.algorithm);
     }
 
 
@@ -53,14 +54,27 @@ public class AuthenticationService {
      */
     public String verify(String token) {
         try {
-            String email = verifier.verify(token).getClaim("email").asString();
-            if (!repository.existsById(email)) return null;
-            return email;
+            String mail = verifier.verify(token).getClaim("mail").asString();
+            if (!repository.existsById(mail)) return null;
+            return mail;
         } catch (JWTVerificationException e) {
             System.err.println("Erreur lors de la vérification du jeton : " + e.getMessage());
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    /**
+     * Creates credentials in repository
+     * @param unsafeCredentials The credentials with insecure password
+     * @return True if the credentials were created, or false if they already exist
+     */
+    public boolean createOne(UnsafeCredentials unsafeCredentials) {
+        if (repository.existsById(unsafeCredentials.getMail())) return false;
+        String hashedPassword = BCrypt.hashpw(unsafeCredentials.getPassword(), BCrypt.gensalt());
+        repository.save(unsafeCredentials.makeSafe(hashedPassword));
+        return true;
     }
 
 }
