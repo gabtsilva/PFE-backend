@@ -1,4 +1,4 @@
-name: Deploy backend to SSH Server
+name: Deploy frontend to SSH Server
 
 on:
   push:
