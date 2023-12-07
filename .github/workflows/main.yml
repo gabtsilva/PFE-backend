@@ -1,0 +1,31 @@
+name: Deploy backend to SSH Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      USER: ${{ secrets.USER }}
+      IP_ADDRESS: ${{ secrets.IP_ADDRESS }}
+      PORT: ${{ secrets.PORT }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -t rsa $IP_ADDRESS >> ~/.ssh/known_hosts
+        chmod 644 ~/.ssh/known_hosts
+
+    - name: Pull Repository on Server
+      run: |
+        ssh $USER@$IP_ADDRESS -p $PORT "cd /home/$USER/PFE-backend && git pull && bash /home/$USER/script.sh"
