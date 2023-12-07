@@ -16,7 +16,7 @@ import lombok.ToString;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int client_id;
+    private int id;
 
     @Column(name="client_address", nullable=false)
     private String address;
@@ -25,18 +25,18 @@ public class Client {
     private String name;
 
     @Column(name="phone_number", nullable=false)
-    private String phone_number;
+    private String phoneNumber;
 
     @Column(name="children_quantity", nullable=false)
-    private int children_quantity;
+    private int childrenQuantity;
 
     @Column(name="tour", nullable=false)
     private int tour;
 
     public boolean invalid() {
-        return address.isBlank() || address.isEmpty()
-                || name.isBlank() || name.isEmpty()
-                || phone_number.isBlank() || phone_number.isEmpty()
-                || children_quantity <  0;
+        return  address == null || address.isBlank() || address.isEmpty()
+                || name == null || name.isBlank() || name.isEmpty()
+                || phoneNumber == null || phoneNumber.isBlank() || phoneNumber.isEmpty()
+                || childrenQuantity <  0;
     }
 }

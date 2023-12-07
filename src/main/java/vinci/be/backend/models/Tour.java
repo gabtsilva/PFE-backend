@@ -16,11 +16,11 @@ import lombok.ToString;
 public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int tour_id;
+    private int id;
 
     @Column(name="tour_name", nullable=false)
     private String name;
 
-    public boolean invalid(){ return name.isBlank() || name.isEmpty();}
+    public boolean invalid(){ return name == null || name.isBlank() || name.isEmpty();}
 
 }

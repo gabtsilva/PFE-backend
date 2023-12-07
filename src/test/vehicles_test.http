@@ -11,7 +11,7 @@ Content-Type: application/json
 {
   "name": "Vehicle Three",
   "plate": "ABC123",
-  "max_quantity": 5
+  "maxQuantity": 5
 }
 
 ### Update One
@@ -19,10 +19,10 @@ PUT http://localhost:8080/vehicle/1
 Content-Type: application/json
 
 {
-  "vehicle_id": 1,
+  "id": 1,
   "name": "Vehicle Four",
   "plate": "ABC123",
-  "max_quantity": 5
+  "maxQuantity": 5
 }
 
 

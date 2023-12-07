@@ -15,8 +15,8 @@ Content-Type: application/json
 {
   "address": "123 Main St, City1",
   "name": "Client Three",
-  "phone_number": "111222333",
-  "children_quantity": 2,
+  "phoneNumber": "111222333",
+  "childrenQuantity": 2,
   "tour": 1
 }
 
@@ -27,10 +27,10 @@ PUT http://localhost:8080/client/1
 Content-Type: application/json
 
 {
-  "client_id": 1,
+  "id": 1,
   "address": "123 Main St, City1",
   "name": "Client Four",
-  "phone_number": "111222333",
-  "children_quantity": 2,
+  "phoneNumber": "111222333",
+  "childrenQuantity": 2,
   "tour": 1
 }

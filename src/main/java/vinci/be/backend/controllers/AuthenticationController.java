@@ -21,7 +21,6 @@ public class AuthenticationController {
     @PostMapping("/auth/login")
     public ResponseEntity<String> connect(@RequestBody UnsafeCredentials credentials) {
         if (credentials.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        System.out.println("DANS LE LOGIN");
         String jwtToken =  service.connect(credentials);
         if (jwtToken == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(jwtToken, HttpStatus.OK);
@@ -36,18 +35,19 @@ public class AuthenticationController {
         return new ResponseEntity<>(pseudo, HttpStatus.OK);
     }
 
-/*
-    @PostMapping("/auth/{pseudo}")
-    public ResponseEntity<Void> createOne(@PathVariable String pseudo, @RequestBody UnsafeCredentials credentials) {
-        if (!Objects.equals(credentials.getPseudo(), pseudo)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        if (credentials.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        boolean created = service.createOne(credentials);
+//    @PostMapping("/auth/{mail}")
+//    public ResponseEntity<Void> createOne(@PathVariable String mail, @RequestBody UnsafeCredentials credentials) {
+//        if (!Objects.equals(credentials.getMail(), mail)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        if (credentials.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//
+//        boolean created = service.createOne(credentials);
+//
+//        if (!created) return new ResponseEntity<>(HttpStatus.CONFLICT);
+//        else return new ResponseEntity<>(HttpStatus.CREATED);
+//    }
 
-        if (!created) return new ResponseEntity<>(HttpStatus.CONFLICT);
-        else return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
+    /*
     @PutMapping("/auth/{pseudo}")
     public ResponseEntity<Void> updateOne(@PathVariable String pseudo, @RequestBody UnsafeCredentials credentials) {
         if (!Objects.equals(credentials.getPseudo(), pseudo)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

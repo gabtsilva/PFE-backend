@@ -43,7 +43,7 @@ public class VehicleService {
      * @return true if the vehicle is successfully created, false if a vehicle with the same ID already exists.
      */
     public boolean createOne(Vehicle vehicle) {
-        if (vehicleRepository.existsById(vehicle.getVehicle_id())) return false;
+        if (vehicleRepository.existsById(vehicle.getId())) return false;
         vehicleRepository.save(vehicle);
         return true;
     }
@@ -55,7 +55,7 @@ public class VehicleService {
      * @return true if the vehicle is successfully updated, false if the vehicle with the provided ID does not exist.
      */
     public boolean updateOne(Vehicle vehicle) {
-        if (!vehicleRepository.existsById(vehicle.getVehicle_id())) return false;
+        if (!vehicleRepository.existsById(vehicle.getId())) return false;
         vehicleRepository.save(vehicle);
         return true;
     }

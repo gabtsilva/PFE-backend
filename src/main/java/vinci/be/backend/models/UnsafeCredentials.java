@@ -4,25 +4,26 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-@Entity(name = "users")
-@Table(name="users")
+@AllArgsConstructor
 public class UnsafeCredentials {
-
-    @Id
-    private String email;
-    @Column(name="password", nullable=false)
+    private String mail;
     private String password;
 
+    public SafeCredentials makeSafe(String hashedPassword) {
+        return new SafeCredentials(mail, hashedPassword);
+    }
+
     public boolean invalid() {
-        return email.isEmpty() || password.isEmpty();
+        return mail == null || mail.isBlank() ||  mail.isEmpty() ||
+                password == null || password.isBlank() || password.isEmpty();
     }
 }
