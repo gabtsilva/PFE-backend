@@ -1,0 +1,28 @@
+name: Deploy backend to SSH Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        cat ~/.ssh/id_rsa
+        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+        
+    - name: Pull Repository on Server
+      run: |
+        echo "Starting deployment..."
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.IP_ADDRESS }} -p ${{ secrets.PORT }} "cd /home/${{ secrets.USER }}/PFE-backend && bash /home/${{ secrets.USER }}/script.sh"
+        echo "Deployment completed."
