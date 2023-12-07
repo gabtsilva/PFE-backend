@@ -13,7 +13,6 @@ POST http://localhost:8080/client
 Content-Type: application/json
 
 {
-  "client_id": 10,
   "address": "123 Main St, City1",
   "name": "Client Three",
   "phone_number": "111222333",
@@ -28,7 +27,7 @@ PUT http://localhost:8080/client
 Content-Type: application/json
 
 {
-  "client_id": 10,
+  "client_id": 5,
   "address": "123 Main St, City1",
   "name": "Client Four",
   "phone_number": "111222333",
