@@ -17,15 +17,17 @@ public class AuthenticationController {
         this.service = service;
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/auth/login")
     public ResponseEntity<String> connect(@RequestBody UnsafeCredentials credentials) {
         if (credentials.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
+        System.out.println("DANS LE LOGIN");
         String jwtToken =  service.connect(credentials);
         if (jwtToken == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(jwtToken, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/auth/verify")
     public ResponseEntity<String> verify(@RequestBody String token) {
         String pseudo = service.verify(token);
