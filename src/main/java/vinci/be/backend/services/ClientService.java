@@ -44,7 +44,7 @@ public class ClientService {
      * @return true if the client is successfully created, false if a client with the same ID already exists.
      */
     public boolean createOne(Client client) {
-        if (clientRepository.existsById(client.getClient_id())) return false;
+        if (clientRepository.existsById(client.getId())) return false;
         clientRepository.save(client);
         return true;
     }
@@ -56,7 +56,7 @@ public class ClientService {
      * @return true if the client is successfully updated, false if the client with the provided ID does not exist.
      */
     public boolean updateOne(Client client) {
-        if (!clientRepository.existsById(client.getClient_id())) return false;
+        if (!clientRepository.existsById(client.getId())) return false;
         clientRepository.save(client);
         return true;
     }

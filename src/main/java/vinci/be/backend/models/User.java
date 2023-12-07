@@ -32,8 +32,9 @@ public class User {
 
 
     public boolean invalid() {
-        return mail.isBlank() || mail.isEmpty()
-                || mail.isBlank() || mail.isEmpty()
+        return  mail == null || mail.isBlank() || mail.isEmpty()
+                || firstname == null || firstname.isBlank() || firstname.isEmpty()
+                || lastname == null || lastname.isBlank() || lastname.isEmpty()
                 || phoneNumber.isBlank() || phoneNumber.isEmpty();
     }
 }

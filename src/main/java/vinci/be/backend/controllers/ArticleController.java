@@ -54,7 +54,7 @@ public class ArticleController {
 
     @PutMapping("/article/{articleId}")
     public ResponseEntity<Void> updateOne(@PathVariable int articleId, @RequestBody Article article) {
-        if (article.getArticle_id() != articleId) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (article.getId() != articleId) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (article.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = articleService.updateOne(article);
         if (found) {

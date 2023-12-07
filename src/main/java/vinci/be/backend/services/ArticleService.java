@@ -42,7 +42,7 @@ public class ArticleService {
      * @return true if the article is successfully created, false if a article with the same ID already exists.
      */
     public boolean createOne(Article article) {
-        if (articleRepository.existsById(article.getArticle_id())) return false;
+        if (articleRepository.existsById(article.getId())) return false;
         articleRepository.save(article);
         return true;
     }
@@ -54,7 +54,7 @@ public class ArticleService {
      * @return true if the article is successfully updated, false if the article with the provided ID does not exist.
      */
     public boolean updateOne(Article article) {
-        if (!articleRepository.existsById(article.getArticle_id())) return false;
+        if (!articleRepository.existsById(article.getId())) return false;
         articleRepository.save(article);
         return true;
     }

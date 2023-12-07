@@ -43,7 +43,7 @@ public class TourService {
      * @return true if the tour is successfully created, false if a tour with the same ID already exists.
      */
     public boolean createOne(Tour tour) {
-        if (tourRepository.existsById(tour.getTour_id())) return false;
+        if (tourRepository.existsById(tour.getId())) return false;
         tourRepository.save(tour);
         return true;
     }
@@ -55,7 +55,7 @@ public class TourService {
      * @return true if the tour is successfully updated, false if the tour with the provided ID does not exist.
      */
     public boolean updateOne(Tour tour) {
-        if (!tourRepository.existsById(tour.getTour_id())) return false;
+        if (!tourRepository.existsById(tour.getId())) return false;
         tourRepository.save(tour);
         return true;
     }

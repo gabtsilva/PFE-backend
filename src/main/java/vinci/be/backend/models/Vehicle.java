@@ -16,7 +16,7 @@ import lombok.ToString;
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int vehicle_id;
+    private int id;
 
     @Column(name="vehicle_name", nullable=false)
     private String name;
@@ -25,13 +25,13 @@ public class Vehicle {
     private String plate;
 
     @Column(name="max_quantity", nullable=false)
-    private int max_quantity;
+    private int maxQuantity;
 
 
 
     public boolean invalid() {
-        return name.isBlank() || name.isEmpty()
-                || plate.isBlank() || plate.isEmpty()
-                || max_quantity <  0;
+        return name == null || name.isBlank() || name.isEmpty()
+                || plate == null || plate.isBlank() || plate.isEmpty()
+                || maxQuantity <  0;
     }
 }

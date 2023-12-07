@@ -53,7 +53,7 @@ public class ClientController {
 
     @PutMapping("/client/{clientId}")
     public ResponseEntity<Void> updateOne(@PathVariable int clientId, @RequestBody Client client) {
-        if (clientId != client.getClient_id()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (clientId != client.getId()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (client.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = clientService.updateOne(client);
         if (found) {

@@ -53,7 +53,7 @@ public class VehicleController {
 
     @PutMapping("/vehicle/{vehicleId}")
     public ResponseEntity<Void> updateOne(@PathVariable int vehicleId, @RequestBody Vehicle vehicle) {
-        if (vehicleId != vehicle.getVehicle_id()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (vehicleId != vehicle.getId()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (vehicle.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = vehicleService.updateOne(vehicle);
         if (found) {

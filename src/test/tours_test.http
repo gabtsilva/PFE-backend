@@ -17,6 +17,6 @@ PUT http://localhost:8080/tour/1
 Content-Type: application/json
 
 {
-  "tour_id" : 1,
+  "id" : 1,
   "name": "Tour Four"
 }

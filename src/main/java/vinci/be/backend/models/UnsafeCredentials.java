@@ -23,7 +23,7 @@ public class UnsafeCredentials {
     }
 
     public boolean invalid() {
-        return mail == null || mail.isBlank() ||
-                password == null || password.isBlank();
+        return mail == null || mail.isBlank() ||  mail.isEmpty() ||
+                password == null || password.isBlank() || password.isEmpty();
     }
 }
