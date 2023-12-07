@@ -16,10 +16,10 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up SSH
-      run: mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa && ssh-keyscan -t rsa $IP_ADDRESS >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
+      run: mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa && ssh-keyscan -t rsa "$IP_ADDRESS" >> ~/.ssh/known_hosts && chmod 644 ~/.ssh/known_hosts
 
     - name: Pull Repository on Server
-      run: ssh $USER@$IP_ADDRESS -p $PORT "cd /home/$USER/PFE-backend && git pull && bash /home/$USER/script.sh"
+      run: ssh "$USER"@"$IP_ADDRESS" -p "$PORT" "cd /home/$USER/PFE-backend && git pull && bash /home/$USER/script.sh"
