@@ -1,0 +1,37 @@
+### Read All
+GET http://localhost:8080/vehicle
+
+### Get One
+GET http://localhost:8080/vehicle/1
+
+### Create One
+POST http://localhost:8080/vehicle
+Content-Type: application/json
+
+{
+  "name": "Vehicle Three",
+  "plate": "ABC123",
+  "max_quantity": 5
+}
+
+### Update One
+PUT http://localhost:8080/vehicle
+Content-Type: application/json
+
+{
+  "vehicle_id": 5,
+  "name": "Vehicle Four",
+  "plate": "ABC123",
+  "max_quantity": 5
+}
+
+### Delete One
+DELETE http://localhost:8080/vehicle
+Content-Type: application/json
+
+{
+  "vehicle_id": 5,
+  "name": "Vehicle Four",
+  "plate": "ABC123",
+  "max_quantity": 5
+}
