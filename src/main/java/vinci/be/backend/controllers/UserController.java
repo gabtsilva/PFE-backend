@@ -41,6 +41,14 @@ public class UserController {
 
     }
 
+
+    @GetMapping("/user/delivery}")
+    public ResponseEntity<List<User>> readAllDeliveryMen() {
+        ArrayList<User> deliveryMen = (ArrayList<User>) userService.getDeliveryMen();
+        return new ResponseEntity<>(deliveryMen, HttpStatus.OK);
+
+    }
+
     @PostMapping("/user")
     public ResponseEntity<Void> createOne(@RequestBody UserWithPassword userWithPassword) {
         if (userWithPassword.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
