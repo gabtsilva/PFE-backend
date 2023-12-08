@@ -23,10 +23,10 @@ public class TourExecution {
   @Column(name="state", nullable=false)
   private String state;
 
-  @Column(name="delivery_person", nullable=false)
+  @Column(name="delivery_person")
   private String deliveryPerson;
 
-  @Column(name="vehicle_id", nullable=false)
+  @Column(name="vehicle_id")
   private int vehicleId;
 
   @Column(name="tour_id", nullable=false)
