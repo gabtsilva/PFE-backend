@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.Order;
+import vinci.be.backend.models.OrderLine;
 import vinci.be.backend.models.Tour;
 import vinci.be.backend.services.OrderService;
 
@@ -33,6 +34,7 @@ public class OrderController {
 
     @GetMapping("/order/{clientId}")
     public ResponseEntity<Order> readOne(@PathVariable int clientId) {
+        if (clientId<=0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Order order;
         try {
             order = orderService.readOne(clientId);
@@ -42,6 +44,20 @@ public class OrderController {
 
         }
         return new ResponseEntity<>(order, HttpStatus.FOUND);
+    }
+
+    @GetMapping("/order/{clientId}/article")
+    public ResponseEntity<List<OrderLine>> readAllArticleFromAnOrder(@PathVariable int clientId) {
+        if (clientId<=0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        List<OrderLine> ordersLines;
+        try {
+            ordersLines = (ArrayList<OrderLine>) orderService.readAllArticleFromAnOrder(clientId);
+        } catch (NotFoundException nfe) {
+            nfe.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+        return new ResponseEntity<>(ordersLines, HttpStatus.FOUND);
     }
 
 
@@ -64,6 +80,7 @@ public class OrderController {
 
     @PostMapping("/order/{clientId}/addArticle/{articleId}/{quantity}")
     public ResponseEntity<Void> addArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
+        if (quantity <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             orderService.addArticle(clientId, quantity, articleId);
         }catch (BusinessException businessException) {
@@ -82,6 +99,23 @@ public class OrderController {
     public ResponseEntity<Void> removeArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
         try {
             orderService.removeArticle(clientId, quantity, articleId);
+        }catch (BusinessException businessException) {
+            businessException.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        }catch (NotFoundException notFoundException) {
+            notFoundException.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    /*Correspond à une modification ponctuelle */
+    @PostMapping("/order/{clientId}/modify/{articleId}/{quantity}")
+    public ResponseEntity<Void> updateOne(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
+        try {
+            orderService.modify(clientId, quantity, articleId);
         }catch (BusinessException businessException) {
             businessException.printStackTrace();
             return new ResponseEntity<>(HttpStatus.CONFLICT);

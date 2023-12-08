@@ -31,9 +31,10 @@ public class ArticleController {
 
     @GetMapping("/article/{articleId}")
     public ResponseEntity<Article> readOne(@PathVariable int articleId) {
+        if (articleId <= 0 ) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Article article = articleService.readOne(articleId);
         if (article != null) {
-            return new ResponseEntity<>(article, HttpStatus.OK);
+            return new ResponseEntity<>(article, HttpStatus.FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -54,7 +55,7 @@ public class ArticleController {
 
     @PutMapping("/article/{articleId}")
     public ResponseEntity<Void> updateOne(@PathVariable int articleId, @RequestBody Article article) {
-        if (article.getId() != articleId) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (articleId <=0 || article.getId() != articleId) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (article.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = articleService.updateOne(article);
         if (found) {
