@@ -122,9 +122,9 @@ public class OrderService {
         if(orderLine == null) {
             throw new NotFoundException("Le client n'a pas cet article dans sa commande");
         }else{
-            if (quantity > orderLine.getPlannedQuantity()) {
-                throw new BusinessException("Vous tentez de soustraire une quantité trop grande");
-            }
+//            if (quantity > orderLine.getPlannedQuantity()) {
+//                throw new BusinessException("Vous tentez de soustraire une quantité trop grande");
+//            }
             orderLine.setPlannedQuantity(orderLine.getPlannedQuantity() - quantity);
             orderLineRepository.save(orderLine);
         }
@@ -132,9 +132,36 @@ public class OrderService {
 
 
 
+    /**
+     * modify temporaly an article to an order. Once the tour is over, this quantity must be deleted /*TODO
+     *
+     * @param clientId The unique identifier of the client
+     * @param articleId The unique identifier of the article
+     * @param quantity The quantity to add
+     */
+    public void modify(int clientId, int quantity, int articleId) throws NotFoundException, BusinessException {
+        verifyIfClientExists(clientId);
+        verifyIfArticleExists(articleId);
+
+        Order order = orderRepository.findByClientId(clientId);
+        if (order == null) {
+            throw new NotFoundException("Le client n'a pas de commande à laquelle retirer des articles");
+        }
 
 
+        OrderLineIdentifier pk = new OrderLineIdentifier(articleId, order.getId());
+        OrderLine orderLine = orderLineRepository.findById(pk).orElse(null);
 
+        if(orderLine == null) {
+            throw new NotFoundException("Le client n'a pas cet article dans sa commande");
+        }else{
+//            if (quantity > orderLine.getPlannedQuantity()) {
+//                throw new BusinessException("Vous tentez de soustraire une quantité trop grande");
+//            }
+            orderLine.setChangedQuantity(orderLine.getChangedQuantity() + quantity);
+            orderLineRepository.save(orderLine);
+        }
+    }
 
 
     /** Verify if the client exists in the repository

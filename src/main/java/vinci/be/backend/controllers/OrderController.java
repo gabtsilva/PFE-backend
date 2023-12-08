@@ -92,4 +92,21 @@ public class OrderController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    /*Correspond à une modification ponctuelle */
+    @PostMapping("/order/{clientId}/modify/{articleId}/{quantity}")
+    public ResponseEntity<Void> updateOne(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
+        try {
+            orderService.modify(clientId, quantity, articleId);
+        }catch (BusinessException businessException) {
+            businessException.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        }catch (NotFoundException notFoundException) {
+            notFoundException.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
