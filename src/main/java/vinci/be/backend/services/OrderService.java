@@ -52,6 +52,23 @@ public class OrderService {
         return order;
     }
 
+
+    /**
+     * Retrieves all articles from an user order.
+     *
+     * @param clientId The unique identifier of the client .
+     * @return all articles.
+     */
+    public List<OrderLine> readAllArticleFromAnOrder(int clientId) throws NotFoundException {
+        verifyIfClientExists(clientId);
+
+        Order order = orderRepository.findByClientId(clientId);
+
+        if (order == null) throw new NotFoundException("Le client n'a pas encore de commande");
+
+        return orderLineRepository.findByOrderId(order.getId());
+    }
+
     /**
      * Creates a new order in the repository if the client does not already have an order.
      *

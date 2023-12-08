@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.Order;
+import vinci.be.backend.models.OrderLine;
 import vinci.be.backend.models.Tour;
 import vinci.be.backend.services.OrderService;
 
@@ -43,6 +44,20 @@ public class OrderController {
 
         }
         return new ResponseEntity<>(order, HttpStatus.FOUND);
+    }
+
+    @GetMapping("/order/{clientId}/article")
+    public ResponseEntity<List<OrderLine>> readAllArticleFromAnOrder(@PathVariable int clientId) {
+        if (clientId<=0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        List<OrderLine> ordersLines;
+        try {
+            ordersLines = (ArrayList<OrderLine>) orderService.readAllArticleFromAnOrder(clientId);
+        } catch (NotFoundException nfe) {
+            nfe.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+        return new ResponseEntity<>(ordersLines, HttpStatus.FOUND);
     }
 
 

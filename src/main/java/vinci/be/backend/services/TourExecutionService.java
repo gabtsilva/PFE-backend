@@ -2,7 +2,7 @@ package vinci.be.backend.services;
 
 import org.springframework.stereotype.Service;
 import vinci.be.backend.exceptions.BusinessException;
-import vinci.be.backend.exceptions.ConflitException;
+import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.TourExecution;
 import vinci.be.backend.models.User;
@@ -25,9 +25,9 @@ public class TourExecutionService {
     this.userRepository = userRepository;
   }
 
-  public void createOneExecution(int tourId, TourExecution tourExecution) throws NotFoundException, ConflitException {
+  public void createOneExecution(int tourId, TourExecution tourExecution) throws NotFoundException, ConflictException {
     if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tour does not exist");
-    if (tourExecutionRepository.existsByExecutionDateAndTourId(tourExecution.getExecutionDate(),tourId)) throw new ConflitException("There is already a tour execution for this tour on the specified date");
+    if (tourExecutionRepository.existsByExecutionDateAndTourId(tourExecution.getExecutionDate(),tourId)) throw new ConflictException("There is already a tour execution for this tour on the specified date");
 
     tourExecutionRepository.save(tourExecution);
   }
