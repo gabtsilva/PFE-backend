@@ -37,6 +37,6 @@ public class Client {
         return  address == null || address.isBlank() || address.isEmpty()
                 || name == null || name.isBlank() || name.isEmpty()
                 || phoneNumber == null || phoneNumber.isBlank() || phoneNumber.isEmpty()
-                || childrenQuantity <  0;
+                || childrenQuantity <  0 || tour <= 0 || id <= 0;
     }
 }

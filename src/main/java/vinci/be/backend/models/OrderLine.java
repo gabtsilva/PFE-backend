@@ -34,7 +34,7 @@ public class OrderLine {
 
 
     public boolean invalid() {
-        return plannedQuantity < 0 || deliveredQuantity < 0;
+        return plannedQuantity < 0 || deliveredQuantity < 0 ||orderId <=0  || articleId <= 0;
     }
 
 }

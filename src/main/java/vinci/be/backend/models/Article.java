@@ -24,7 +24,7 @@ public class Article {
 
 
     public boolean invalid() {
-        return name == null || name.isBlank() || name.isEmpty();
+        return name == null || name.isBlank() || name.isEmpty() || id <=0;
     }
 
 }
