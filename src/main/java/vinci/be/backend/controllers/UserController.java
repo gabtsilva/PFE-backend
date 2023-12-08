@@ -32,6 +32,7 @@ public class UserController {
 
     @GetMapping("/user/{userMail}")
     public ResponseEntity<User> readOne(@PathVariable String userMail) {
+        if (userMail == null || userMail.isBlank() || userMail.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         User user = userService.readOne(userMail);
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);

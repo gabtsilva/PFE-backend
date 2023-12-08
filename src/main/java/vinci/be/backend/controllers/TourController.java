@@ -31,6 +31,7 @@ public class TourController {
 
     @GetMapping("/tour/{tourId}")
     public ResponseEntity<Tour> readOne(@PathVariable int tourId) {
+        if (tourId <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Tour tour = tourService.readOne(tourId);
         if (tour != null) {
             return new ResponseEntity<>(tour, HttpStatus.OK);
@@ -54,7 +55,7 @@ public class TourController {
 
     @PutMapping("/tour/{tourId}")
     public ResponseEntity<Void> updateOne(@PathVariable int tourId, @RequestBody Tour tour) {
-        if (tour.getId() != tourId) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (tourId <= 0 ||tour.getId() != tourId) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (tour.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = tourService.updateOne(tour);
         if (found) {

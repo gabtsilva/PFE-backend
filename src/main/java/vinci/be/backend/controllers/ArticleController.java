@@ -31,6 +31,7 @@ public class ArticleController {
 
     @GetMapping("/article/{articleId}")
     public ResponseEntity<Article> readOne(@PathVariable int articleId) {
+        if (articleId <= 0 ) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Article article = articleService.readOne(articleId);
         if (article != null) {
             return new ResponseEntity<>(article, HttpStatus.OK);

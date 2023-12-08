@@ -33,6 +33,7 @@ public class OrderController {
 
     @GetMapping("/order/{clientId}")
     public ResponseEntity<Order> readOne(@PathVariable int clientId) {
+        if (clientId<=0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Order order;
         try {
             order = orderService.readOne(clientId);
@@ -64,6 +65,7 @@ public class OrderController {
 
     @PostMapping("/order/{clientId}/addArticle/{articleId}/{quantity}")
     public ResponseEntity<Void> addArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
+        if (quantity <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             orderService.addArticle(clientId, quantity, articleId);
         }catch (BusinessException businessException) {

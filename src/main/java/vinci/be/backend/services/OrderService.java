@@ -122,9 +122,9 @@ public class OrderService {
         if(orderLine == null) {
             throw new NotFoundException("Le client n'a pas cet article dans sa commande");
         }else{
-//            if (quantity > orderLine.getPlannedQuantity()) {
-//                throw new BusinessException("Vous tentez de soustraire une quantité trop grande");
-//            }
+            if (quantity > orderLine.getPlannedQuantity()) {
+                throw new BusinessException("Vous tentez de soustraire une quantité trop grande");
+            }
             orderLine.setPlannedQuantity(orderLine.getPlannedQuantity() - quantity);
             orderLineRepository.save(orderLine);
         }
@@ -155,9 +155,6 @@ public class OrderService {
         if(orderLine == null) {
             throw new NotFoundException("Le client n'a pas cet article dans sa commande");
         }else{
-//            if (quantity > orderLine.getPlannedQuantity()) {
-//                throw new BusinessException("Vous tentez de soustraire une quantité trop grande");
-//            }
             orderLine.setChangedQuantity(orderLine.getChangedQuantity() + quantity);
             orderLineRepository.save(orderLine);
         }

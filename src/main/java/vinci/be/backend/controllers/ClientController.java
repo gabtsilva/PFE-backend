@@ -31,6 +31,7 @@ public class ClientController {
 
     @GetMapping("/client/{clientId}")
     public ResponseEntity<Client> readOne(@PathVariable int clientId) {
+        if (clientId <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Client client = clientService.readOne(clientId);
         if (client != null) {
             return new ResponseEntity<>(client, HttpStatus.OK);
@@ -53,7 +54,7 @@ public class ClientController {
 
     @PutMapping("/client/{clientId}")
     public ResponseEntity<Void> updateOne(@PathVariable int clientId, @RequestBody Client client) {
-        if (clientId != client.getId()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (clientId <=0 || clientId != client.getId()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (client.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = clientService.updateOne(client);
         if (found) {
