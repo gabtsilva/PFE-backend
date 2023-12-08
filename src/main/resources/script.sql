@@ -45,15 +45,14 @@ CREATE TABLE snappies.tours_executions(
                                           delivery_person varchar(50) NOT NULL REFERENCES snappies.users(mail),
                                           vehicle_id integer NOT NULL REFERENCES snappies.vehicles(vehicle_id),
                                           tour_id integer NOT NULL REFERENCES snappies.tours(tour_id)
-                                      /*unique ?*/
+    /*unique ?*/
 );
 
 
 
-CREATE TABLE snappies.commandes(
-                                   commande_id SERIAL PRIMARY KEY,
-                                   client_id integer NOT NULL REFERENCES snappies.clients (client_id),
-                                   tour_execution integer REFERENCES snappies.tours_executions(tour_execution_id)
+CREATE TABLE snappies.orders(
+                                order_id SERIAL PRIMARY KEY,
+                                client_id integer NOT NULL REFERENCES snappies.clients (client_id)
 );
 
 
@@ -63,13 +62,13 @@ CREATE TABLE snappies.articles(
 );
 
 
-CREATE TABLE snappies.commandesLines(
-                                        commande_id integer NOT NULL REFERENCES snappies.commandes(commande_id),
-                                        article_id integer NOT NULL REFERENCES snappies.articles(article_id),
-                                        planned_quantity integer NOT NULL CHECK (planned_quantity > 0),
-                                        delivered_quantity integer NOT NULL CHECK (delivered_quantity >= 0),
-                                        added_quantity integer NOT NULL CHECK (commandesLines.added_quantity >= 0),
-                                        PRIMARY KEY (commande_id, article_id)
+CREATE TABLE snappies.orders_lines(
+                                      order_id integer NOT NULL REFERENCES snappies.orders(order_id),
+                                      article_id integer NOT NULL REFERENCES snappies.articles(article_id),
+                                      planned_quantity integer NOT NULL CHECK (planned_quantity >= 0),
+                                      delivered_quantity integer NOT NULL CHECK (delivered_quantity >= 0) DEFAULT 0,
+                                      changed_quantity integer NOT NULL DEFAULT 0,
+                                      PRIMARY KEY (order_id, article_id)
 );
 
 CREATE TABLE snappies.surplus(
@@ -121,10 +120,10 @@ VALUES
     ('2023-02-01', 'commencée', 'user1@example.com', 2, 2);
 
 -- Insertion des commandes
-INSERT INTO snappies.commandes(client_id, tour_execution)
+INSERT INTO snappies.orders(client_id)
 VALUES
-    (1, 1),
-    (2, 2);
+    (1),
+    (2);
 
 -- Insertion des articles
 INSERT INTO snappies.articles(article_name) VALUES
@@ -132,7 +131,7 @@ INSERT INTO snappies.articles(article_name) VALUES
                                                 ('Article 2');
 
 -- Insertion des lignes de commande
-INSERT INTO snappies.commandesLines(commande_id, article_id, planned_quantity, delivered_quantity, added_quantity)
+INSERT INTO snappies.orders_lines(order_id, article_id, planned_quantity, delivered_quantity, changed_quantity)
 VALUES
     (1, 1, 5, 3, 2),
     (1, 2, 10, 8, 3),

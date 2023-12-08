@@ -1,0 +1,47 @@
+###
+### Basé sur le cript SQL
+###
+
+###Read all
+GET http://localhost:8080/order
+
+###Read One
+GET http://localhost:8080/order/1
+
+
+###Create an extra user
+POST http://localhost:8080/client
+Content-Type: application/json
+
+{
+  "address": "test",
+  "name": "Client Four",
+  "phoneNumber": "111222333",
+  "childrenQuantity": 2,
+  "tour": 1
+}
+
+### Create One Order to that client
+POST http://localhost:8080/order/3
+Content-Type: application/json
+
+{
+  "address": "123 Main St, City1",
+  "name": "Client Three",
+  "phoneNumber": "111222333",
+  "childrenQuantity": 2,
+  "tour": 1
+}
+
+###Add an article to that order
+POST http://localhost:8080/order/3/addArticle/1/20
+
+###Add more of the previous article from that order
+POST http://localhost:8080/order/3/addArticle/1/40
+
+
+###Remove the previous article from the order
+POST http://localhost:8080/order/3/removeArticle/1/60
+
+###Remove an article that the order does not contains
+POST http://localhost:8080/order/3/removeArticle/1/40
