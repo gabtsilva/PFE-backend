@@ -33,7 +33,7 @@ public class VehicleController {
         if (vehicleId <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Vehicle vehicle = vehicleService.readOne(vehicleId);
         if (vehicle != null) {
-            return new ResponseEntity<>(vehicle, HttpStatus.OK);
+            return new ResponseEntity<>(vehicle, HttpStatus.FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 

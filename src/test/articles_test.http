@@ -4,6 +4,9 @@ GET http://localhost:8080/article
 ### Get One
 GET http://localhost:8080/article/1
 
+### Get One with a wrong article id
+GET http://localhost:8080/article/-1
+
 ### Create One
 POST http://localhost:8080/article
 Content-Type: application/json
@@ -14,6 +17,15 @@ Content-Type: application/json
 
 ### Update One
 PUT http://localhost:8080/article/1
+Content-Type: application/json
+
+{
+  "id" : 1,
+  "name": "Article Four"
+}
+
+### Update One with a wrong article id (not the matching the one from the body)
+PUT http://localhost:8080/article/3
 Content-Type: application/json
 
 {

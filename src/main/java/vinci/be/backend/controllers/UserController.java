@@ -35,7 +35,7 @@ public class UserController {
         if (userMail == null || userMail.isBlank() || userMail.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         User user = userService.readOne(userMail);
         if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -55,6 +55,7 @@ public class UserController {
 
     @PutMapping("/user/{userMail}")
     public ResponseEntity<Void> updateOne(@PathVariable String userMail, @RequestBody User user) {
+        if (userMail == null || userMail.isBlank() || userMail.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (!userMail.equals(user.getMail()) )return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (user.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = userService.updateOne(user);

@@ -28,11 +28,11 @@ Content-Type: application/json
 
 
 ### Update One
-PUT http://localhost:8080/user/steven@gmail.com
+PUT http://localhost:8080/user/ju
 Content-Type: application/json
 
 {
-  "mail": "steven@gmail.com",
+  "mail": "ju",
   "firstname": "Roy",
   "lastname": "Agbassah",
   "phoneNumber": "5589825",

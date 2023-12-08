@@ -34,7 +34,7 @@ public class TourController {
         if (tourId <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Tour tour = tourService.readOne(tourId);
         if (tour != null) {
-            return new ResponseEntity<>(tour, HttpStatus.OK);
+            return new ResponseEntity<>(tour, HttpStatus.FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 

@@ -9,6 +9,16 @@ Content-Type: application/json
   "password": "ju"
 }
 
+
+### LOGIN non-existing user
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "mail": "sss",
+  "password": "jsssu"
+}
+
 ### VERIFY TOKEN
 POST http://localhost:8080/auth/verify
 Content-Type: text/plain

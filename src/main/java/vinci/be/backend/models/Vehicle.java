@@ -32,6 +32,6 @@ public class Vehicle {
     public boolean invalid() {
         return name == null || name.isBlank() || name.isEmpty()
                 || plate == null || plate.isBlank() || plate.isEmpty()
-                || maxQuantity <  0 || id <= 0;
+                || maxQuantity <  0;
     }
 }

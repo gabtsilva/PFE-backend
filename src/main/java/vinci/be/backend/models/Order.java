@@ -22,6 +22,6 @@ public class Order {
     private int clientId;
 
     public boolean invalid() {
-        return id <= 0 || clientId < 0;
+         return clientId < 0;
     }
 }
