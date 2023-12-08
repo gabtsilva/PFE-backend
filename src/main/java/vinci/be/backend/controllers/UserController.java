@@ -42,7 +42,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/user/delivery}")
+    @GetMapping("/user/delivery")
     public ResponseEntity<List<User>> readAllDeliveryMen() {
         ArrayList<User> deliveryMen = (ArrayList<User>) userService.getDeliveryMen();
         return new ResponseEntity<>(deliveryMen, HttpStatus.OK);
