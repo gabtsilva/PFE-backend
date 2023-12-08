@@ -5,12 +5,12 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "mail": "steven@gmail.com",
-  "password": "passwordtest"
+  "mail": "ju",
+  "password": "ju"
 }
 
 ### VERIFY TOKEN
 POST http://localhost:8080/auth/verify
 Content-Type: text/plain
 
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhdXRoMCIsImVtYWlsIjoiZ2FiQHRlc3QuY29tIn0.-Aps_mOyE2Bg46ibz6we2PEuAd5jXRTeA_--QrNV9AcdaFb0pXgW9hb8GyuT4LNvagmCgAZp--8Rh0JgI4Qn5A
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJtYWlsIjoianUiLCJpc3MiOiJhdXRoMCJ9.BGXmdNYymA1dzvyAqr_o4Z8-6SPmdaWY8pklPqy1pTowtaFPuEYgCefw-3HDc8zc68OCTJohnyRr9y8wrFiN5w

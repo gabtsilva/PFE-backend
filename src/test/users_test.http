@@ -14,14 +14,14 @@ Content-Type: application/json
 
 {
   "user_data" : {
-    "mail": "steven@gmail.com",
-    "firstname": "Steven",
-    "lastname": "Agbassah",
+    "mail": "ju",
+    "firstname": "ju",
+    "lastname": "ju",
     "phoneNumber": "5589825",
     "isAdmin" : true
 
   },
-  "password" : "passwordtest"
+  "password" : "ju"
 
 }
 

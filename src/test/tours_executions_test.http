@@ -1,0 +1,20 @@
+## Création d'une exécution de tour
+#POST http://localhost:8080/tour/1/tourExecution
+#Content-Type: application/json
+#
+#{
+#  "executionDate": "2023-03-20",
+#  "state": "prévue",
+#  "deliveryPerson": "admin@example.com",
+#  "vehicleId": 1,
+#  "tourId": 1
+#}
+#
+#
+#### Récupération des exécutions de tour pour un tour et un état donnés
+#GET http://localhost:8080/tour/1/prévue
+#Content-Type: application/json
+#
+#### Récupération des exécutions de tour pour un tour, un livreur et un état donnés
+#GET http://localhost:8080/tour/1/user/admin@example.com/state/prévue
+#Content-Type: application/json

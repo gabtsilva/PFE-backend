@@ -41,10 +41,11 @@ CREATE TABLE snappies.vehicles(
 CREATE TABLE snappies.tours_executions(
                                           tour_execution_id SERIAL PRIMARY KEY,
                                           execution_date date NOT NULL,
-                                          state varchar(20) NOT NULL  CHECK ( state in ('prévu', 'commencé', 'finie') ),
+                                          state varchar(20) NOT NULL  CHECK ( state in ('prévue', 'commencée', 'finie') ),
                                           delivery_person varchar(50) NOT NULL REFERENCES snappies.users(mail),
                                           vehicle_id integer NOT NULL REFERENCES snappies.vehicles(vehicle_id),
                                           tour_id integer NOT NULL REFERENCES snappies.tours(tour_id)
+                                      /*unique ?*/
 );
 
 
@@ -116,8 +117,8 @@ VALUES
 -- Insertion des exécutions de tour
 INSERT INTO snappies.tours_executions(execution_date, state, delivery_person, vehicle_id, tour_id)
 VALUES
-    ('2023-01-01', 'prévu', 'admin@example.com', 1, 1),
-    ('2023-02-01', 'commencé', 'user1@example.com', 2, 2);
+    ('2023-01-01', 'prévue', 'admin@example.com', 1, 1),
+    ('2023-02-01', 'commencée', 'user1@example.com', 2, 2);
 
 -- Insertion des commandes
 INSERT INTO snappies.commandes(client_id, tour_execution)

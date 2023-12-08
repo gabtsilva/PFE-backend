@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import vinci.be.backend.models.UnsafeCredentials;
 import vinci.be.backend.services.AuthenticationService;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class AuthenticationController {
@@ -19,11 +20,15 @@ public class AuthenticationController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/auth/login")
-    public ResponseEntity<String> connect(@RequestBody UnsafeCredentials credentials) {
+    public ResponseEntity<Map<String, String>> connect(@RequestBody UnsafeCredentials credentials) {
         if (credentials.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         String jwtToken =  service.connect(credentials);
         if (jwtToken == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>(jwtToken, HttpStatus.OK);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwtToken);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @CrossOrigin(origins = "*")
