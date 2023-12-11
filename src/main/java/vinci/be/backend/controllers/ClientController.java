@@ -4,6 +4,8 @@ package vinci.be.backend.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vinci.be.backend.exceptions.ConflictException;
+import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.Client;
 import vinci.be.backend.services.ClientService;
 
@@ -31,9 +33,10 @@ public class ClientController {
 
     @GetMapping("/client/{clientId}")
     public ResponseEntity<Client> readOne(@PathVariable int clientId) {
+        if (clientId <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Client client = clientService.readOne(clientId);
         if (client != null) {
-            return new ResponseEntity<>(client, HttpStatus.OK);
+            return new ResponseEntity<>(client, HttpStatus.FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -41,25 +44,46 @@ public class ClientController {
 
     @PostMapping("/client")
     public ResponseEntity<Void> createOne(@RequestBody Client client) {
+        System.out.println(client.invalid());
         if (client.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        boolean created  = clientService.createOne(client);
-        if (created) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        try {
+            clientService.createOne(client);
+        } catch (ConflictException conflictException) {
+            conflictException.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
 
+        } catch (NotFoundException notFoundException) {
+            notFoundException.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @PutMapping("/client/{clientId}")
     public ResponseEntity<Void> updateOne(@PathVariable int clientId, @RequestBody Client client) {
-        if (clientId != client.getId()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (clientId <= 0 || clientId != client.getId()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (client.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        boolean found  = clientService.updateOne(client);
-        if (found) {
-            return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            clientService.updateOne(client);
+        } catch (ConflictException conflictException) {
+            conflictException.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        } catch (NotFoundException notFoundException) {
+            notFoundException.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @GetMapping("/client/tour/{id}")
+    public ResponseEntity<List<Client>> updateOne(@PathVariable int id) {
+        ArrayList<Client> clientsByTour = (ArrayList<Client>) clientService.readAllByTour(id);
+        return new ResponseEntity<>(clientsByTour, HttpStatus.OK);
 
     }
 

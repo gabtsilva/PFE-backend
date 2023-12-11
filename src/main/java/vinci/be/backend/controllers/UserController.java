@@ -30,16 +30,25 @@ public class UserController {
     }
 
 
-    @GetMapping("/user/{userMail}")
-    public ResponseEntity<User> readOne(@PathVariable String userMail) {
-        User user = userService.readOne(userMail);
+    @GetMapping("/user/{email}")
+    public ResponseEntity<User> readOne(@PathVariable String email) {
+        if (email == null || email.isBlank() || email.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        User user = userService.readOne(email);
         if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
 
+
+    @GetMapping("/user/delivery")
+    public ResponseEntity<List<User>> readAllDeliveryMen() {
+        ArrayList<User> deliveryMen = (ArrayList<User>) userService.getDeliveryMen();
+        return new ResponseEntity<>(deliveryMen, HttpStatus.OK);
+
+    }
+/*
     @PostMapping("/user")
     public ResponseEntity<Void> createOne(@RequestBody UserWithPassword userWithPassword) {
         if (userWithPassword.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -52,9 +61,11 @@ public class UserController {
     }
 
 
-    @PutMapping("/user/{userMail}")
-    public ResponseEntity<Void> updateOne(@PathVariable String userMail, @RequestBody User user) {
-        if (!userMail.equals(user.getMail()) )return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+ */
+
+    @PutMapping("/user/{email}")
+    public ResponseEntity<Void> updateOne(@PathVariable String email, @RequestBody User user) {
+        if (!email.equals(user.getEmail()) )return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (user.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = userService.updateOne(user);
         if (found) {

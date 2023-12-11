@@ -10,6 +10,7 @@ import vinci.be.backend.models.UserWithPassword;
 import vinci.be.backend.repositories.UserRepository;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,21 +43,38 @@ public class UserService {
         return userRepository.findById(userMail).orElse(null);
     }
 
+    /**
+     * Reads all delivery men in repository
+     *
+     * @return all users
+     */
+    public List<User> getDeliveryMen() {
+        List<User> users = userRepository.findAll();
+        List<User> deliveryMen = new ArrayList<>();
 
+        for (User u: users) {
+            if (u.isDeliveryMan()) deliveryMen.add(u);
+        }
+
+        return deliveryMen;
+    }
+
+/*
     /**
      * Creates a new user in the repository if the provided user mail does not already exist.
      *
      * @param userWithPassword The user object to be created.
      * @return true if the user is successfully created, false if a user with the same mail already exists.
-     */
-    public boolean createOne(UserWithPassword userWithPassword) {
-        if (userRepository.existsById(userWithPassword.getUser().getMail())) return false;
-        UnsafeCredentials unsafeCredentials = new UnsafeCredentials(userWithPassword.getUser().getMail(), userWithPassword.getPassword());
 
+    public boolean createOne(UserWithPassword userWithPassword) {
+        if (userRepository.existsById(userWithPassword.getUser().getEmail())) return false;
+        UnsafeCredentials unsafeCredentials = new UnsafeCredentials(userWithPassword.getUser().getEmail(), userWithPassword.getPassword(), false);
         authenticationService.createOne(unsafeCredentials);
         userRepository.save(userWithPassword.getUser());
         return true;
     }
+
+ */
 
     /**
      * Updates an existing user in the repository if the provided user mail already exists.
@@ -65,7 +83,7 @@ public class UserService {
      * @return true if the user is successfully updated, false if the user with the provided mail does not exist.
      */
     public boolean updateOne(User user) {
-        if (!userRepository.existsById(user.getMail())) return false;
+        if (!userRepository.existsById(user.getEmail())) return false;
         userRepository.save(user);
         return true;
     }

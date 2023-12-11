@@ -4,8 +4,13 @@
 
 ### Read all
 GET http://localhost:8080/client
+
 ### Get One
 GET http://localhost:8080/client/1
+
+### Get One with bad id
+GET http://localhost:8080/client/-1
+
 
 
 ### Create One
@@ -18,6 +23,19 @@ Content-Type: application/json
   "phoneNumber": "111222333",
   "childrenQuantity": 2,
   "tour": 1
+}
+
+
+### Create One user with a tour that doesn't exist
+POST http://localhost:8080/client
+Content-Type: application/json
+
+{
+  "address": "123 Main St, City1",
+  "name": "Client Three",
+  "phoneNumber": "111222333",
+  "childrenQuantity": 2,
+  "tour": 1000
 }
 
 
@@ -34,3 +52,20 @@ Content-Type: application/json
   "childrenQuantity": 2,
   "tour": 1
 }
+
+
+### Update One with bad id (not matching with the body one)
+PUT http://localhost:8080/client/3
+Content-Type: application/json
+
+{
+  "id": 1,
+  "address": "123 Main St, City1",
+  "name": "Client Four",
+  "phoneNumber": "111222333",
+  "childrenQuantity": 2,
+  "tour": 1
+}
+
+### GET clients by specific tour
+GET http://localhost:8080/client/tour/3

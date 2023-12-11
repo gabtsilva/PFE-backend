@@ -2,7 +2,7 @@ package vinci.be.backend.services;
 
 import org.springframework.stereotype.Service;
 import vinci.be.backend.exceptions.BusinessException;
-import vinci.be.backend.exceptions.ConflitException;
+import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.TourExecution;
 import vinci.be.backend.models.User;
@@ -32,35 +32,25 @@ public class TourExecutionService {
   }
 
   public void createOneExecution(int tourId, TourExecution tourExecution)
-      throws NotFoundException, ConflitException {
-    if (!tourRepository.existsById(tourId))
-      throw new NotFoundException("Tour does not exist");
-    if (tourExecutionRepository.existsByExecutionDateAndTourId(tourExecution.getExecutionDate(),
-        tourId))
-      throw new ConflitException(
-          "There is already a tour execution for this tour on the specified date");
-
-    tourExecutionRepository.save(tourExecution);
-  }
-
-  public List<TourExecution> readExecutionByStateForATour(int tourId, String state)
       throws NotFoundException {
     if (!tourRepository.existsById(tourId))
       throw new NotFoundException("Tour does not exist");
-    return tourExecutionRepository.findByTourIdAndState(tourId, state);
+    tourExecutionRepository.existsByExecutionDateAndTourId(tourExecution.getExecutionDate(),tourId);
+    tourExecutionRepository.save(tourExecution);
   }
 
-  public List<TourExecution> readPlannedExecutionByDeliveryManForATour(int tourId, String userMail,
-      String state) throws NotFoundException, BusinessException {
-    if (!tourRepository.existsById(tourId))
-      throw new NotFoundException("Tout does not exist");
-    User user = userRepository.findById(userMail).orElse(null);
-    if (user == null)
-      throw new NotFoundException("User does not exist");
-    if (user.isAdmin())
-      throw new BusinessException("User is not a delivery person");
+  public List<TourExecution> readExecutionByStateForATour(int tourId, String state) throws  NotFoundException {
+    if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tour does not exist");
+    return  tourExecutionRepository.findByTourIdAndState(tourId, state);
+  }
 
-    return tourExecutionRepository.findByTourIdAndDeliveryPersonAndState(tourId, userMail, state);
+  public List<TourExecution> readPlannedExecutionByDeliveryManForATour(int tourId, String userMail, String state) throws NotFoundException, BusinessException {
+    if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tout does not exist");
+    User user = userRepository.findById(userMail).orElse(null);
+    if (user == null) throw new NotFoundException("User does not exist");
+    if (user.isAdmin() ) throw new BusinessException("User is not a delivery person");
+
+    return  tourExecutionRepository.findByTourIdAndDeliveryPersonAndState(tourId, userMail, state);
   }
 
   public void updatedeliveryPersonExecution(int tourId, String deliveryPerson)

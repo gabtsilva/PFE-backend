@@ -2,11 +2,12 @@ DROP SCHEMA IF EXISTS snappies CASCADE;
 CREATE SCHEMA snappies;
 
 CREATE TABLE snappies.users(
-                               mail VARCHAR(50) PRIMARY KEY CHECK (mail<>''),
-                               firstname VARCHAR(50) NOT NULL CHECK (firstname<>''),
-                               lastname VARCHAR(50) NOT NULL CHECK (lastname<>''),
-                               phone_number VARCHAR(15) NOT NULL CHECK (users.phone_number<>''),
-                               is_admin BOOLEAN NOT NULL DEFAULT false
+    email VARCHAR(50) PRIMARY KEY CHECK (email<>''),
+    firstname VARCHAR(50) NOT NULL CHECK (firstname<>''),
+    lastname VARCHAR(50) NOT NULL CHECK (lastname<>''),
+    phone_number VARCHAR(15) NOT NULL CHECK (users.phone_number<>''),
+    password VARCHAR(200) NOT NULL CHECK (password<>''),
+    is_admin BOOLEAN NOT NULL DEFAULT false
 );
 
 
@@ -17,48 +18,43 @@ CREATE TABLE snappies.credentials(
 );
 
 CREATE TABLE snappies.tours(
-                               tour_id SERIAL PRIMARY KEY,
-                               tour_name varchar(50) NOT NULL CHECK (tour_name<>'')
+    tour_id SERIAL PRIMARY KEY,
+    tour_name varchar(50) NOT NULL CHECK (tour_name<>'')
 );
 
 CREATE TABLE snappies.clients(
-                                 client_id SERIAL PRIMARY KEY,
-                                 client_address varchar(200) NOT NULL CHECK (client_address <> ''),
-                                 client_name varchar(50) NOT NULL CHECK (client_name <>''),
-                                 phone_number varchar(15) NOT NULL CHECK (phone_number <>''),
-                                 children_quantity integer NOT NULL CHECK(children_quantity > 0),
-                                 tour integer NOT NULL REFERENCES snappies.tours (tour_id)
+    client_id SERIAL PRIMARY KEY,
+    client_address varchar(200) NOT NULL CHECK (client_address <> ''),
+    client_name varchar(50) NOT NULL CHECK (client_name <>''),
+    phone_number varchar(15) NOT NULL CHECK (phone_number <>''),
+    children_quantity integer NOT NULL CHECK(children_quantity > 0),
+    tour integer NOT NULL REFERENCES snappies.tours (tour_id)
 );
 
 CREATE TABLE snappies.vehicles(
-                                  vehicle_id SERIAL PRIMARY KEY,
-                                  vehicle_name varchar(100) CHECK ( vehicle_name <> '' ),
-                                  plate varchar(15) CHECK ( plate <> '' ),
-                                  max_quantity float NOT NULL CHECK (max_quantity > 0)
+    vehicle_id SERIAL PRIMARY KEY,
+    vehicle_name varchar(100) CHECK ( vehicle_name <> '' ),
+    plate varchar(15) CHECK ( plate <> '' ),
+    max_quantity float NOT NULL CHECK (max_quantity > 0)
 );
-
 
 CREATE TABLE snappies.tours_executions(
-                                          tour_execution_id SERIAL PRIMARY KEY,
-                                          execution_date date NOT NULL,
-                                          state varchar(20) NOT NULL  CHECK ( state in ('prévue', 'commencée', 'finie') ),
-                                          delivery_person varchar(50) REFERENCES snappies.users(mail),
-                                          vehicle_id integer REFERENCES snappies.vehicles(vehicle_id),
-                                          tour_id integer NOT NULL REFERENCES snappies.tours(tour_id)
-    /*unique ?*/
+    tour_execution_id SERIAL PRIMARY KEY,
+    execution_date date NOT NULL,
+    state varchar(20) NOT NULL  CHECK ( state in ('prévue', 'commencée', 'finie') ),
+    delivery_person varchar(50) NOT NULL REFERENCES snappies.users(email),
+    vehicle_id integer NOT NULL REFERENCES snappies.vehicles(vehicle_id),
+    tour_id integer NOT NULL REFERENCES snappies.tours(tour_id)
 );
-
-
 
 CREATE TABLE snappies.orders(
-                                order_id SERIAL PRIMARY KEY,
-                                client_id integer NOT NULL REFERENCES snappies.clients (client_id)
+    order_id SERIAL PRIMARY KEY,
+    client_id integer NOT NULL REFERENCES snappies.clients (client_id)
 );
 
-
 CREATE TABLE snappies.articles(
-                                  article_id serial PRIMARY KEY,
-                                  article_name varchar(100) NOT NULL CHECK (article_name <> '')
+    article_id serial PRIMARY KEY,
+    article_name varchar(100) NOT NULL CHECK (article_name <> '')
 );
 
 

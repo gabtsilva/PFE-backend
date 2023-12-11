@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vinci.be.backend.exceptions.BusinessException;
-import vinci.be.backend.exceptions.ConflitException;
+import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.TourExecution;
 import vinci.be.backend.models.TourState;
@@ -71,9 +71,6 @@ public class TourExecutionController {
     }
     try {
       tourExecutionService.createOneExecution(tourId, tourExecution);
-    } catch (ConflitException conflitException) {
-      System.err.println(conflitException.getMessage());
-      return new ResponseEntity<>(HttpStatus.CONFLICT);
     } catch (NotFoundException notFoundException) {
       System.err.println(notFoundException.getMessage());
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -87,7 +84,7 @@ public class TourExecutionController {
   public ResponseEntity<Void> updateDeliveryPerson(@PathVariable int tourId, @RequestBody User deliveryPerson){
 
     try {
-      tourExecutionService.updatedeliveryPersonExecution(tourId, deliveryPerson.getMail());
+      tourExecutionService.updatedeliveryPersonExecution(tourId, deliveryPerson.getEmail());
     } catch (NotFoundException notFoundException) {
       System.err.println(notFoundException.getMessage());
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
