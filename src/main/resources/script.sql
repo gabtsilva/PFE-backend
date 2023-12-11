@@ -148,3 +148,21 @@ VALUES
     (2, 1, 8),
     (1, 2, 3),
     (2, 2, 6);
+
+SELECT
+    art.article_id,
+    art.article_name,
+    SUM(ol.planned_quantity) AS total_planned_quantity,
+    SUM(ol.planned_quantity) * (1 + COALESCE(MAX(s.percentage), 0) / 100.0) AS total_with_surplus
+FROM
+    snappies.articles art
+        INNER JOIN snappies.orders_lines ol ON art.article_id = ol.article_id
+        INNER JOIN snappies.orders ord ON ol.order_id = ord.order_id
+        INNER JOIN snappies.general_clients_orders gco ON ord.client_id = gco.client_id
+        INNER JOIN snappies.execution_clients_orders eco ON gco.general_client_order_id = eco.general_client_order
+        INNER JOIN snappies.tours_executions tex ON eco.tour_execution_id = tex.tour_execution_id
+        LEFT JOIN snappies.surplus s ON art.article_id = s.article_id AND tex.tour_execution_id = s.tour_execution_id
+WHERE
+        tex.tour_execution_id = 1 -- Remplacez 1 par l'ID de l'exécution de tournée spécifique
+GROUP BY
+    art.article_id, art.article_name;

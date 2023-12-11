@@ -68,6 +68,9 @@ Content-Type: application/json
 ### get all articlss for tourExex
 GET http://localhost:8080//tour/1/tourExecution/allArticles
 
+### get all articlss  by client for tourExex
+GET http://localhost:8080//tour/1/tourExecution/allArticles/client/1
+
 ### get all client for tourExex
 GET http://localhost:8080//tour/1/tourExecution/allClients
 

@@ -146,6 +146,16 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
     }
   }
 
+    @GetMapping("/tour/{tourExecutionId}/tourExecution/allArticles/client/{clientId}")
+    public ResponseEntity<List<ArticlesCommande>> getAllArticlesByClient(@PathVariable int tourExecutionId, @PathVariable int clientId){
+    try {
+      List<ArticlesCommande > allArticles = tourExecutionService.getAllArticlesByClients(tourExecutionId,clientId);
+      return new ResponseEntity<>(allArticles,HttpStatus.OK);
+    }catch (Exception e){
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @GetMapping("/tour/{tourExecutionId}/tourExecution/allClients")
   public ResponseEntity<List<Client>> getAllClients(@PathVariable int tourExecutionId){
     try {
