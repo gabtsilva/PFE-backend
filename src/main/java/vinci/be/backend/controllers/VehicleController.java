@@ -41,13 +41,13 @@ public class VehicleController {
 
 
     @PostMapping("/vehicle")
-    public ResponseEntity<Void> createOne(@RequestBody Vehicle vehicle) {
+    public ResponseEntity<Vehicle> createOne(@RequestBody Vehicle vehicle) {
         if (vehicle.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean created  = vehicleService.createOne(vehicle);
         if (created) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(vehicle, HttpStatus.CONFLICT);
 
     }
 
