@@ -78,4 +78,19 @@ public class TourExecutionService {
     tourExecutionRepository.save(tourExecution);
   }
 
+  public void updateState(int tourId, String state) throws NotFoundException {
+
+    TourExecution tourExecution = tourExecutionRepository.getReferenceById(tourId);
+    if (tourExecution == null){
+      throw new NotFoundException("tour not found");
+    }
+    String actualSate = tourExecution.getState();
+    if (actualSate.equals("prevue") && state.equals("commencee")){
+      tourExecution.setState(state);
+    }else if (actualSate.equals("commencee") && state.equals("finie")){
+      tourExecution.setState(state);
+    }
+
+
+  }
 }

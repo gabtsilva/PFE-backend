@@ -42,10 +42,10 @@ public class TourService {
      * @param tour The tour object to be created.
      * @return true if the tour is successfully created, false if a tour with the same ID already exists.
      */
-    public boolean createOne(Tour tour) {
-        if (tourRepository.existsById(tour.getId())) return false;
+    public Tour createOne(Tour tour) {
+        if (tourRepository.existsById(tour.getId())) return null;
         tourRepository.save(tour);
-        return true;
+        return tour;
     }
 
     /**

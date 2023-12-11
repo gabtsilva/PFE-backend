@@ -100,4 +100,17 @@ public class TourExecutionController {
 
   }
 
+
+  @PostMapping("/tour/{tourId}/tourExecution/begin")
+  public ResponseEntity<Void> beginTour(){
+    tourExecutionService.updateState("commencee");
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/tour/{tourId}/tourExecution/end")
+  public ResponseEntity<Void> endTour(){
+    tourExecutionService.updateState("finie");
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
 }
