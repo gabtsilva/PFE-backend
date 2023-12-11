@@ -92,7 +92,7 @@ public class OrderService {
      * @param articleId The unique identifier of the article
      * @param quantity The quantity to add
      */
-    public void addArticle(int clientId, int quantity, int articleId) throws NotFoundException, BusinessException {
+    public void addArticle(int clientId, double quantity, int articleId) throws NotFoundException, BusinessException {
         verifyIfClientExists(clientId);
         verifyIfArticleExists(articleId);
 
@@ -123,7 +123,7 @@ public class OrderService {
      * @param articleId The unique identifier of the article
      * @param quantity The quantity to add
      */
-    public void removeArticle(int clientId, int quantity, int articleId) throws NotFoundException, BusinessException {
+    public void removeArticle(int clientId, double quantity, int articleId) throws NotFoundException, BusinessException {
         verifyIfClientExists(clientId);
         verifyIfArticleExists(articleId);
 
@@ -156,7 +156,7 @@ public class OrderService {
      * @param articleId The unique identifier of the article
      * @param quantity The quantity to add
      */
-    public void modify(int clientId, int quantity, int articleId) throws NotFoundException, BusinessException {
+    public void modify(int clientId, double quantity, int articleId) throws NotFoundException, BusinessException {
         verifyIfClientExists(clientId);
         verifyIfArticleExists(articleId);
 

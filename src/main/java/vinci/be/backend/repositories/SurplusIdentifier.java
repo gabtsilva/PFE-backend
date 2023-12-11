@@ -3,18 +3,18 @@ package vinci.be.backend.repositories;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class OrderLineIdentifier implements Serializable {
+public class SurplusIdentifier implements Serializable {
 
+    private int tourId;
     private int articleId;
-    private int orderId;
 
 
-    public OrderLineIdentifier() {
+    public SurplusIdentifier() {
     }
 
-    public OrderLineIdentifier(int articleId, int orderId) {
+    public SurplusIdentifier(int articleId, int tourId) {
         this.articleId = articleId;
-        this.orderId = orderId;
+        this.tourId = tourId;
     }
 
     // Getters, setters
@@ -28,11 +28,11 @@ public class OrderLineIdentifier implements Serializable {
     }
 
     public int getOrderId() {
-        return orderId;
+        return tourId;
     }
 
     public void setOrderId(int orderId) {
-        this.orderId = orderId;
+        this.tourId = orderId;
     }
 
 
@@ -40,12 +40,12 @@ public class OrderLineIdentifier implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderLineIdentifier that = (OrderLineIdentifier) o;
-        return articleId == that.articleId && orderId == that.orderId;
+        SurplusIdentifier that = (SurplusIdentifier) o;
+        return articleId == that.articleId && tourId == that.tourId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(articleId, orderId);
+        return Objects.hash(articleId, tourId);
     }
 }

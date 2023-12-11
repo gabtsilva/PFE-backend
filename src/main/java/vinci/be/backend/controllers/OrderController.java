@@ -79,7 +79,7 @@ public class OrderController {
 
 
     @PostMapping("/order/{clientId}/addArticle/{articleId}/{quantity}")
-    public ResponseEntity<Void> addArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
+    public ResponseEntity<Void> addArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable double quantity ) {
         if (quantity <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             orderService.addArticle(clientId, quantity, articleId);
@@ -96,7 +96,7 @@ public class OrderController {
 
 
     @PostMapping("/order/{clientId}/removeArticle/{articleId}/{quantity}")
-    public ResponseEntity<Void> removeArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
+    public ResponseEntity<Void> removeArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable double quantity ) {
         try {
             orderService.removeArticle(clientId, quantity, articleId);
         }catch (BusinessException businessException) {
@@ -113,7 +113,7 @@ public class OrderController {
 
     /*Correspond à une modification ponctuelle */
     @PostMapping("/order/{clientId}/modify/{articleId}/{quantity}")
-    public ResponseEntity<Void> updateOne(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
+    public ResponseEntity<Void> updateOne(@PathVariable int clientId, @PathVariable int articleId, @PathVariable double quantity ) {
         try {
             orderService.modify(clientId, quantity, articleId);
         }catch (BusinessException businessException) {

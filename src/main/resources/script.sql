@@ -2,69 +2,61 @@ DROP SCHEMA IF EXISTS snappies CASCADE;
 CREATE SCHEMA snappies;
 
 CREATE TABLE snappies.users(
-    email VARCHAR(50) PRIMARY KEY CHECK (email<>''),
-    firstname VARCHAR(50) NOT NULL CHECK (firstname<>''),
-    lastname VARCHAR(50) NOT NULL CHECK (lastname<>''),
-    phone_number VARCHAR(15) NOT NULL CHECK (users.phone_number<>''),
-    password VARCHAR(200) NOT NULL CHECK (password<>''),
-    is_admin BOOLEAN NOT NULL DEFAULT false
-);
-
-
-
-CREATE TABLE snappies.credentials(
-                                     mail VARCHAR(50) PRIMARY KEY CHECK (mail<>''),
-                                     password VARCHAR(200) NOT NULL CHECK (password<>'')
+                               email VARCHAR(50) PRIMARY KEY CHECK (email<>''),
+                               firstname VARCHAR(50) NOT NULL CHECK (firstname<>''),
+                               lastname VARCHAR(50) NOT NULL CHECK (lastname<>''),
+                               phone_number VARCHAR(15) NOT NULL CHECK (users.phone_number<>''),
+                               password VARCHAR(200) NOT NULL CHECK (password<>''),
+                               is_admin BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE snappies.tours(
-    tour_id SERIAL PRIMARY KEY,
-    tour_name varchar(50) NOT NULL CHECK (tour_name<>'')
+                               tour_id SERIAL PRIMARY KEY,
+                               tour_name varchar(50) NOT NULL CHECK (tour_name<>'')
 );
 
 CREATE TABLE snappies.clients(
-    client_id SERIAL PRIMARY KEY,
-    client_address varchar(200) NOT NULL CHECK (client_address <> ''),
-    client_name varchar(50) NOT NULL CHECK (client_name <>''),
-    phone_number varchar(15) NOT NULL CHECK (phone_number <>''),
-    children_quantity integer NOT NULL CHECK(children_quantity > 0),
-    tour integer NOT NULL REFERENCES snappies.tours (tour_id)
+                                 client_id SERIAL PRIMARY KEY,
+                                 client_address varchar(200) NOT NULL CHECK (client_address <> ''),
+                                 client_name varchar(50) NOT NULL CHECK (client_name <>''),
+                                 phone_number varchar(15) NOT NULL CHECK (phone_number <>''),
+                                 children_quantity integer NOT NULL CHECK(children_quantity > 0),
+                                 tour integer NOT NULL REFERENCES snappies.tours (tour_id)
 );
 
 CREATE TABLE snappies.vehicles(
-    vehicle_id SERIAL PRIMARY KEY,
-    vehicle_name varchar(100) CHECK ( vehicle_name <> '' ),
-    plate varchar(15) CHECK ( plate <> '' ),
-    max_quantity float NOT NULL CHECK (max_quantity > 0)
+                                  vehicle_id SERIAL PRIMARY KEY,
+                                  vehicle_name varchar(100) CHECK ( vehicle_name <> '' ),
+                                  plate varchar(15) CHECK ( plate <> '' ),
+                                  max_quantity float NOT NULL CHECK (max_quantity > 0)
 );
 
 CREATE TABLE snappies.tours_executions(
-    tour_execution_id SERIAL PRIMARY KEY,
-    execution_date date NOT NULL,
-    state varchar(20) NOT NULL  CHECK ( state in ('prévue', 'commencée', 'finie') ),
-    delivery_person varchar(50) NOT NULL REFERENCES snappies.users(email),
-    vehicle_id integer NOT NULL REFERENCES snappies.vehicles(vehicle_id),
-    tour_id integer NOT NULL REFERENCES snappies.tours(tour_id)
+                                          tour_execution_id SERIAL PRIMARY KEY,
+                                          execution_date date NOT NULL,
+                                          state varchar(20) NOT NULL  CHECK ( state in ('prévue', 'commencée', 'finie') ),
+                                          delivery_person varchar(50) NOT NULL REFERENCES snappies.users(email),
+                                          vehicle_id integer NOT NULL REFERENCES snappies.vehicles(vehicle_id),
+                                          tour_id integer NOT NULL REFERENCES snappies.tours(tour_id)
 );
 
 CREATE TABLE snappies.orders(
-    order_id SERIAL PRIMARY KEY,
-    client_id integer NOT NULL REFERENCES snappies.clients (client_id)
+                                order_id SERIAL PRIMARY KEY,
+                                client_id integer NOT NULL REFERENCES snappies.clients (client_id)
 );
 
 CREATE TABLE snappies.articles(
-    article_id serial PRIMARY KEY,
-    article_name varchar(100) NOT NULL CHECK (article_name <> '')
+                                  article_id serial PRIMARY KEY,
+                                  article_name varchar(100) NOT NULL CHECK (article_name <> '')
 );
 
-
 CREATE TABLE snappies.orders_lines(
-                                      order_id integer NOT NULL REFERENCES snappies.orders(order_id),
-                                      article_id integer NOT NULL REFERENCES snappies.articles(article_id),
-                                      planned_quantity integer NOT NULL CHECK (planned_quantity >= 0),
-                                      delivered_quantity integer NOT NULL CHECK (delivered_quantity >= 0) DEFAULT 0,
-                                      changed_quantity integer NOT NULL DEFAULT 0,
-                                      PRIMARY KEY (order_id, article_id)
+    order_id integer NOT NULL REFERENCES snappies.orders(order_id),
+    article_id integer NOT NULL REFERENCES snappies.articles(article_id),
+    planned_quantity float NOT NULL CHECK (planned_quantity >= 0),
+    delivered_quantity float NOT NULL CHECK (delivered_quantity >= 0) DEFAULT 0,
+    changed_quantity float NOT NULL DEFAULT 0,
+    PRIMARY KEY (order_id, article_id)
 );
 
 CREATE TABLE snappies.surplus(
@@ -72,10 +64,7 @@ CREATE TABLE snappies.surplus(
                                  tour_execution_id integer NOT NULL REFERENCES snappies.tours_executions(tour_execution_id),
                                  percentage integer NOT NULL CHECK (percentage >=0),
                                  PRIMARY KEY (article_id, tour_execution_id)
-
-
 );
-
 
 CREATE TABLE snappies.clients_orders(
                                         client_order_id SERIAL PRIMARY KEY,
@@ -84,14 +73,12 @@ CREATE TABLE snappies.clients_orders(
                                         client_id integer NOT NULL REFERENCES snappies.clients(client_id)
 );
 
-
 --Script test--
 -- Insertion des utilisateurs
-INSERT INTO snappies.users(mail, firstname, lastname, phone_number, is_admin)
+INSERT INTO snappies.users(email, firstname, lastname, phone_number, password, is_admin)
 VALUES
-    ('admin@example.com', 'Admin',  'User', '123456789', true),
-    ('user1@example.com', 'User',  'One', '987655321', false),
-    ('user2@example.com', 'User',  'two', '987654321', false);
+    ('admin@example.com', 'Admin',  'User', '123456789', '$2a$10$iXDbSUmi5x1T84NgO6r0FuEPiDWLBhMFnbTmK5E4x5VtZecm1m6um', true),
+    ('user1@example.com', 'User',  'One', '987654321', '$2a$10$EzyRNcYwzu5DXUGoXnm.9u0IxS1TyZnR09wEosKM99ZZ7GWBemZ0S',false);
 
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES
