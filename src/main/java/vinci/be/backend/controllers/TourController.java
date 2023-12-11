@@ -5,6 +5,7 @@ import org.aspectj.weaver.ast.Not;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.GeneralClientOrder;
 import vinci.be.backend.models.Tour;
@@ -112,6 +113,9 @@ public class TourController {
         }catch (NotFoundException nfe) {
             System.err.println(nfe.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch(ConflictException cfe) {
+            System.err.println(cfe.getMessage());
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(generalClientsOrders, HttpStatus.OK);
     }

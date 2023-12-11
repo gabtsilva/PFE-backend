@@ -3,6 +3,7 @@ package vinci.be.backend.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.GeneralClientOrder;
 import vinci.be.backend.models.Tour;
@@ -77,8 +78,11 @@ public class TourService {
      * @param tourId the id of the tour
      * @param generalClientsOrders the order
      */
-    public void createOrder(int  tourId, List<GeneralClientOrder> generalClientsOrders) throws NotFoundException {
+    public void createOrder(int  tourId, List<GeneralClientOrder> generalClientsOrders) throws NotFoundException, ConflictException {
         if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tour does not exists");
+
+        /*La ligne ci-dessous crée des bugs  */
+//        if (generalClientOrderRepository.existsByTourId(tourId))throw new ConflictException("An order already exists");
         for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
             if (!clientRepository.existsById(generalClientOrder.getClientId())) throw new NotFoundException("Client does not exists");
         }
