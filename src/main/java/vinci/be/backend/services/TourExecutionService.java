@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.AllArticlesTourExecution;
+import vinci.be.backend.models.ArticlesCommande;
 import vinci.be.backend.models.Client;
+import vinci.be.backend.models.OrderLine;
 import vinci.be.backend.models.Surplus;
 import vinci.be.backend.models.TourExecution;
 import vinci.be.backend.models.User;
@@ -24,16 +26,18 @@ public class TourExecutionService {
   private final SurplusRepository surplusRepository;
 
   private final VehicleRepository vehicleRepository;
+  private final ClientRepository clientRepository;
 
   public TourExecutionService(TourExecutionRepository tourExecutionRepository,
       TourRepository tourRepository, UserRepository userRepository,
-      VehicleRepository vehicleRepository, ArticleRepository articleRepository, SurplusRepository surplusRepository) {
+      VehicleRepository vehicleRepository, ArticleRepository articleRepository, SurplusRepository surplusRepository, ClientRepository clientRepository) {
     this.tourExecutionRepository = tourExecutionRepository;
     this.tourRepository = tourRepository;
     this.userRepository = userRepository;
     this.vehicleRepository = vehicleRepository;
     this.articleRepository = articleRepository;
     this.surplusRepository = surplusRepository;
+    this.clientRepository = clientRepository;
   }
 
   public void createOneExecution(int tourId, TourExecution tourExecution)
@@ -148,4 +152,32 @@ public class TourExecutionService {
     }
     return results;
   }
+
+
+  public List<ArticlesCommande> getAllArticlesByClients(int tourExecutionId, int idClient)
+      throws NotFoundException {
+    TourExecution tourExecution = tourExecutionRepository.getReferenceById(tourExecutionId);
+    Client client= clientRepository.getReferenceById(idClient);
+    if (tourExecution == null){
+      throw new NotFoundException("tour not found");
+    }
+    if (client == null){
+      throw new NotFoundException("client not found");
+    }
+    List<ArticlesCommande> results = new ArrayList<>();
+    for (Object[] row : tourExecutionRepository.getAllArticlesByClients(tourExecutionId, idClient)) {
+      ArticlesCommande orderLine = new ArticlesCommande();
+      orderLine.setArticleId((int) row[0]);
+      orderLine.setArticleName((String) row[1]);
+      orderLine.setPlannedQuantity((double) row[2]);
+      orderLine.setDeliveredQuantity((double) row[3]);
+      orderLine.setChangedQuantity((double) row[4]);
+      results.add(orderLine);
+
+    }
+    return results;
+  }
+
+
+
 }
