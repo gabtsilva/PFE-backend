@@ -5,15 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vinci.be.backend.exceptions.BusinessException;
-import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.TourExecution;
 import vinci.be.backend.models.TourState;
+import vinci.be.backend.models.User;
+import vinci.be.backend.models.Vehicle;
 import vinci.be.backend.services.TourExecutionService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -68,9 +67,6 @@ public class TourExecutionController {
     }
     try {
       tourExecutionService.createOneExecution(tourId, tourExecution);
-    } catch (ConflictException conflitException) {
-      System.err.println(conflitException.getMessage());
-      return new ResponseEntity<>(HttpStatus.CONFLICT);
     } catch (NotFoundException notFoundException) {
       System.err.println(notFoundException.getMessage());
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -79,4 +75,29 @@ public class TourExecutionController {
     return new ResponseEntity<>(HttpStatus.CREATED);
 
   }
+
+  @PatchMapping("/tour/{tourId}/tourExecution/deliveryPerson")
+  public ResponseEntity<Void> updateDeliveryPerson(@PathVariable int tourId, @RequestBody User deliveryPerson){
+
+    try {
+      tourExecutionService.updatedeliveryPersonExecution(tourId, deliveryPerson.getEmail());
+    } catch (NotFoundException notFoundException) {
+      System.err.println(notFoundException.getMessage());
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PatchMapping("/tour/{tourId}/tourExecution/van")
+  public ResponseEntity<Void> updateVan(@PathVariable int tourId, @RequestBody Vehicle van){
+    try {
+      tourExecutionService.updateVanExecution(tourId, van.getId());
+    } catch (NotFoundException notFoundException) {
+      System.err.println(notFoundException.getMessage());
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
+
+  }
+
 }
