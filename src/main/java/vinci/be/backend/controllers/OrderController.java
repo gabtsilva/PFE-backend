@@ -1,5 +1,6 @@
 package vinci.be.backend.controllers;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -62,9 +63,10 @@ public class OrderController {
 
 
     @PostMapping("/order/{clientId}")
-    public ResponseEntity<Void> createOne(@PathVariable int clientId) {
+    public ResponseEntity<Order> createOne(@PathVariable int clientId) {
+        Order order;
         try{
-            orderService.createOne(clientId);
+            order = orderService.createOne(clientId);
         }catch (NotFoundException nfe) {
             nfe.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -74,7 +76,7 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
 

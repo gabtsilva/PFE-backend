@@ -43,7 +43,7 @@ public class ClientController {
     }
 
     @PostMapping("/client")
-    public ResponseEntity<Void> createOne(@RequestBody Client client) {
+    public ResponseEntity<Client> createOne(@RequestBody Client client) {
         System.out.println(client.invalid());
         if (client.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
@@ -57,7 +57,7 @@ public class ClientController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(client, HttpStatus.CREATED);
     }
 
 

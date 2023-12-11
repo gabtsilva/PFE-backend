@@ -47,6 +47,7 @@ public class TourController {
         Tour newTour  = tourService.createOne(tour);
         if (newTour != null) {
             return new ResponseEntity<>(newTour, HttpStatus.CREATED);
+
         }
         return new ResponseEntity<>(HttpStatus.CONFLICT);
 

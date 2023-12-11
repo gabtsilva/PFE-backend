@@ -59,7 +59,7 @@ public class TourExecutionController {
   }
 
   @PostMapping("/tour/{tourId}/tourExecution")
-  public ResponseEntity<Void> createOne(@PathVariable int tourId, @RequestBody TourExecution tourExecution) {
+  public ResponseEntity<TourExecution> createOne(@PathVariable int tourId, @RequestBody TourExecution tourExecution) {
     //tourExecution.setExecutionDate(tourExecution.getExecutionDate());
     tourExecution.invalid();
     if (tourExecution.invalid()) {
@@ -72,7 +72,7 @@ public class TourExecutionController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return new ResponseEntity<>(tourExecution, HttpStatus.CREATED);
 
   }
 
