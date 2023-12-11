@@ -21,6 +21,6 @@ public class Tour {
     @Column(name="tour_name", nullable=false)
     private String name;
 
-    public boolean invalid(){ return name == null || name.isBlank() || name.isEmpty();}
+    public boolean invalid(){ return name == null || name.isBlank() || name.isEmpty() ;}
 
 }

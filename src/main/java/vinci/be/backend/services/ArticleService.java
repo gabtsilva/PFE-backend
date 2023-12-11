@@ -27,8 +27,8 @@ public class ArticleService {
     /**
      * Retrieves a specific article from the repository based on the provided article ID.
      *
-     * @param articleId The unique identifier of the articleId to be retrieved.
-     * @return The Article object corresponding to the provided articleId ID, or null if not found.
+     * @param articleId The unique identifier of the article to be retrieved.
+     * @return The Article object corresponding to the provided article ID, or null if not found.
      */
     public Article readOne(int articleId) {
         return articleRepository.findById(articleId).orElse(null);

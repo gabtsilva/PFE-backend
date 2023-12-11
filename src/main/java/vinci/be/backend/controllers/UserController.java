@@ -32,11 +32,20 @@ public class UserController {
 
     @GetMapping("/user/{userMail}")
     public ResponseEntity<User> readOne(@PathVariable String userMail) {
+        if (userMail == null || userMail.isBlank() || userMail.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         User user = userService.readOne(userMail);
         if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    }
+
+
+    @GetMapping("/user/delivery")
+    public ResponseEntity<List<User>> readAllDeliveryMen() {
+        ArrayList<User> deliveryMen = (ArrayList<User>) userService.getDeliveryMen();
+        return new ResponseEntity<>(deliveryMen, HttpStatus.OK);
 
     }
 

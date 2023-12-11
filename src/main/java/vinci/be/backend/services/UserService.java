@@ -10,6 +10,7 @@ import vinci.be.backend.models.UserWithPassword;
 import vinci.be.backend.repositories.UserRepository;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,6 +41,22 @@ public class UserService {
      */
     public User readOne(String userMail) {
         return userRepository.findById(userMail).orElse(null);
+    }
+
+    /**
+     * Reads all delivery men in repository
+     *
+     * @return all users
+     */
+    public List<User> getDeliveryMen() {
+        List<User> users = userRepository.findAll();
+        List<User> deliveryMen = new ArrayList<>();
+
+        for (User u: users) {
+            if (u.isDeliveryMan()) deliveryMen.add(u);
+        }
+
+        return deliveryMen;
     }
 
 

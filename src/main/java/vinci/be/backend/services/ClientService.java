@@ -1,10 +1,12 @@
 package vinci.be.backend.services;
 
 
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import vinci.be.backend.exceptions.ConflictException;
+import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.Client;
 import vinci.be.backend.repositories.ClientRepository;
+import vinci.be.backend.repositories.TourRepository;
 
 import java.util.List;
 
@@ -12,8 +14,10 @@ import java.util.List;
 public class ClientService {
 
     private final ClientRepository clientRepository;
-    public ClientService(ClientRepository clientRepository) {
+    private final TourRepository tourRepository;
+    public ClientService(ClientRepository clientRepository, TourRepository tourRepository) {
         this.clientRepository = clientRepository;
+        this.tourRepository = tourRepository;
     }
 
     /**
@@ -43,10 +47,10 @@ public class ClientService {
      * @param client The client object to be created.
      * @return true if the client is successfully created, false if a client with the same ID already exists.
      */
-    public boolean createOne(Client client) {
-        if (clientRepository.existsById(client.getId())) return false;
+    public void createOne(Client client) throws NotFoundException, ConflictException {
+        if (!tourRepository.existsById(client.getTour())) throw new NotFoundException("La tournée du client n'existe pas");
+        if (clientRepository.existsById(client.getId())) throw new ConflictException("La client existe déjà");
         clientRepository.save(client);
-        return true;
     }
 
     /**
@@ -55,8 +59,9 @@ public class ClientService {
      * @param client The client object with updated information.
      * @return true if the client is successfully updated, false if the client with the provided ID does not exist.
      */
-    public boolean updateOne(Client client) {
-        if (!clientRepository.existsById(client.getId())) return false;
+    public boolean updateOne(Client client) throws NotFoundException, ConflictException {
+        if (!tourRepository.existsById(client.getTour())) throw new NotFoundException("La tournée du client n'existe pas");
+        if (!clientRepository.existsById(client.getId())) throw new NotFoundException("La client n'existe pas");
         clientRepository.save(client);
         return true;
     }

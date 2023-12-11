@@ -52,6 +52,23 @@ public class OrderService {
         return order;
     }
 
+
+    /**
+     * Retrieves all articles from an user order.
+     *
+     * @param clientId The unique identifier of the client .
+     * @return all articles.
+     */
+    public List<OrderLine> readAllArticleFromAnOrder(int clientId) throws NotFoundException {
+        verifyIfClientExists(clientId);
+
+        Order order = orderRepository.findByClientId(clientId);
+
+        if (order == null) throw new NotFoundException("Le client n'a pas encore de commande");
+
+        return orderLineRepository.findByOrderId(order.getId());
+    }
+
     /**
      * Creates a new order in the repository if the client does not already have an order.
      *
@@ -132,9 +149,33 @@ public class OrderService {
 
 
 
+    /**
+     * modify temporaly an article to an order. Once the tour is over, this quantity must be deleted /*TODO
+     *
+     * @param clientId The unique identifier of the client
+     * @param articleId The unique identifier of the article
+     * @param quantity The quantity to add
+     */
+    public void modify(int clientId, int quantity, int articleId) throws NotFoundException, BusinessException {
+        verifyIfClientExists(clientId);
+        verifyIfArticleExists(articleId);
+
+        Order order = orderRepository.findByClientId(clientId);
+        if (order == null) {
+            throw new NotFoundException("Le client n'a pas de commande à laquelle retirer des articles");
+        }
 
 
+        OrderLineIdentifier pk = new OrderLineIdentifier(articleId, order.getId());
+        OrderLine orderLine = orderLineRepository.findById(pk).orElse(null);
 
+        if(orderLine == null) {
+            throw new NotFoundException("Le client n'a pas cet article dans sa commande");
+        }else{
+            orderLine.setChangedQuantity(orderLine.getChangedQuantity() + quantity);
+            orderLineRepository.save(orderLine);
+        }
+    }
 
 
     /** Verify if the client exists in the repository

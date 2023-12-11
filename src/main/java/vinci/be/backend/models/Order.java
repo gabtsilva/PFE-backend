@@ -20,4 +20,8 @@ public class Order {
 
     @Column(name="client_id", nullable=false)
     private int clientId;
+
+    public boolean invalid() {
+         return clientId < 0;
+    }
 }

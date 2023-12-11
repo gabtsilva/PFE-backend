@@ -34,6 +34,8 @@ public class User {
     private boolean isAdmin;
 
 
+    public boolean isDeliveryMan() {return !isAdmin;}
+
     public boolean invalid() {
         return  email == null || email.isBlank() || email.isEmpty()
                 || firstname == null || firstname.isBlank() || firstname.isEmpty()
