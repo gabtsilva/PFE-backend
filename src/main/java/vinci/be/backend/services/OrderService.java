@@ -1,6 +1,9 @@
 package vinci.be.backend.services;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.Order;
@@ -101,18 +104,34 @@ public class OrderService {
             throw new NotFoundException("Le client n'a pas de commande à laquelle ajouter des articles");
         }
 
-
         OrderLineIdentifier pk = new OrderLineIdentifier(articleId, order.getId());
         OrderLine orderLine = orderLineRepository.findById(pk).orElse(null);
 
         //il existe déjà une ligne de commande pour cet article
         if(orderLine != null) {
+            if(quantity < 0 && quantity > orderLine.getPlannedQuantity()){
+                throw new BusinessException("Vous tentez de soustraire une quantité trop grande");
+            }
             orderLine.setPlannedQuantity(orderLine.getPlannedQuantity() + quantity);
             orderLineRepository.save(orderLine);
         }else{
             orderLine = new OrderLine(quantity, 0,0 ,articleId, clientId);
             orderLineRepository.save(orderLine);
         }
+    }
+
+    /**
+     * completely removes the article from a client's order
+     *
+     * @param orderId The unique identifier of the client
+     * @param articleId The unique identifier of the article
+     */
+    public OrderLine deleteOne(int orderId, int articleId) {
+        OrderLineIdentifier test = new OrderLineIdentifier(articleId,orderId);
+        OrderLine output = orderLineRepository.findById(test).orElse(null);
+        if(output == null) return null;
+        orderLineRepository.delete(output);
+        return output;
     }
 
 
@@ -131,7 +150,6 @@ public class OrderService {
         if (order == null) {
             throw new NotFoundException("Le client n'a pas de commande à laquelle retirer des articles");
         }
-
 
         OrderLineIdentifier pk = new OrderLineIdentifier(articleId, order.getId());
         OrderLine orderLine = orderLineRepository.findById(pk).orElse(null);

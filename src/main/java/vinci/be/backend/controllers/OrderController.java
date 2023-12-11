@@ -3,6 +3,7 @@ package vinci.be.backend.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,6 @@ public class OrderController {
 
     }
 
-
     @GetMapping("/order/{clientId}")
     public ResponseEntity<Order> readOne(@PathVariable int clientId) {
         if (clientId<=0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -44,6 +44,14 @@ public class OrderController {
 
         }
         return new ResponseEntity<>(order, HttpStatus.FOUND);
+    }
+
+    @DeleteMapping("/order/remove/{order_id}/{articleId}")
+    public ResponseEntity<OrderLine> deleteOne(@PathVariable int articleId, @PathVariable int order_id) {
+        if (articleId<=0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        OrderLine output = orderService.deleteOne(order_id, articleId);
+        if(output == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(output, HttpStatus.OK);
     }
 
     @GetMapping("/order/{clientId}/article")
@@ -80,7 +88,7 @@ public class OrderController {
 
     @PostMapping("/order/{clientId}/addArticle/{articleId}/{quantity}")
     public ResponseEntity<Void> addArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable double quantity ) {
-        if (quantity <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        // if (quantity <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             orderService.addArticle(clientId, quantity, articleId);
         }catch (BusinessException businessException) {
