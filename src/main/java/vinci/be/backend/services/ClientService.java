@@ -65,4 +65,13 @@ public class ClientService {
         clientRepository.save(client);
         return true;
     }
+
+    /**
+     * Reads all clients by specifiq tour in repository
+     *
+     * @return all clients by specifiq tour
+     */
+    public List<Client> readAllByTour(int indexTour) {
+        return clientRepository.findAllByIdTour(indexTour);
+    }
 }
