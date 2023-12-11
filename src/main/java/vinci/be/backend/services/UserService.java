@@ -59,13 +59,13 @@ public class UserService {
         return deliveryMen;
     }
 
-
+/*
     /**
      * Creates a new user in the repository if the provided user mail does not already exist.
      *
      * @param userWithPassword The user object to be created.
      * @return true if the user is successfully created, false if a user with the same mail already exists.
-     */
+
     public boolean createOne(UserWithPassword userWithPassword) {
         if (userRepository.existsById(userWithPassword.getUser().getEmail())) return false;
         UnsafeCredentials unsafeCredentials = new UnsafeCredentials(userWithPassword.getUser().getEmail(), userWithPassword.getPassword(), false);
@@ -73,6 +73,8 @@ public class UserService {
         userRepository.save(userWithPassword.getUser());
         return true;
     }
+
+ */
 
     /**
      * Updates an existing user in the repository if the provided user mail already exists.
