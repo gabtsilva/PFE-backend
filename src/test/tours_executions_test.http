@@ -65,4 +65,5 @@ Content-Type: application/json
   "percentage": 10
 }
 
-
+### get all articlss for tourExex
+GET http://localhost:8080//tour/1/tourExecution/allArticles
