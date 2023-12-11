@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.AllArticlesTourExecution;
+import vinci.be.backend.models.Client;
 import vinci.be.backend.models.Surplus;
 import vinci.be.backend.models.TourExecution;
 import vinci.be.backend.models.User;
@@ -113,9 +114,6 @@ public class TourExecutionService {
     if (tourExecution == null){
       throw new NotFoundException("tour not found");
     }
-    System.out.println("avat requete : " + tourExecution);
-    //List<Object[]> articleList = tourExecutionRepository.getAllArticles(tourExecutionId);
-
     List<AllArticlesTourExecution> results = new ArrayList<>();
     for (Object[] row : tourExecutionRepository.getAllArticles(tourExecutionId)) {
       AllArticlesTourExecution article = new AllArticlesTourExecution();
@@ -125,9 +123,29 @@ public class TourExecutionService {
       article.setTotal_with_surplus((Double) row[3]);
       results.add(article);
     }
+    return results;
+  }
 
+  public List<Client> getAllClients(int tourExecutionId)
+      throws NotFoundException {
+    TourExecution tourExecution = tourExecutionRepository.getReferenceById(tourExecutionId);
+    if (tourExecution == null){
+      throw new NotFoundException("tour not found");
+    }
+    List<Client> results = new ArrayList<>();
+    for (Object[] row : tourExecutionRepository.getAllClients(tourExecutionId)) {
+      System.out.println("---");
+      Client client = new Client();
+      client.setId((Integer) row[0]);
+      client.setAddress((String) row[1]);
+      client.setName((String) row[2]);
+      client.setAddress((String) row[3]);
+      client.setPhoneNumber((String) row[3]);
+      client.setChildrenQuantity((int) row[4]);
+      client.setTour((int) row[5]);
+      results.add(client);
 
-    System.out.println("apres requete : " + results);
+    }
     return results;
   }
 }

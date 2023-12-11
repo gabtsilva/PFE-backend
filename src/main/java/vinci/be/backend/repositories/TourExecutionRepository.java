@@ -4,8 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import vinci.be.backend.models.AllArticlesTourExecution;
-import vinci.be.backend.models.Article;
+import vinci.be.backend.models.Client;
 import vinci.be.backend.models.TourExecution;
 
 import java.time.LocalDate;
@@ -31,5 +30,9 @@ public interface TourExecutionRepository extends JpaRepository<TourExecution, In
       "GROUP BY art.article_id, art.article_name",
       nativeQuery = true)
   List<Object[]> getAllArticles(@Param("idExecutionTournee") int idExecutionTournee);
+
+
+  @Query(value = "SELECT c.client_id, c.client_address, c.client_name, c.phone_number, c.children_quantity, c.tour FROM snappies.clients c WHERE c.tour IN (SELECT tour_id FROM snappies.tours_executions WHERE tour_execution_id = :idExecutionTournee)", nativeQuery = true)
+  List<Object[]> getAllClients(@Param("idExecutionTournee") int idExecutionTournee);
 
 }
