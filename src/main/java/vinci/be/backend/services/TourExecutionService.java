@@ -1,5 +1,6 @@
 package vinci.be.backend.services;
 
+import java.util.random.RandomGenerator.ArbitrarilyJumpableGenerator;
 import org.springframework.stereotype.Service;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.ConflictException;
@@ -87,10 +88,12 @@ public class TourExecutionService {
     String actualSate = tourExecution.getState();
     if (actualSate.equals("prevue") && state.equals("commencee")){
       tourExecution.setState(state);
+      tourExecutionRepository.save(tourExecution);
+
     }else if (actualSate.equals("commencee") && state.equals("finie")){
       tourExecution.setState(state);
+      tourExecutionRepository.save(tourExecution);
     }
-
-
+    throw new IllegalArgumentException("not in good state");
   }
 }
