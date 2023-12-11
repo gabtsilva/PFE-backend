@@ -94,26 +94,26 @@ public class TourController {
 
 
 
-    @PutMapping("/tour/{tourId}/modifyTourOrder")
-    public ResponseEntity<List<GeneralClientOrder>> modifyTourOrder(@PathVariable int tourId, @RequestBody List<GeneralClientOrder> generalClientsOrders) {
-        Set<Integer> uniqueOrders = new HashSet<>();
-        for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
-            if (generalClientOrder.invalid() || tourId != generalClientOrder.getTourId()) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            //ce numéro d'ordre est déjà présent dans la liste
-            if (!uniqueOrders.add(generalClientOrder.getOrder())) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        }
-
-        try {
-            tourService.modifyTourOrder(tourId, generalClientsOrders);
-        }catch (NotFoundException nfe) {
-            System.err.println(nfe.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(generalClientsOrders, HttpStatus.OK);
-    }
+//    @PutMapping("/tour/{tourId}/modifyTourOrder")
+//    public ResponseEntity<List<GeneralClientOrder>> modifyTourOrder(@PathVariable int tourId, @RequestBody List<GeneralClientOrder> generalClientsOrders) {
+//        Set<Integer> uniqueOrders = new HashSet<>();
+//        for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
+//            if (generalClientOrder.invalid() || tourId != generalClientOrder.getTourId()) {
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            }
+//            //ce numéro d'ordre est déjà présent dans la liste
+//            if (!uniqueOrders.add(generalClientOrder.getOrder())) {
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            }
+//        }
+//
+//        try {
+//            tourService.modifyTourOrder(tourId, generalClientsOrders);
+//        }catch (NotFoundException nfe) {
+//            System.err.println(nfe.getMessage());
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(generalClientsOrders, HttpStatus.OK);
+//    }
 
 }
