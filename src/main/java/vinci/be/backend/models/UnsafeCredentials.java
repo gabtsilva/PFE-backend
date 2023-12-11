@@ -15,15 +15,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UnsafeCredentials {
-    private String mail;
+    private String email;
     private String password;
+    private boolean is_admin;
 
+    /*
     public SafeCredentials makeSafe(String hashedPassword) {
-        return new SafeCredentials(mail, hashedPassword);
+        return new SafeCredentials(email, hashedPassword, false);
     }
 
+     */
+
     public boolean invalid() {
-        return mail == null || mail.isBlank() ||  mail.isEmpty() ||
+        return email == null || email.isBlank() ||  email.isEmpty() ||
                 password == null || password.isBlank() || password.isEmpty();
     }
 }

@@ -5,11 +5,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.stereotype.Service;
-import vinci.be.backend.models.AuthenticationProperties;
-import vinci.be.backend.models.SafeCredentials;
+import org.springframework.stereotype.Service;;
 import vinci.be.backend.models.UnsafeCredentials;
-import vinci.be.backend.repositories.AuthenticationRepository;
+import vinci.be.backend.models.User;
+import vinci.be.backend.repositories.UserRepository;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,10 +16,10 @@ import java.util.Properties;
 
 @Service
 public class AuthenticationService {
-    private final AuthenticationRepository repository;
+    private final UserRepository userRepository;
     private final Algorithm algorithm;
     private final JWTVerifier verifier;
-    public AuthenticationService(AuthenticationRepository repository) {
+    public AuthenticationService(UserRepository userRepository) {
         Properties propertiesFile = new Properties();
         String secret = null;
         try (FileInputStream fileInputStream = new FileInputStream("dev.properties")) {
@@ -29,8 +28,7 @@ public class AuthenticationService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        this.repository = repository;
+        this.userRepository = userRepository;
         this.algorithm = Algorithm.HMAC512(secret);
         this.verifier = JWT.require(this.algorithm).withIssuer("auth0").build();
     }
@@ -41,9 +39,9 @@ public class AuthenticationService {
      * @return The JWT token, or null if the user couldn't be connected
      */
     public String connect(UnsafeCredentials unsafeCredentials) {
-        SafeCredentials credentials = repository.findById(unsafeCredentials.getMail()).orElse(null);
-        if(credentials == null || (!BCrypt.checkpw(unsafeCredentials.getPassword(), credentials.getHashedPassword()))) return null;
-        return JWT.create().withIssuer("auth0").withClaim("mail", unsafeCredentials.getMail()).sign(this.algorithm);
+        User user = userRepository.findById(unsafeCredentials.getEmail()).orElse(null);
+        if(user == null || (!BCrypt.checkpw(unsafeCredentials.getPassword(), user.getPassword()))) return null;
+        return JWT.create().withIssuer("auth0").withClaim("email", user.getEmail()).withClaim("is_admin",user.isAdmin()).sign(this.algorithm);
     }
 
 
@@ -54,9 +52,9 @@ public class AuthenticationService {
      */
     public String verify(String token) {
         try {
-            String mail = verifier.verify(token).getClaim("mail").asString();
-            if (!repository.existsById(mail)) return null;
-            return mail;
+            String email = verifier.verify(token).getClaim("email").asString();
+            if (!userRepository.existsById(email)) return null;
+            return email;
         } catch (JWTVerificationException e) {
             System.err.println("Erreur lors de la vérification du jeton : " + e.getMessage());
             e.printStackTrace();
@@ -64,17 +62,18 @@ public class AuthenticationService {
         }
     }
 
-
+/*
     /**
      * Creates credentials in repository
      * @param unsafeCredentials The credentials with insecure password
      * @return True if the credentials were created, or false if they already exist
-     */
+
     public boolean createOne(UnsafeCredentials unsafeCredentials) {
-        if (repository.existsById(unsafeCredentials.getMail())) return false;
+        if (userRepository.existsById(unsafeCredentials.getEmail())) return false;
         String hashedPassword = BCrypt.hashpw(unsafeCredentials.getPassword(), BCrypt.gensalt());
-        repository.save(unsafeCredentials.makeSafe(hashedPassword));
+        //userRepository.save(unsafeCredentials.makeSafe(hashedPassword));
         return true;
     }
+*/
 
 }

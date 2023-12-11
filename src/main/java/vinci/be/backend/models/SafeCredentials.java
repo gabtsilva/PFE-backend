@@ -1,7 +1,6 @@
 package vinci.be.backend.models;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -10,12 +9,19 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "credentials")
 public class SafeCredentials {
+    public SafeCredentials(String mail, String hashedPassword){
+        this.mail = mail;
+        this.hashedPassword = hashedPassword;
+    }
+
     @Id
     @Column(name = "mail", nullable = false)
     private String mail;
 
     @Column(name = "password", nullable = false)
     private String hashedPassword;
+
+    @Column(name = "is_admin", nullable = false)
+    private boolean is_admin;
 }
