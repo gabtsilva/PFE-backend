@@ -1,6 +1,7 @@
 package vinci.be.backend.services;
 
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.GeneralClientOrder;
@@ -71,7 +72,7 @@ public class TourService {
 
 
     /**
-     * created the general delivery order for customers
+     * creates the general delivery order for customers
      *
      * @param tourId the id of the tour
      * @param generalClientsOrders the order
@@ -84,6 +85,37 @@ public class TourService {
 
         generalClientOrderRepository.saveAll(generalClientsOrders);
 
+    }
+
+
+    /**
+     * modify the general delivery order for customers
+     *
+     * @param tourId the id of the tour
+     * @param generalClientsOrders the order
+     */
+    @Transactional
+    public void modifyTourOrder(int  tourId, List<GeneralClientOrder> generalClientsOrders) throws NotFoundException {
+        if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tour does not exists");
+        for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
+            if (!clientRepository.existsById(generalClientOrder.getClientId())) throw new NotFoundException("Client does not exists");
+        }
+        generalClientOrderRepository.deleteAll(generalClientOrderRepository.findAllByTourId(tourId));
+        generalClientOrderRepository.saveAll(generalClientsOrders);
+
+    }
+
+
+    /**
+     * read tour order
+     *
+     * @param tourId the id of the tour
+     * @return  tour order
+     */
+    @Transactional
+    public List<GeneralClientOrder> readTourOrder(int tourId) throws NotFoundException {
+        if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tour does not exists");
+        return generalClientOrderRepository.findAllByTourId(tourId);
     }
 
 }

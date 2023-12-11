@@ -1,6 +1,7 @@
 package vinci.be.backend.controllers;
 
 
+import org.aspectj.weaver.ast.Not;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,15 +71,38 @@ public class TourController {
 
     }
 
+    @GetMapping("/tour/{tourId}/getTourOrder")
+    public ResponseEntity<List<GeneralClientOrder>> readTourOrder(@PathVariable int tourId) {
+        if (tourId <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        ArrayList<GeneralClientOrder> generalClientOrders;
+        try {
+            generalClientOrders = (ArrayList<GeneralClientOrder>) tourService.readTourOrder(tourId);
+        } catch (NotFoundException nfe) {
+            System.err.println(nfe.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(generalClientOrders, HttpStatus.OK);
+
+    }
+
+
     @PostMapping("/tour/{tourId}/createTourOrder")
     public ResponseEntity<List<GeneralClientOrder>> createTourOrder(@PathVariable int tourId, @RequestBody List<GeneralClientOrder> generalClientsOrders) {
         Set<Integer> uniqueOrders = new HashSet<>();
+        Set<Integer> uniqueTour = new HashSet<>();
+        uniqueTour.add(tourId);
         for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
             if (generalClientOrder.invalid() || tourId != generalClientOrder.getTourId()) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             //ce numéro d'ordre est déjà présent dans la liste
             if (!uniqueOrders.add(generalClientOrder.getOrder())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            //plus de un tourid dans l'ordre
+            if (uniqueTour.add(generalClientOrder.getTourId())) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
@@ -94,26 +118,33 @@ public class TourController {
 
 
 
-//    @PutMapping("/tour/{tourId}/modifyTourOrder")
-//    public ResponseEntity<List<GeneralClientOrder>> modifyTourOrder(@PathVariable int tourId, @RequestBody List<GeneralClientOrder> generalClientsOrders) {
-//        Set<Integer> uniqueOrders = new HashSet<>();
-//        for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
-//            if (generalClientOrder.invalid() || tourId != generalClientOrder.getTourId()) {
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            }
-//            //ce numéro d'ordre est déjà présent dans la liste
-//            if (!uniqueOrders.add(generalClientOrder.getOrder())) {
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            }
-//        }
-//
-//        try {
-//            tourService.modifyTourOrder(tourId, generalClientsOrders);
-//        }catch (NotFoundException nfe) {
-//            System.err.println(nfe.getMessage());
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(generalClientsOrders, HttpStatus.OK);
-//    }
+    @PutMapping("/tour/{tourId}/modifyTourOrder")
+    public ResponseEntity<List<GeneralClientOrder>> modifyTourOrder(@PathVariable int tourId, @RequestBody List<GeneralClientOrder> generalClientsOrders) {
+        Set<Integer> uniqueOrders = new HashSet<>();
+        Set<Integer> uniqueTour = new HashSet<>();
+        uniqueTour.add(tourId);
+        for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
+            if (generalClientOrder.invalid() || tourId != generalClientOrder.getTourId()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            //ce numéro d'ordre est déjà présent dans la liste
+            if (!uniqueOrders.add(generalClientOrder.getOrder())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            //plus de un tourid dans l'ordre
+            if (uniqueTour.add(generalClientOrder.getTourId())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        try {
+            tourService.modifyTourOrder(tourId, generalClientsOrders);
+        }catch (NotFoundException nfe) {
+            System.err.println(nfe.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(generalClientsOrders, HttpStatus.OK);
+    }
 
 }

@@ -40,3 +40,17 @@ Content-Type: application/json
   {"clientId": 1, "tourId": 2, "order": 2},
   {"clientId": 2, "tourId": 2, "order": 2}
 ]
+
+
+### Modify Tour Order
+PUT http://localhost:8080/tour/2/modifyTourOrder
+Content-Type: application/json
+
+[
+  {"clientId": 1, "tourId": 2, "order": 2},
+  {"clientId": 2, "tourId": 2, "order": 1}
+]
+
+
+### Read Tour Order
+GET http://localhost:8080/tour/2/getTourOrder
