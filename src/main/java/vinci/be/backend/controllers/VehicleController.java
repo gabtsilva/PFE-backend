@@ -45,9 +45,9 @@ public class VehicleController {
         if (vehicle.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean created  = vehicleService.createOne(vehicle);
         if (created) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(vehicle, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(vehicle, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
 
     }
 
