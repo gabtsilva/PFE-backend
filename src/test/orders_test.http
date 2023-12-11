@@ -34,24 +34,24 @@ Content-Type: application/json
 }
 
 ###Add an article to that order
-POST http://localhost:8080/order/3/addArticle/1/20
+POST http://localhost:8080/order/3/addArticle/1/1.5
 
 ###Add an article to that order
-POST http://localhost:8080/order/3/addArticle/2/70
+POST http://localhost:8080/order/3/addArticle/2/3.5
 
 ###Add more of the previous article from that order
-POST http://localhost:8080/order/3/addArticle/1/40
+POST http://localhost:8080/order/3/addArticle/1/3.5
 
 
 ###Remove the previous article from the order
-POST http://localhost:8080/order/3/removeArticle/1/60
+POST http://localhost:8080/order/3/removeArticle/1/4.5
 
 ###Remove an article that the order does not contains
 POST http://localhost:8080/order/3/removeArticle/1/40
 
 
 ###Temporaly modify the quantity of an article
-POST http://localhost:8080/order/3/modify/1/-40
+POST http://localhost:8080/order/3/modify/1/-3.5
 
 ###Retrieves all articles from a client's order
 GET http://localhost:8080/order/3/article

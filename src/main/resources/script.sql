@@ -53,9 +53,9 @@ CREATE TABLE snappies.articles(
 CREATE TABLE snappies.orders_lines(
     order_id integer NOT NULL REFERENCES snappies.orders(order_id),
     article_id integer NOT NULL REFERENCES snappies.articles(article_id),
-    planned_quantity integer NOT NULL CHECK (planned_quantity >= 0),
-    delivered_quantity integer NOT NULL CHECK (delivered_quantity >= 0) DEFAULT 0,
-    changed_quantity integer NOT NULL DEFAULT 0,
+    planned_quantity float NOT NULL CHECK (planned_quantity >= 0),
+    delivered_quantity float NOT NULL CHECK (delivered_quantity >= 0) DEFAULT 0,
+    changed_quantity float NOT NULL DEFAULT 0,
     PRIMARY KEY (order_id, article_id)
 );
 
