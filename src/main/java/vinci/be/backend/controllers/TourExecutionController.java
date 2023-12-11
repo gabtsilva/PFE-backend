@@ -5,18 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vinci.be.backend.exceptions.BusinessException;
-import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.TourExecution;
 import vinci.be.backend.models.TourState;
 import vinci.be.backend.models.User;
 import vinci.be.backend.models.Vehicle;
 import vinci.be.backend.services.TourExecutionService;
-import org.json.JSONObject;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -104,5 +100,4 @@ public class TourExecutionController {
 
   }
 
-
-  }
+}
