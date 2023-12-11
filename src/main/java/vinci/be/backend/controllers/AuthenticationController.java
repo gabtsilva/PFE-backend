@@ -21,8 +21,10 @@ public class AuthenticationController {
     @CrossOrigin(origins = "*")
     @PostMapping("/auth/login")
     public ResponseEntity<Map<String, String>> connect(@RequestBody UnsafeCredentials credentials) {
+        System.out.println("tried to connect");
         if (credentials.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         String jwtToken =  service.connect(credentials);
+        System.out.println(jwtToken);
         if (jwtToken == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         Map<String, String> response = new HashMap<>();
@@ -39,39 +41,4 @@ public class AuthenticationController {
         if (pseudo == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(pseudo, HttpStatus.OK);
     }
-
-
-//    @PostMapping("/auth/{mail}")
-//    public ResponseEntity<Void> createOne(@PathVariable String mail, @RequestBody UnsafeCredentials credentials) {
-//        if (!Objects.equals(credentials.getMail(), mail)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        if (credentials.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//
-//        boolean created = service.createOne(credentials);
-//
-//        if (!created) return new ResponseEntity<>(HttpStatus.CONFLICT);
-//        else return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
-
-    /*
-    @PutMapping("/auth/{pseudo}")
-    public ResponseEntity<Void> updateOne(@PathVariable String pseudo, @RequestBody UnsafeCredentials credentials) {
-        if (!Objects.equals(credentials.getPseudo(), pseudo)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        if (credentials.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        boolean found = service.updateOne(credentials);
-
-        if (!found) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping("/auth/{pseudo}")
-    public ResponseEntity<Void> deleteCredentials(@PathVariable String pseudo) {
-        boolean found = service.deleteOne(pseudo);
-
-        if (!found) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else return new ResponseEntity<>(HttpStatus.OK);
-    }
-
- */
-
 }

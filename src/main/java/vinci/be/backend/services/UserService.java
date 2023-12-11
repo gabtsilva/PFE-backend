@@ -67,9 +67,8 @@ public class UserService {
      * @return true if the user is successfully created, false if a user with the same mail already exists.
      */
     public boolean createOne(UserWithPassword userWithPassword) {
-        if (userRepository.existsById(userWithPassword.getUser().getMail())) return false;
-        UnsafeCredentials unsafeCredentials = new UnsafeCredentials(userWithPassword.getUser().getMail(), userWithPassword.getPassword());
-
+        if (userRepository.existsById(userWithPassword.getUser().getEmail())) return false;
+        UnsafeCredentials unsafeCredentials = new UnsafeCredentials(userWithPassword.getUser().getEmail(), userWithPassword.getPassword(), false);
         authenticationService.createOne(unsafeCredentials);
         userRepository.save(userWithPassword.getUser());
         return true;
@@ -82,7 +81,7 @@ public class UserService {
      * @return true if the user is successfully updated, false if the user with the provided mail does not exist.
      */
     public boolean updateOne(User user) {
-        if (!userRepository.existsById(user.getMail())) return false;
+        if (!userRepository.existsById(user.getEmail())) return false;
         userRepository.save(user);
         return true;
     }
