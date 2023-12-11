@@ -45,3 +45,9 @@ Content-Type: application/json
   "plate": "ABC123",
   "maxQuantity": 10
 }
+
+###maj state d un tour execution ( commencee )
+POST http://localhost:8080/tour/2/tourExecution/begin
+
+###maj state d un tour execution ( finie )
+POST http://localhost:8080/tour/2/tourExecution/end

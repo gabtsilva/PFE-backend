@@ -76,11 +76,11 @@ public class TourExecutionController {
 
   }
 
-  @PatchMapping("/tour/{tourId}/tourExecution/deliveryPerson")
-  public ResponseEntity<Void> updateDeliveryPerson(@PathVariable int tourId, @RequestBody User deliveryPerson){
+  @PatchMapping("/tour/{tourExecutionId}/tourExecution/deliveryPerson")
+  public ResponseEntity<Void> updateDeliveryPerson(@PathVariable int tourExecutionId, @RequestBody User deliveryPerson){
 
     try {
-      tourExecutionService.updatedeliveryPersonExecution(tourId, deliveryPerson.getEmail());
+      tourExecutionService.updatedeliveryPersonExecution(tourExecutionId, deliveryPerson.getEmail());
     } catch (NotFoundException notFoundException) {
       System.err.println(notFoundException.getMessage());
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -88,16 +88,29 @@ public class TourExecutionController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @PatchMapping("/tour/{tourId}/tourExecution/van")
-  public ResponseEntity<Void> updateVan(@PathVariable int tourId, @RequestBody Vehicle van){
+  @PatchMapping("/tour/{tourExecutionId}/tourExecution/van")
+  public ResponseEntity<Void> updateVan(@PathVariable int tourExecutionId, @RequestBody Vehicle van){
     try {
-      tourExecutionService.updateVanExecution(tourId, van.getId());
+      tourExecutionService.updateVanExecution(tourExecutionId, van.getId());
     } catch (NotFoundException notFoundException) {
       System.err.println(notFoundException.getMessage());
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     return new ResponseEntity<>(HttpStatus.OK);
 
+  }
+
+
+  @PostMapping("/tour/{tourtourExecutionIdId}/tourExecution/begin")
+  public ResponseEntity<Void> beginTour(@PathVariable int tourExecutionId) throws NotFoundException {
+    tourExecutionService.updateState(tourExecutionId,"commencee");
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/tour/{tourExecutionId}/tourExecution/end")
+  public ResponseEntity<Void> endTour(@PathVariable int tourExecutionId) throws NotFoundException {
+    tourExecutionService.updateState(tourExecutionId, "finie");
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
 }

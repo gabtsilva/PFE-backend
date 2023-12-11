@@ -44,9 +44,10 @@ public class TourController {
     @PostMapping("/tour")
     public ResponseEntity<Tour> createOne(@RequestBody Tour tour) {
         if (tour.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        boolean created  = tourService.createOne(tour);
-        if (created) {
-            return new ResponseEntity<>(tour, HttpStatus.CREATED);
+        Tour newTour  = tourService.createOne(tour);
+        if (newTour != null) {
+            return new ResponseEntity<>(newTour, HttpStatus.CREATED);
+
         }
         return new ResponseEntity<>(HttpStatus.CONFLICT);
 
