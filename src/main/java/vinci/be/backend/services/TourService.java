@@ -2,7 +2,12 @@ package vinci.be.backend.services;
 
 
 import org.springframework.stereotype.Service;
+import vinci.be.backend.exceptions.NotFoundException;
+import vinci.be.backend.models.GeneralClientOrder;
 import vinci.be.backend.models.Tour;
+import vinci.be.backend.repositories.ClientRepository;
+import vinci.be.backend.repositories.GeneralClientOrderRepository;
+import vinci.be.backend.repositories.OrderRepository;
 import vinci.be.backend.repositories.TourRepository;
 
 import java.util.List;
@@ -10,9 +15,13 @@ import java.util.List;
 @Service
 public class TourService {
     private final TourRepository tourRepository;
+    private final ClientRepository clientRepository;
+    private final GeneralClientOrderRepository generalClientOrderRepository;
 
-    public TourService(TourRepository tourRepository) {
+    public TourService(TourRepository tourRepository, ClientRepository clientRepository, GeneralClientOrderRepository generalClientOrderRepository) {
         this.tourRepository = tourRepository;
+        this.clientRepository = clientRepository;
+        this.generalClientOrderRepository = generalClientOrderRepository;
     }
 
     /**
@@ -58,6 +67,23 @@ public class TourService {
         if (!tourRepository.existsById(tour.getId())) return false;
         tourRepository.save(tour);
         return true;
+    }
+
+
+    /**
+     * created the general delivery order for customers
+     *
+     * @param tourId the id of the tour
+     * @param generalClientsOrders the order
+     */
+    public void createOrder(int  tourId, List<GeneralClientOrder> generalClientsOrders) throws NotFoundException {
+        if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tour does not exists");
+        for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
+            if (!clientRepository.existsById(generalClientOrder.getClientId())) throw new NotFoundException("Client does not exists");
+        }
+
+        generalClientOrderRepository.saveAll(generalClientsOrders);
+
     }
 
 }

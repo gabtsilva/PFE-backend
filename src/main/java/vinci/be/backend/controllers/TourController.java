@@ -4,12 +4,16 @@ package vinci.be.backend.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vinci.be.backend.exceptions.NotFoundException;
+import vinci.be.backend.models.GeneralClientOrder;
 import vinci.be.backend.models.Tour;
 import vinci.be.backend.services.TourService;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -64,6 +68,28 @@ public class TourController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+    }
+
+    @PostMapping("/tour/{tourId}/createTourOrder")
+    public ResponseEntity<List<GeneralClientOrder>> createTourOrder(@PathVariable int tourId, @RequestBody List<GeneralClientOrder> generalClientsOrders) {
+        Set<Integer> uniqueOrders = new HashSet<>();
+        for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
+            if (generalClientOrder.invalid() || tourId != generalClientOrder.getTourId()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            //ce numéro d'ordre est déjà présent dans la liste
+            if (!uniqueOrders.add(generalClientOrder.getOrder())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        try {
+            tourService.createOrder(tourId, generalClientsOrders);
+        }catch (NotFoundException nfe) {
+            System.err.println(nfe.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(generalClientsOrders, HttpStatus.OK);
     }
 
 }
