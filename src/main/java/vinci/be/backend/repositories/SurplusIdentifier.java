@@ -5,16 +5,16 @@ import java.util.Objects;
 
 public class SurplusIdentifier implements Serializable {
 
-    private int tourId;
+    private int tourExecutionId;
     private int articleId;
 
 
     public SurplusIdentifier() {
     }
 
-    public SurplusIdentifier(int articleId, int tourId) {
+    public SurplusIdentifier(int articleId, int tourExecutionId) {
         this.articleId = articleId;
-        this.tourId = tourId;
+        this.tourExecutionId = tourExecutionId;
     }
 
     // Getters, setters
@@ -28,11 +28,11 @@ public class SurplusIdentifier implements Serializable {
     }
 
     public int getOrderId() {
-        return tourId;
+        return tourExecutionId;
     }
 
     public void setOrderId(int orderId) {
-        this.tourId = orderId;
+        this.tourExecutionId = orderId;
     }
 
 
@@ -41,11 +41,11 @@ public class SurplusIdentifier implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SurplusIdentifier that = (SurplusIdentifier) o;
-        return articleId == that.articleId && tourId == that.tourId;
+        return articleId == that.articleId && tourExecutionId == that.tourExecutionId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(articleId, tourId);
+        return Objects.hash(articleId, tourExecutionId);
     }
 }

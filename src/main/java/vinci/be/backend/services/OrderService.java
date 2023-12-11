@@ -77,13 +77,14 @@ public class OrderService {
      *
      * @param clientId The unique identifier of the client to retrieve its order
      */
-    public void createOne(int clientId) throws NotFoundException, BusinessException {
+    public Order createOne(int clientId) throws NotFoundException, BusinessException {
         verifyIfClientExists(clientId);
         Order order = orderRepository.findByClientId(clientId);
         if (order != null) throw new BusinessException("Le client a déjà une commande");
         Order newOrder = new Order();
         newOrder.setClientId(clientId);
         orderRepository.save(newOrder);
+        return newOrder;
     }
 
 

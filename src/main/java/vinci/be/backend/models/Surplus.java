@@ -26,7 +26,7 @@ public class Surplus {
 
     @Id
     @Column(name="tour_execution_id", nullable=false)
-    private int tourId;
+    private int tourExecutionId;
 
     @Column(name="percentage", nullable=false)
     private int percentage;
