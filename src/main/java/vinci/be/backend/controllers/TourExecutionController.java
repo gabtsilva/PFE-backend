@@ -6,10 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
-import vinci.be.backend.models.TourExecution;
-import vinci.be.backend.models.TourState;
-import vinci.be.backend.models.User;
-import vinci.be.backend.models.Vehicle;
+import vinci.be.backend.models.*;
 import vinci.be.backend.services.TourExecutionService;
 
 import java.util.ArrayList;
@@ -111,6 +108,21 @@ public class TourExecutionController {
   public ResponseEntity<Void> endTour(@PathVariable int tourExecutionId) throws NotFoundException {
     tourExecutionService.updateState(tourExecutionId, "finie");
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/tour/{tourExecutionId}/addSurplus")
+  public ResponseEntity<Surplus> addSurplus(@PathVariable int tourExecutionId, @RequestBody Surplus surplus) throws NotFoundException {
+    if (tourExecutionId != surplus.getTourExecutionId()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    if (surplus.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+    try {
+      tourExecutionService.addSurplus(tourExecutionId, surplus);
+    }catch (NotFoundException nfe) {
+      System.err.println(nfe.getMessage());
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    return new ResponseEntity<>(surplus, HttpStatus.OK);
   }
 
 }

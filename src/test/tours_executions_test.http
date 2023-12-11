@@ -51,3 +51,14 @@ POST http://localhost:8080/tour/2/tourExecution/begin
 
 ###maj state d un tour execution ( finie )
 POST http://localhost:8080/tour/2/tourExecution/end
+
+
+### ajouter du surplus à une tour executon
+POST http://localhost:8080/tour/1/addSurplus
+Content-Type: application/json
+
+{
+  "articleId": 1,
+  "tourExecutionId": 1,
+  "percentage": 10
+}

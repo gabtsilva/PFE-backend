@@ -5,14 +5,12 @@ import org.springframework.stereotype.Service;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
+import vinci.be.backend.models.Surplus;
 import vinci.be.backend.models.TourExecution;
 import vinci.be.backend.models.User;
-import vinci.be.backend.repositories.TourExecutionRepository;
-import vinci.be.backend.repositories.TourRepository;
-import vinci.be.backend.repositories.UserRepository;
+import vinci.be.backend.repositories.*;
 
 import java.util.List;
-import vinci.be.backend.repositories.VehicleRepository;
 
 @Service
 public class TourExecutionService {
@@ -20,16 +18,21 @@ public class TourExecutionService {
   private final TourExecutionRepository tourExecutionRepository;
   private final TourRepository tourRepository;
   private final UserRepository userRepository;
+  private final ArticleRepository articleRepository;
+
+  private final SurplusRepository surplusRepository;
 
   private final VehicleRepository vehicleRepository;
 
   public TourExecutionService(TourExecutionRepository tourExecutionRepository,
       TourRepository tourRepository, UserRepository userRepository,
-      VehicleRepository vehicleRepository) {
+      VehicleRepository vehicleRepository, ArticleRepository articleRepository, SurplusRepository surplusRepository) {
     this.tourExecutionRepository = tourExecutionRepository;
     this.tourRepository = tourRepository;
     this.userRepository = userRepository;
     this.vehicleRepository = vehicleRepository;
+    this.articleRepository = articleRepository;
+    this.surplusRepository = surplusRepository;
   }
 
   public void createOneExecution(int tourId, TourExecution tourExecution)
@@ -95,5 +98,13 @@ public class TourExecutionService {
       tourExecutionRepository.save(tourExecution);
     }
     throw new IllegalArgumentException("not in good state");
+  }
+
+  public void addSurplus(int tourExecutionId, Surplus surplus) throws NotFoundException {
+    if (!tourExecutionRepository.existsById(tourExecutionId)) throw new NotFoundException("Tour execution does not exist");
+    if (!articleRepository.existsById(surplus.getArticleId())) throw new NotFoundException("Article does not exist");
+
+    surplusRepository.save(surplus);
+
   }
 }
