@@ -80,4 +80,11 @@ public class ClientController {
 
     }
 
+    @GetMapping("/client/tour/{id}")
+    public ResponseEntity<List<Client>> updateOne(@PathVariable int id) {
+        ArrayList<Client> clientsByTour = (ArrayList<Client>) clientService.readAllByTour(id);
+        return new ResponseEntity<>(clientsByTour, HttpStatus.OK);
+
+    }
+
 }

@@ -66,3 +66,6 @@ Content-Type: application/json
   "childrenQuantity": 2,
   "tour": 1
 }
+
+### GET clients by specific tour
+GET http://localhost:8080/client/tour/3
