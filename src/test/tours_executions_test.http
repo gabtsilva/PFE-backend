@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ###maj state d un tour execution ( commencee )
-POST http://localhost:8080/tour/2/tourExecution/begin
+POST http://localhost:8080/tour/1/tourExecution/begin
 
 ###maj state d un tour execution ( finie )
-POST http://localhost:8080/tour/2/tourExecution/end
+POST http://localhost:8080/tour/1/tourExecution/end

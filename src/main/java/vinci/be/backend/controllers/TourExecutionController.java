@@ -101,15 +101,26 @@ public class TourExecutionController {
   }
 
 
-  @PostMapping("/tour/{tourtourExecutionIdId}/tourExecution/begin")
-  public ResponseEntity<Void> beginTour(@PathVariable int tourExecutionId) throws NotFoundException {
-    tourExecutionService.updateState(tourExecutionId,"commencee");
+  @PostMapping("/tour/{tourExecutionId}/tourExecution/begin")
+  public ResponseEntity<String> beginTour(@PathVariable int tourExecutionId) throws NotFoundException {
+    System.out.println("je rentre");
+    try {
+      tourExecutionService.updateState(tourExecutionId,"commencée");
+    }catch (Exception e){
+      System.out.println("je catch");
+      return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PostMapping("/tour/{tourExecutionId}/tourExecution/end")
-  public ResponseEntity<Void> endTour(@PathVariable int tourExecutionId) throws NotFoundException {
-    tourExecutionService.updateState(tourExecutionId, "finie");
+  public ResponseEntity<String> endTour(@PathVariable int tourExecutionId) throws NotFoundException {
+    try {
+      tourExecutionService.updateState(tourExecutionId, "finie");
+    }catch (Exception e){
+      return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

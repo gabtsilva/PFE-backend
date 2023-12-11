@@ -86,14 +86,14 @@ public class TourExecutionService {
       throw new NotFoundException("tour not found");
     }
     String actualSate = tourExecution.getState();
-    if (actualSate.equals("prevue") && state.equals("commencee")){
+    if (actualSate.equals("prévue") && state.equals("commencée")){
       tourExecution.setState(state);
       tourExecutionRepository.save(tourExecution);
-
-    }else if (actualSate.equals("commencee") && state.equals("finie")){
+    }else if (actualSate.equals("commencée") && state.equals("finie")){
       tourExecution.setState(state);
       tourExecutionRepository.save(tourExecution);
-    }
+    }else {
     throw new IllegalArgumentException("not in good state");
+    }
   }
 }
