@@ -9,7 +9,10 @@ import vinci.be.backend.exceptions.ConflitException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.TourExecution;
 import vinci.be.backend.models.TourState;
+import vinci.be.backend.models.User;
+import vinci.be.backend.models.Vehicle;
 import vinci.be.backend.services.TourExecutionService;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -79,4 +82,30 @@ public class TourExecutionController {
     return new ResponseEntity<>(HttpStatus.CREATED);
 
   }
-}
+
+  @PatchMapping("/tour/{tourId}/tourExecution/deliveryPerson")
+  public ResponseEntity<Void> updateDeliveryPerson(@PathVariable int tourId, @RequestBody User deliveryPerson){
+
+    try {
+      tourExecutionService.updatedeliveryPersonExecution(tourId, deliveryPerson.getMail());
+    } catch (NotFoundException notFoundException) {
+      System.err.println(notFoundException.getMessage());
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PatchMapping("/tour/{tourId}/tourExecution/van")
+  public ResponseEntity<Void> updateVan(@PathVariable int tourId, @RequestBody Vehicle van){
+    try {
+      tourExecutionService.updateVanExecution(tourId, van.getId());
+    } catch (NotFoundException notFoundException) {
+      System.err.println(notFoundException.getMessage());
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
+
+  }
+
+
+  }

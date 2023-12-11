@@ -94,7 +94,8 @@ CREATE TABLE snappies.clients_orders(
 INSERT INTO snappies.users(mail, firstname, lastname, phone_number, is_admin)
 VALUES
     ('admin@example.com', 'Admin',  'User', '123456789', true),
-    ('user1@example.com', 'User',  'One', '987654321', false);
+    ('user1@example.com', 'User',  'One', '987655321', false),
+    ('user2@example.com', 'User',  'two', '987654321', false);
 
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES
