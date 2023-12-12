@@ -42,11 +42,11 @@ public class ArticleController {
 
 
     @PostMapping("/article")
-    public ResponseEntity<Void> createOne(@RequestBody Article article) {
+    public ResponseEntity<Article> createOne(@RequestBody Article article) {
         if (article.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean created  = articleService.createOne(article);
         if (created) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(article, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.CONFLICT);
 

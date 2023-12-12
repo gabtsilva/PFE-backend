@@ -16,13 +16,13 @@ public class OrderLine {
 
 
     @Column(name="planned_quantity", nullable=false)
-    private int plannedQuantity;
+    private double plannedQuantity;
 
     @Column(name="delivered_quantity", nullable=false)
-    private int deliveredQuantity;
+    private double deliveredQuantity;
 
     @Column(name="changed_quantity", nullable=false)
-    private int changedQuantity;
+    private double changedQuantity;
 
     @Id
     @Column(name="article_id", nullable=false)

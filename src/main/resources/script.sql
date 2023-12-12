@@ -2,18 +2,12 @@ DROP SCHEMA IF EXISTS snappies CASCADE;
 CREATE SCHEMA snappies;
 
 CREATE TABLE snappies.users(
-                               mail VARCHAR(50) PRIMARY KEY CHECK (mail<>''),
+                               email VARCHAR(50) PRIMARY KEY CHECK (email<>''),
                                firstname VARCHAR(50) NOT NULL CHECK (firstname<>''),
                                lastname VARCHAR(50) NOT NULL CHECK (lastname<>''),
                                phone_number VARCHAR(15) NOT NULL CHECK (users.phone_number<>''),
+                               password VARCHAR(200) NOT NULL CHECK (password<>''),
                                is_admin BOOLEAN NOT NULL DEFAULT false
-);
-
-
-
-CREATE TABLE snappies.credentials(
-                                     mail VARCHAR(50) PRIMARY KEY CHECK (mail<>''),
-                                     password VARCHAR(200) NOT NULL CHECK (password<>'')
 );
 
 CREATE TABLE snappies.tours(
@@ -37,37 +31,31 @@ CREATE TABLE snappies.vehicles(
                                   max_quantity float NOT NULL CHECK (max_quantity > 0)
 );
 
-
 CREATE TABLE snappies.tours_executions(
                                           tour_execution_id SERIAL PRIMARY KEY,
                                           execution_date date NOT NULL,
                                           state varchar(20) NOT NULL  CHECK ( state in ('prévue', 'commencée', 'finie') ),
-                                          delivery_person varchar(50) REFERENCES snappies.users(mail),
-                                          vehicle_id integer REFERENCES snappies.vehicles(vehicle_id),
+                                          delivery_person varchar(50) NOT NULL REFERENCES snappies.users(email),
+                                          vehicle_id integer NOT NULL REFERENCES snappies.vehicles(vehicle_id),
                                           tour_id integer NOT NULL REFERENCES snappies.tours(tour_id)
-    /*unique ?*/
 );
-
-
 
 CREATE TABLE snappies.orders(
                                 order_id SERIAL PRIMARY KEY,
                                 client_id integer NOT NULL REFERENCES snappies.clients (client_id)
 );
 
-
 CREATE TABLE snappies.articles(
                                   article_id serial PRIMARY KEY,
                                   article_name varchar(100) NOT NULL CHECK (article_name <> '')
 );
 
-
 CREATE TABLE snappies.orders_lines(
                                       order_id integer NOT NULL REFERENCES snappies.orders(order_id),
                                       article_id integer NOT NULL REFERENCES snappies.articles(article_id),
-                                      planned_quantity integer NOT NULL CHECK (planned_quantity >= 0),
-                                      delivered_quantity integer NOT NULL CHECK (delivered_quantity >= 0) DEFAULT 0,
-                                      changed_quantity integer NOT NULL DEFAULT 0,
+                                      planned_quantity float NOT NULL CHECK (planned_quantity >= 0),
+                                      delivered_quantity float NOT NULL CHECK (delivered_quantity >= 0) DEFAULT 0,
+                                      changed_quantity float NOT NULL DEFAULT 0,
                                       PRIMARY KEY (order_id, article_id)
 );
 
@@ -76,36 +64,42 @@ CREATE TABLE snappies.surplus(
                                  tour_execution_id integer NOT NULL REFERENCES snappies.tours_executions(tour_execution_id),
                                  percentage integer NOT NULL CHECK (percentage >=0),
                                  PRIMARY KEY (article_id, tour_execution_id)
-
-
 );
 
-
-CREATE TABLE snappies.clients_orders(
-                                        client_order_id SERIAL PRIMARY KEY,
-                                        client_order integer NOT NULL CHECK ( client_order > 0 ),
-                                        delivered boolean NOT NULL DEFAULT false,
-                                        client_id integer NOT NULL REFERENCES snappies.clients(client_id)
+CREATE TABLE snappies.general_clients_orders(
+                                                general_client_order_id SERIAL PRIMARY KEY,
+                                                client_order integer NOT NULL CHECK ( client_order > 0 ),
+                                                client_id integer NOT NULL REFERENCES snappies.clients(client_id),
+                                                tour_id integer NOT NULL  REFERENCES snappies.tours(tour_id),
+                                                unique(tour_id, client_id)
 );
 
+CREATE TABLE snappies.execution_clients_orders(
+                                                  execution_client_order_id SERIAL PRIMARY KEY,
+                                                  delivered boolean NOT NULL DEFAULT false,
+                                                  general_client_order integer REFERENCES snappies.general_clients_orders(general_client_order_id),
+                                                  tour_execution_id integer NOT NULL  REFERENCES snappies.tours_executions(tour_execution_id)
+);
 
---Script test--
 -- Insertion des utilisateurs
-INSERT INTO snappies.users(mail, firstname, lastname, phone_number, is_admin)
+INSERT INTO snappies.users(email, firstname, lastname, phone_number, password, is_admin)
 VALUES
-    ('admin@example.com', 'Admin',  'User', '123456789', true),
-    ('user1@example.com', 'User',  'One', '987654321', false);
+    ('admin@example.com', 'Admin',  'User', '123456789', '$2a$10$iXDbSUmi5x1T84NgO6r0FuEPiDWLBhMFnbTmK5E4x5VtZecm1m6um', true),
+    ('user1@example.com', 'User',  'One', '987654321', '$2a$10$EzyRNcYwzu5DXUGoXnm.9u0IxS1TyZnR09wEosKM99ZZ7GWBemZ0S', false);
 
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES
                                           ('Tour A'),
-                                          ('Tour B');
+                                          ('Tour B'),
+                                          ('Tour C');
 
 -- Insertion des clients
 INSERT INTO snappies.clients(client_address, client_name, phone_number, children_quantity, tour)
 VALUES
     ('123 Main St, City1', 'Client One', '111222333', 2, 1),
-    ('456 Oak St, City2', 'Client Two', '444555666', 3, 2);
+    ('456 Oak St, City2', 'Client Two', '444555666', 3, 2),
+    ('La bas', 'Client Three', '5984', 10, 3),
+    ('Ici', 'Client Four', '48487', 10, 3);
 
 -- Insertion des véhicules
 INSERT INTO snappies.vehicles(vehicle_name, plate, max_quantity)
@@ -134,16 +128,21 @@ INSERT INTO snappies.articles(article_name) VALUES
 INSERT INTO snappies.orders_lines(order_id, article_id, planned_quantity, delivered_quantity, changed_quantity)
 VALUES
     (1, 1, 5, 3, 2),
-    (1, 2, 10, 8, 3),
+    (1, 2, 10, 8, 2), -- Corrigé le changement de quantité
     (2, 1, 8, 6, 1),
     (2, 2, 15, 12, 4);
 
 -- Insertion des commandes clients
-INSERT INTO snappies.clients_orders(client_order, delivered, client_id)
+INSERT INTO snappies.general_clients_orders(client_order, client_id, tour_id)
 VALUES
-    (101, false, 1),
-    (102, true, 2);
+    (1, 1, 1),
+    (1, 2, 2);
 
+-- Insertion des lignes de commande d'exécution clients
+INSERT INTO snappies.execution_clients_orders(delivered, general_client_order, tour_execution_id)
+VALUES
+    (true, 1, 1), -- Ajouté le tour_execution_id
+    (false, 2, 2);
 
 -- Insertion des lignes de surplus
 INSERT INTO snappies.surplus(article_id, tour_execution_id, percentage)
@@ -152,3 +151,21 @@ VALUES
     (2, 1, 8),
     (1, 2, 3),
     (2, 2, 6);
+
+SELECT
+    art.article_id,
+    art.article_name,
+    SUM(ol.planned_quantity) AS total_planned_quantity,
+    SUM(ol.planned_quantity) * (1 + COALESCE(MAX(s.percentage), 0) / 100.0) AS total_with_surplus
+FROM
+    snappies.articles art
+        INNER JOIN snappies.orders_lines ol ON art.article_id = ol.article_id
+        INNER JOIN snappies.orders ord ON ol.order_id = ord.order_id
+        INNER JOIN snappies.general_clients_orders gco ON ord.client_id = gco.client_id
+        INNER JOIN snappies.execution_clients_orders eco ON gco.general_client_order_id = eco.general_client_order
+        INNER JOIN snappies.tours_executions tex ON eco.tour_execution_id = tex.tour_execution_id
+        LEFT JOIN snappies.surplus s ON art.article_id = s.article_id AND tex.tour_execution_id = s.tour_execution_id
+WHERE
+        tex.tour_execution_id = 1 -- Remplacez 1 par l'ID de l'exécution de tournée spécifique
+GROUP BY
+    art.article_id, art.article_name;

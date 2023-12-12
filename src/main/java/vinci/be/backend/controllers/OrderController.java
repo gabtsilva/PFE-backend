@@ -1,8 +1,10 @@
 package vinci.be.backend.controllers;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +33,6 @@ public class OrderController {
 
     }
 
-
     @GetMapping("/order/{clientId}")
     public ResponseEntity<Order> readOne(@PathVariable int clientId) {
         if (clientId<=0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -44,6 +45,14 @@ public class OrderController {
 
         }
         return new ResponseEntity<>(order, HttpStatus.FOUND);
+    }
+
+    @DeleteMapping("/order/remove/{order_id}/{articleId}")
+    public ResponseEntity<OrderLine> deleteOne(@PathVariable int articleId, @PathVariable int order_id) {
+        if (articleId<=0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        OrderLine output = orderService.deleteOne(order_id, articleId);
+        if(output == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(output, HttpStatus.OK);
     }
 
     @GetMapping("/order/{clientId}/article")
@@ -62,9 +71,10 @@ public class OrderController {
 
 
     @PostMapping("/order/{clientId}")
-    public ResponseEntity<Void> createOne(@PathVariable int clientId) {
+    public ResponseEntity<Order> createOne(@PathVariable int clientId) {
+        Order order;
         try{
-            orderService.createOne(clientId);
+            order = orderService.createOne(clientId);
         }catch (NotFoundException nfe) {
             nfe.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -74,13 +84,13 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
 
     @PostMapping("/order/{clientId}/addArticle/{articleId}/{quantity}")
-    public ResponseEntity<Void> addArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
-        if (quantity <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Void> addArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable double quantity ) {
+        // if (quantity <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             orderService.addArticle(clientId, quantity, articleId);
         }catch (BusinessException businessException) {
@@ -96,7 +106,7 @@ public class OrderController {
 
 
     @PostMapping("/order/{clientId}/removeArticle/{articleId}/{quantity}")
-    public ResponseEntity<Void> removeArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
+    public ResponseEntity<Void> removeArticle(@PathVariable int clientId, @PathVariable int articleId, @PathVariable double quantity ) {
         try {
             orderService.removeArticle(clientId, quantity, articleId);
         }catch (BusinessException businessException) {
@@ -113,7 +123,7 @@ public class OrderController {
 
     /*Correspond à une modification ponctuelle */
     @PostMapping("/order/{clientId}/modify/{articleId}/{quantity}")
-    public ResponseEntity<Void> updateOne(@PathVariable int clientId, @PathVariable int articleId, @PathVariable int quantity ) {
+    public ResponseEntity<Void> updateOne(@PathVariable int clientId, @PathVariable int articleId, @PathVariable double quantity ) {
         try {
             orderService.modify(clientId, quantity, articleId);
         }catch (BusinessException businessException) {

@@ -15,8 +15,8 @@ import lombok.ToString;
 @Table(name="users")
 public class User {
     @Id
-    @Column(name="mail")
-    private String mail;
+    @Column(name="email")
+    private String email;
 
     @Column(name="firstname", nullable=false)
     private String firstname;
@@ -27,6 +27,9 @@ public class User {
     @Column(name="phone_number", nullable=false)
     private String phoneNumber;
 
+    @Column(name="password", nullable=false)
+    private String password;
+
     @Column(name="is_admin", nullable=false)
     private boolean isAdmin;
 
@@ -34,7 +37,7 @@ public class User {
     public boolean isDeliveryMan() {return !isAdmin;}
 
     public boolean invalid() {
-        return  mail == null || mail.isBlank() || mail.isEmpty()
+        return  email == null || email.isBlank() || email.isEmpty()
                 || firstname == null || firstname.isBlank() || firstname.isEmpty()
                 || lastname == null || lastname.isBlank() || lastname.isEmpty()
                 || phoneNumber.isBlank() || phoneNumber.isEmpty();

@@ -16,6 +16,7 @@ import lombok.ToString;
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="vehicle_id", nullable=false)
     private int id;
 
     @Column(name="vehicle_name", nullable=false)
