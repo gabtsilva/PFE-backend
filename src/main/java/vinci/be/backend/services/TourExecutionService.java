@@ -2,6 +2,7 @@ package vinci.be.backend.services;
 
 import java.util.ArrayList;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.AllArticlesTourExecution;
@@ -178,6 +179,25 @@ public class TourExecutionService {
     return results;
   }
 
+  @Transactional
+  public void updateComandeClientTourExecuution(int tourExecutionId, int clientId, List<ArticlesCommande> articlesCommandeList)
+      throws NotFoundException {
+    TourExecution tourExecution = tourExecutionRepository.getReferenceById(tourExecutionId);
+    Client client= clientRepository.getReferenceById(clientId);
+    if (tourExecution == null){
+      throw new NotFoundException("tour not found");
+    }
+    if (client == null){
+      throw new NotFoundException("client not found");
+    }
+    for (ArticlesCommande ac:articlesCommandeList) {
 
+        tourExecutionRepository.updateComandeClientTourExecuution(tourExecutionId, clientId,
+              ac.getArticleId(), ac.getDeliveredQuantity());
+    }
+
+      tourExecutionRepository.updateRealiser(tourExecutionId, clientId, true);
+
+  }
 
 }

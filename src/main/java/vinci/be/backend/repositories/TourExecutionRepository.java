@@ -1,6 +1,7 @@
 package vinci.be.backend.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -61,4 +62,19 @@ public interface TourExecutionRepository extends JpaRepository<TourExecution, In
   List<Object[]> getAllArticlesByClients(@Param("idExecutionTournee") int idExecutionTournee, @Param("clientId") int idClient);
 
 
+
+  @Modifying
+  @Query(value = "UPDATE snappies.orders_lines\n"
+      + "SET delivered_quantity = :delivredQty \n"
+      + "FROM snappies.orders ord \n"
+      + "INNER JOIN snappies.general_clients_orders gco ON ord.client_id = gco.client_id \n"
+      + "INNER JOIN snappies.execution_clients_orders eco ON gco.general_client_order_id = eco.general_client_order \n"
+      + "WHERE orders_lines.article_id =  :articleId\n"
+      + "AND ord.order_id = orders_lines.order_id \n"
+      + "AND eco.tour_execution_id = :idExecutionTournee \n"
+      + "AND gco.client_id = :clientId\n", nativeQuery = true)
+  void updateComandeClientTourExecuution(@Param("idExecutionTournee") int idExecutionTournee,@Param("clientId") int clientId, @Param("articleId") int articleId,@Param("delivredQty") double delivredQty);
+  @Modifying
+  @Query(value = "UPDATE snappies.execution_clients_orders eco SET delivered = :delivred FROM snappies.general_clients_orders gco WHERE eco.general_client_order = gco.general_client_order_id AND eco.tour_execution_id = :idExecutionTournee AND gco.client_id = :clientId ",nativeQuery = true)
+  void updateRealiser(@Param("idExecutionTournee") int idExecutionTournee,@Param("clientId") int clientId, @Param("delivred") boolean delivred);
 }
