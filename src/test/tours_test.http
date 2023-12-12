@@ -41,7 +41,6 @@ Content-Type: application/json
   {"clientId": 2, "tourId": 2, "order": 2}
 ]
 
-
 ### Modify Tour Order
 PUT http://localhost:8080/tour/3/modifyTourOrder
 Content-Type: application/json
@@ -51,7 +50,21 @@ Content-Type: application/json
   {"clientId": 4, "tourId": 3, "order": 1}
 ]
 
-###Modify Tour Order trying to add a client from an other tour (conflict)
+
+### Modify client 2 to make him in the Tour A
+PUT http://localhost:8080/client/2
+Content-Type: application/json
+
+{
+  "id": 2,
+  "address": "456 Oak St, City2",
+  "name": "Client Two",
+  "phoneNumber": "444555666",
+  "childrenQuantity": 3,
+  "tour": 1
+}
+
+###Modify Tour Order to add this updated client
 PUT http://localhost:8080/tour/1/modifyTourOrder
 Content-Type: application/json
 

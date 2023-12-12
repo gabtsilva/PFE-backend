@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.Client;
+import vinci.be.backend.models.GeneralClientOrder;
 import vinci.be.backend.repositories.ClientRepository;
+import vinci.be.backend.repositories.GeneralClientOrderRepository;
 import vinci.be.backend.repositories.TourRepository;
 
 import java.util.List;
@@ -15,9 +17,11 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final TourRepository tourRepository;
-    public ClientService(ClientRepository clientRepository, TourRepository tourRepository) {
+    private final GeneralClientOrderRepository generalClientOrderRepository;
+    public ClientService(ClientRepository clientRepository, TourRepository tourRepository, GeneralClientOrderRepository generalClientOrderRepository) {
         this.clientRepository = clientRepository;
         this.tourRepository = tourRepository;
+        this.generalClientOrderRepository = generalClientOrderRepository;
     }
 
     /**
@@ -62,14 +66,27 @@ public class ClientService {
     public boolean updateOne(Client client) throws NotFoundException, ConflictException {
         if (!tourRepository.existsById(client.getTour())) throw new NotFoundException("La tournée du client n'existe pas");
         if (!clientRepository.existsById(client.getId())) throw new NotFoundException("La client n'existe pas");
+        Client savedClient = clientRepository.getReferenceById(client.getId());
+
+        //Si on change le client de tournée
+        if (savedClient.getTour() != client.getTour()) {
+            GeneralClientOrder clientOrder = generalClientOrderRepository.findByClientId(client.getId());
+            clientOrder.setTourId(client.getTour());
+            //On met l'ordre du client dans sa nouvelle tournée à la plus grande par défaut
+            //si dans la tournée 1 il y a 2 clients, le client qu'on update sera à l'ordre 3
+            int maxOrder =  generalClientOrderRepository.findMaxOrderByTourId(client.getTour()).getOrder();
+            clientOrder.setOrder(maxOrder + 1);
+            generalClientOrderRepository.save(clientOrder);
+
+        }
         clientRepository.save(client);
         return true;
     }
 
     /**
-     * Reads all clients by specifiq tour in repository
+     * Reads all clients by specific tour in repository
      *
-     * @return all clients by specifiq tour
+     * @return all clients by specific tour
      */
     public List<Client> readAllByTour(int indexTour) {
         return clientRepository.findAllByIdTour(indexTour);
