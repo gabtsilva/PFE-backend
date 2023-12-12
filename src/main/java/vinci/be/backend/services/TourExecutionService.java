@@ -128,7 +128,7 @@ public class TourExecutionService {
       article.setId((Integer) row[0]);
       article.setName((String) row[1]);
       article.setPlanned_quantity((Double) row[2]);
-      article.setTotal_with_surplus((Double) row[3]);
+      article.setTotal_with_surplus( roundToNearestHalfOrOne((Double) row[3]));
       results.add(article);
     }
     return results;
@@ -252,4 +252,11 @@ public class TourExecutionService {
     }
     return results;
     }
+
+
+
+  private static double roundToNearestHalfOrOne(double number) {
+    double roundedValue = Math.round(number * 2) / 2.0; // Multiplie par 2 pour effectuer l'arrondi à 0,5, puis divise par 2 pour obtenir la valeur arrondie
+    return Math.max(roundedValue, 1.0); // Prend la valeur la plus grande entre la valeur arrondie et 1
+  }
 }
