@@ -93,6 +93,7 @@ public class TourController {
         Set<Integer> uniqueOrders = new HashSet<>();
         Set<Integer> uniqueTour = new HashSet<>();
         uniqueTour.add(tourId);
+        List<GeneralClientOrder> createdOrder = new ArrayList<>();
         for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
             if (generalClientOrder.invalid() || tourId != generalClientOrder.getTourId()) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,7 +110,7 @@ public class TourController {
         }
 
         try {
-            tourService.createOrder(tourId, generalClientsOrders);
+            createdOrder = tourService.createOrder(tourId, generalClientsOrders);
         }catch (NotFoundException nfe) {
             System.err.println(nfe.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -117,7 +118,7 @@ public class TourController {
             System.err.println(cfe.getMessage());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>(generalClientsOrders, HttpStatus.OK);
+        return new ResponseEntity<>(createdOrder, HttpStatus.OK);
     }
 
 

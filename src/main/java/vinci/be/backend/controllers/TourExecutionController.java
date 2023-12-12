@@ -1,5 +1,7 @@
 package vinci.be.backend.controllers;
 
+import java.time.LocalDate;
+import java.util.Date;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,6 +40,7 @@ public class TourExecutionController {
 
   }
 
+
   @GetMapping("/tour/{tourId}/user/{userMail}/state/{state}")
   public ResponseEntity<List<TourExecution>> readPlannedExecutionByDeliveryManForATour(@PathVariable int tourId, @PathVariable String userMail, @PathVariable String state) {
     ArrayList<TourExecution> toursExeuction;
@@ -53,6 +56,14 @@ public class TourExecutionController {
     }
     return new ResponseEntity<>(toursExeuction, HttpStatus.OK);
 
+  }
+
+  @GetMapping("/tour/tourExecution")
+  public ResponseEntity<List<TourExecution>> getAllTourExecutionForToday(){
+    List<TourExecution> tourExecutionList;
+    LocalDate executionDate = LocalDate.now();
+    tourExecutionList = tourExecutionService.getAllTourExecutionForToday(executionDate);
+    return new ResponseEntity<>(tourExecutionList,HttpStatus.OK);
   }
 
   @PostMapping("/tour/{tourId}/tourExecution")
@@ -161,6 +172,21 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
     try {
       List<Client> allClients = tourExecutionService.getAllClients(tourExecutionId);
       return new ResponseEntity<>(allClients,HttpStatus.OK);
+    }catch (Exception e){
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @PostMapping("/tour/{tourExecutionId}/tourExecution/distributeArticle/client/{clientId}")
+  public ResponseEntity<Void> distributeArticle(@PathVariable int tourExecutionId, @PathVariable int clientId, @RequestBody List<ArticlesCommande> articlesCommandeList ){
+    for (ArticlesCommande ac:articlesCommandeList) {
+      if (ac.invalid()){
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+    try {
+      tourExecutionService.updateComandeClientTourExecuution(tourExecutionId,clientId,articlesCommandeList);
+      return new ResponseEntity<>(HttpStatus.OK);
     }catch (Exception e){
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }

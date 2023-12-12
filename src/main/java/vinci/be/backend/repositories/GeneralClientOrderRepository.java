@@ -12,6 +12,7 @@ public interface GeneralClientOrderRepository extends JpaRepository<GeneralClien
     GeneralClientOrder findByClientId(int clientId);
 
     boolean existsByTourId(int tourId);
+    GeneralClientOrder findMaxOrderByTourId(int tourId);
 
 
 }

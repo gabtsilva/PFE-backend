@@ -29,6 +29,9 @@ public class ArticlesCommande {
 
     private String articleName;
 
+    public boolean invalid() {
+        return articleName == null || articleName.isBlank() || articleName.isEmpty() || articleId < 0 || changedQuantity < 0 || deliveredQuantity < 0 || plannedQuantity < 0  ;
+    }
 
 
 }
