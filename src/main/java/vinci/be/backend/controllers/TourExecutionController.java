@@ -111,6 +111,11 @@ public class TourExecutionController {
 
   @PostMapping("/tour/{tourExecutionId}/tourExecution/begin")
   public ResponseEntity<String> beginTour(@PathVariable int tourExecutionId) throws NotFoundException {
+    try {
+      tourExecutionService.createClientExecutionOrder(tourExecutionId);
+    }catch (NotFoundException e) {
+      return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+    }
     System.out.println("je rentre");
     try {
       tourExecutionService.updateState(tourExecutionId,"commencée");
