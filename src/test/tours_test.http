@@ -32,6 +32,17 @@ Content-Type: application/json
 ]
 
 
+### Create Tour Order with a client from an other tour
+POST http://localhost:8080/tour/3/createTourOrder
+Content-Type: application/json
+
+[
+  {"clientId": 3, "tourId": 3, "order": 1},
+  {"clientId": 4, "tourId": 3, "order": 2},
+  {"clientId": 1, "tourId": 3, "order": 3}
+]
+
+
 ### Create Tour Order with wrong order (2 same orders)
 POST http://localhost:8080/tour/2/createTourOrder
 Content-Type: application/json
