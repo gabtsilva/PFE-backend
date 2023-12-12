@@ -65,3 +65,24 @@ GET http://localhost:8080//tour/1/tourExecution/allArticles/client/1
 ### get all client for tourExex
 GET http://localhost:8080//tour/1/tourExecution/allClients
 
+### update deliverd articles
+POST http://localhost:8080//tour/1/tourExecution/distributeArticle/client/1
+Content-Type: application/json
+
+[
+  {
+  "articleId": 1,
+  "articleName": "Article 1",
+  "plannedQuantity": 12,
+  "deliveredQuantity": 20,
+  "changedQuantity": 8
+  },
+{
+"articleId": 2,
+"articleName": "Article 2",
+"plannedQuantity": 4,
+"deliveredQuantity": 20,
+"changedQuantity": 8
+}
+]
+

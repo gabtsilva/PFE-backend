@@ -166,6 +166,21 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
     }
   }
 
+  @PostMapping("/tour/{tourExecutionId}/tourExecution/distributeArticle/client/{clientId}")
+  public ResponseEntity<Void> distributeArticle(@PathVariable int tourExecutionId, @PathVariable int clientId, @RequestBody List<ArticlesCommande> articlesCommandeList ){
+    for (ArticlesCommande ac:articlesCommandeList) {
+      if (ac.invalid()){
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+    try {
+      tourExecutionService.updateComandeClientTourExecuution(tourExecutionId,clientId,articlesCommandeList);
+      return new ResponseEntity<>(HttpStatus.OK);
+    }catch (Exception e){
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 
   @GetMapping("/tourExecution/{tourExecutionId}/getClientDeliveryOrder")
   public ResponseEntity<List<ExecutionClientOrder>> getClientDeliveryOrder(@PathVariable int tourExecutionId){
