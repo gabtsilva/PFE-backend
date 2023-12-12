@@ -54,7 +54,7 @@ public class ClientController {
 
         } catch (NotFoundException notFoundException) {
             notFoundException.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(client, HttpStatus.CREATED);

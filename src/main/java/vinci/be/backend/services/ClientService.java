@@ -56,7 +56,14 @@ public class ClientService {
         if (!tourRepository.existsById(client.getTour()))
             throw new NotFoundException("La tournée du client n'existe pas");
         if (clientRepository.existsById(client.getId())) throw new ConflictException("La client existe déjà");
-        clientRepository.save(client);
+
+        Client createdClient  = clientRepository.save(client);
+        GeneralClientOrder generalClientOrder = new GeneralClientOrder();
+        generalClientOrder.setClientId(createdClient.getId());
+        generalClientOrder.setTourId(createdClient.getTour());
+        int maxOrder = generalClientOrderRepository.findMaxClientOrderValueByTourId(createdClient.getTour()).orElse(0);
+        generalClientOrder.setOrder(++maxOrder);
+        generalClientOrderRepository.save(generalClientOrder);
     }
 
     /**
@@ -74,17 +81,12 @@ public class ClientService {
         //Si on change le client de tournée
         if (clientOrder.getTourId() != client.getTour()) {
 
-            System.out.println(clientOrder.getTourId());
             clientOrder.setTourId(client.getTour());
-            System.out.println(clientOrder.getTourId());
 
             //On met l'ordre du client dans sa nouvelle tournée à la plus grande par défaut
             //si dans la tournée 1 il y a 2 clients, le client qu'on update sera à l'ordre 3
-            int maxOrderNumber = 0;
-            GeneralClientOrder maxOrder = generalClientOrderRepository.findMaxOrderByTourId(client.getTour());
-            if (maxOrder != null) maxOrderNumber = maxOrder.getOrder();
-            clientOrder.setOrder(maxOrderNumber + 1);
-
+            int maxOrder = generalClientOrderRepository.findMaxClientOrderValueByTourId(client.getTour()).orElse(0);
+            clientOrder.setOrder(++maxOrder);
             generalClientOrderRepository.save(clientOrder);
 
         }
