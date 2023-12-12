@@ -18,6 +18,7 @@ public class TourExecution {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name="tour_execution_id", nullable=false)
   private int id;
 
   @Column(name="state", nullable=false)

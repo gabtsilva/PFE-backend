@@ -166,4 +166,21 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
     }
   }
 
+
+  @GetMapping("/tourExecution/{tourExecutionId}/getClientDeliveryOrder")
+  public ResponseEntity<List<ExecutionClientOrder>> getClientDeliveryOrder(@PathVariable int tourExecutionId){
+      if (tourExecutionId < 0) return new ResponseEntity< >(HttpStatus.BAD_REQUEST);
+      List<ExecutionClientOrder> executionClientOrders = new ArrayList<>();
+      try {
+         executionClientOrders =  tourExecutionService.readTourExecutionOrder(tourExecutionId);
+      } catch (NotFoundException e) {
+        System.err.println(e.getMessage());
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+
+      return new ResponseEntity<>(executionClientOrders, HttpStatus.OK);
+
+
+  }
+
 }

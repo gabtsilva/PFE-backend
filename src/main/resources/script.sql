@@ -90,13 +90,16 @@ VALUES
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES
                                           ('Tour A'),
-                                          ('Tour B');
+                                          ('Tour B'),
+                                          ('Tour C');
 
 -- Insertion des clients
 INSERT INTO snappies.clients(client_address, client_name, phone_number, children_quantity, tour)
 VALUES
     ('123 Main St, City1', 'Client One', '111222333', 2, 1),
-    ('456 Oak St, City2', 'Client Two', '444555666', 3, 2);
+    ('456 Oak St, City2', 'Client Two', '444555666', 3, 2),
+    ('La bas', 'Client Three', '5984', 10, 3),
+    ('Ici', 'Client Four', '48487', 10, 3);
 
 -- Insertion des véhicules
 INSERT INTO snappies.vehicles(vehicle_name, plate, max_quantity)
@@ -132,8 +135,8 @@ VALUES
 -- Insertion des commandes clients
 INSERT INTO snappies.general_clients_orders(client_order, client_id, tour_id)
 VALUES
-    (1, 1, 1), -- Ajouté le tour_id
-    (2, 2, 1);
+    (1, 1, 1),
+    (1, 2, 2);
 
 -- Insertion des lignes de commande d'exécution clients
 INSERT INTO snappies.execution_clients_orders(delivered, general_client_order, tour_execution_id)

@@ -16,6 +16,7 @@ import lombok.ToString;
 public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="tour_id", nullable=false)
     private int id;
 
     @Column(name="tour_name", nullable=false)

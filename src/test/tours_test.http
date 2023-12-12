@@ -23,12 +23,12 @@ Content-Type: application/json
 
 
 ### Create Tour Order
-POST http://localhost:8080/tour/2/createTourOrder
+POST http://localhost:8080/tour/3/createTourOrder
 Content-Type: application/json
 
 [
-{"clientId": 1, "tourId": 2, "order": 1},
-{"clientId": 2, "tourId": 2, "order": 2}
+{"clientId": 3, "tourId": 3, "order": 1},
+{"clientId": 4, "tourId": 3, "order": 2}
 ]
 
 
@@ -43,13 +43,14 @@ Content-Type: application/json
 
 
 ### Modify Tour Order
-PUT http://localhost:8080/tour/2/modifyTourOrder
+PUT http://localhost:8080/tour/3/modifyTourOrder
 Content-Type: application/json
 
 [
-  {"clientId": 1, "tourId": 2, "order": 2},
-  {"clientId": 2, "tourId": 2, "order": 1}
+  {"clientId": 3, "tourId": 3, "order": 2},
+  {"clientId": 4, "tourId": 3, "order": 1}
 ]
+
 
 
 ### Read Tour Order

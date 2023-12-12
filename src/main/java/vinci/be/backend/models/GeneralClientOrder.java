@@ -18,6 +18,7 @@ public class GeneralClientOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="general_client_order_id", nullable=false)
     private int id;
 
     @Column(name="client_id", nullable=false)
