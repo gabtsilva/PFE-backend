@@ -182,5 +182,4 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
 
 
   }
-
 }

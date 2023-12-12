@@ -2,7 +2,6 @@ package vinci.be.backend.services;
 
 import java.util.ArrayList;
 
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
@@ -25,10 +24,11 @@ public class TourExecutionService {
     private final ClientRepository clientRepository;
 
     private final ExecutionClientOrderRepository executionClientOrderRepository;
+    private  final GeneralClientOrderRepository generalClientOrderRepository;
 
     public TourExecutionService(TourExecutionRepository tourExecutionRepository,
                                 TourRepository tourRepository, UserRepository userRepository,
-                                VehicleRepository vehicleRepository, ArticleRepository articleRepository, SurplusRepository surplusRepository, ClientRepository clientRepository, ExecutionClientOrderRepository executionClientOrderRepository) {
+                                VehicleRepository vehicleRepository, ArticleRepository articleRepository, SurplusRepository surplusRepository, ClientRepository clientRepository, ExecutionClientOrderRepository executionClientOrderRepository, GeneralClientOrderRepository generalClientOrderRepository) {
         this.tourExecutionRepository = tourExecutionRepository;
         this.tourRepository = tourRepository;
         this.userRepository = userRepository;
@@ -37,6 +37,7 @@ public class TourExecutionService {
         this.surplusRepository = surplusRepository;
         this.clientRepository = clientRepository;
         this.executionClientOrderRepository = executionClientOrderRepository;
+        this.generalClientOrderRepository = generalClientOrderRepository;
     }
 
     public void createOneExecution(int tourId, TourExecution tourExecution)
@@ -186,11 +187,29 @@ public class TourExecutionService {
      * @param tourExecutionId the id of the tour
      * @return tour execution order
      */
-    @Transactional
     public List<ExecutionClientOrder> readTourExecutionOrder(int tourExecutionId) throws NotFoundException {
         if (!tourExecutionRepository.existsById(tourExecutionId)) throw new NotFoundException("Tour execution does not exists");
         return executionClientOrderRepository.findAllByTourExecutionId(tourExecutionId);
     }
 
 
+    /**
+     * create tour execution order
+     *
+     * @param tourExecutionId the id of the tour
+     * @return tour execution order
+     */
+    public List<ExecutionClientOrder> createClientExecutionOrder(int tourExecutionId) throws NotFoundException {
+        if (!tourExecutionRepository.existsById(tourExecutionId)) throw new NotFoundException("Tour execution does not exists");
+        int tourId = tourExecutionRepository.findById(tourExecutionId).get().getTourId();
+        for (GeneralClientOrder generalOrder : generalClientOrderRepository.findAllByTourId(tourId)) {
+            ExecutionClientOrder executionClientOrder = new ExecutionClientOrder();
+            executionClientOrder.setGeneralClientOrderId(generalOrder.getId());
+            executionClientOrder.setTourExecutionId(tourExecutionId);
+            executionClientOrder.setDelivered(false);
+
+        }
+        return null;
+
+    }
 }
