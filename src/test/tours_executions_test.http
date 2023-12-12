@@ -55,15 +55,6 @@ POST http://localhost:8080/tour/2/tourExecution/end
 ###
 POST http://localhost:8080/tour/1/tourExecution/end
 
-### ajouter du surplus à une tour executon
-POST http://localhost:8080/tour/1/addSurplus
-Content-Type: application/json
-
-{
-  "articleId": 1,
-  "tourExecutionId": 1,
-  "percentage": 10
-}
 
 ### get all articlss for tourExex
 GET http://localhost:8080//tour/1/tourExecution/allArticles

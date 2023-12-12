@@ -1,17 +1,13 @@
 package vinci.be.backend.services;
 
 import java.util.ArrayList;
+
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
-import vinci.be.backend.models.AllArticlesTourExecution;
-import vinci.be.backend.models.ArticlesCommande;
-import vinci.be.backend.models.Client;
-import vinci.be.backend.models.OrderLine;
-import vinci.be.backend.models.Surplus;
-import vinci.be.backend.models.TourExecution;
-import vinci.be.backend.models.User;
+import vinci.be.backend.models.*;
 import vinci.be.backend.repositories.*;
 
 import java.util.List;
@@ -19,35 +15,38 @@ import java.util.List;
 @Service
 public class TourExecutionService {
 
-  private final TourExecutionRepository tourExecutionRepository;
-  private final TourRepository tourRepository;
-  private final UserRepository userRepository;
-  private final ArticleRepository articleRepository;
+    private final TourExecutionRepository tourExecutionRepository;
+    private final TourRepository tourRepository;
+    private final UserRepository userRepository;
+    private final ArticleRepository articleRepository;
 
-  private final SurplusRepository surplusRepository;
+    private final SurplusRepository surplusRepository;
 
-  private final VehicleRepository vehicleRepository;
-  private final ClientRepository clientRepository;
+    private final VehicleRepository vehicleRepository;
+    private final ClientRepository clientRepository;
 
-  public TourExecutionService(TourExecutionRepository tourExecutionRepository,
-      TourRepository tourRepository, UserRepository userRepository,
-      VehicleRepository vehicleRepository, ArticleRepository articleRepository, SurplusRepository surplusRepository, ClientRepository clientRepository) {
-    this.tourExecutionRepository = tourExecutionRepository;
-    this.tourRepository = tourRepository;
-    this.userRepository = userRepository;
-    this.vehicleRepository = vehicleRepository;
-    this.articleRepository = articleRepository;
-    this.surplusRepository = surplusRepository;
-    this.clientRepository = clientRepository;
-  }
+    private final ExecutionClientOrderRepository executionClientOrderRepository;
 
-  public void createOneExecution(int tourId, TourExecution tourExecution)
-      throws NotFoundException {
-    if (!tourRepository.existsById(tourId))
-      throw new NotFoundException("Tour does not exist");
-    tourExecutionRepository.existsByExecutionDateAndTourId(tourExecution.getExecutionDate(),tourId);
-    tourExecutionRepository.save(tourExecution);
-  }
+    public TourExecutionService(TourExecutionRepository tourExecutionRepository,
+                                TourRepository tourRepository, UserRepository userRepository,
+                                VehicleRepository vehicleRepository, ArticleRepository articleRepository, SurplusRepository surplusRepository, ClientRepository clientRepository, ExecutionClientOrderRepository executionClientOrderRepository) {
+        this.tourExecutionRepository = tourExecutionRepository;
+        this.tourRepository = tourRepository;
+        this.userRepository = userRepository;
+        this.vehicleRepository = vehicleRepository;
+        this.articleRepository = articleRepository;
+        this.surplusRepository = surplusRepository;
+        this.clientRepository = clientRepository;
+        this.executionClientOrderRepository = executionClientOrderRepository;
+    }
+
+    public void createOneExecution(int tourId, TourExecution tourExecution)
+            throws NotFoundException {
+        if (!tourRepository.existsById(tourId))
+            throw new NotFoundException("Tour does not exist");
+        tourExecutionRepository.existsByExecutionDateAndTourId(tourExecution.getExecutionDate(), tourId);
+        tourExecutionRepository.save(tourExecution);
+    }
 
   public List<TourExecution> readExecutionByStateForATour(int tourId, String state) throws  NotFoundException {
     if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tour does not exist");
@@ -195,9 +194,20 @@ public class TourExecutionService {
         tourExecutionRepository.updateComandeClientTourExecuution(tourExecutionId, clientId,
               ac.getArticleId(), ac.getDeliveredQuantity());
     }
-
-      tourExecutionRepository.updateRealiser(tourExecutionId, clientId, true);
+    tourExecutionRepository.updateRealiser(tourExecutionId, clientId, true);
 
   }
+
+    /**
+     * read tour execution order
+     *
+     * @param tourExecutionId the id of the tour
+     * @return tour execution order
+     */
+    @Transactional
+    public List<ExecutionClientOrder> readTourExecutionOrder(int tourExecutionId) throws NotFoundException {
+        if (!tourExecutionRepository.existsById(tourExecutionId)) throw new NotFoundException("Tour execution does not exists");
+        return executionClientOrderRepository.findAllByTourExecutionId(tourExecutionId);
+    }
 
 }

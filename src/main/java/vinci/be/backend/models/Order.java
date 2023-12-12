@@ -16,6 +16,7 @@ import lombok.ToString;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="order_id", nullable=false)
     private int id;
 
     @Column(name="client_id", nullable=false)

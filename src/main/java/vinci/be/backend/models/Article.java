@@ -17,6 +17,7 @@ public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "article_id", nullable = false)
     private int id;
 
     @Column(name = "article_name", nullable = false)
