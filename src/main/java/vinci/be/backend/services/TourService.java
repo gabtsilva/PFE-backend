@@ -79,28 +79,32 @@ public class TourService {
     /**
      * creates the general delivery order for customers
      *  @param tourId               the id of the tour
-     * @param generalClientsOrders the order
-     * @return
+     * @param generalClientsOrders the given order to create
+     * @return created order
      */
     public List<GeneralClientOrder> createOrder(int tourId, List<GeneralClientOrder> generalClientsOrders) throws NotFoundException, ConflictException {
         if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tour does not exists");
         if (generalClientOrderRepository.existsByTourId(tourId)) throw new ConflictException("Order already exists");
+
         ArrayList<GeneralClientOrder> nonUpatedOrders = new ArrayList<GeneralClientOrder>();
+
         for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
             if (!clientRepository.existsById(generalClientOrder.getClientId()))
                 throw new NotFoundException("Client does not exists");
+
             GeneralClientOrder existingOrder = generalClientOrderRepository.findByClientId(generalClientOrder.getClientId());
             //Si le client est déjà dans une autre tournée, on le change de tournée
             if (existingOrder != null && existingOrder.getTourId() != tourId) {
                 Client client = clientRepository.getReferenceById(existingOrder.getClientId());
                 client.setTour(tourId);
-                clientService.updateOne( client);
+                clientService.updateOne( client); //cette méthode modifie déjà l'entité "GeneralClientOrder" en database
             }else {
+                //Sinon on l'ajoute dans la liste des orders qui doivent être créés
                 nonUpatedOrders.add(generalClientOrder);
             }
 
         }
-        generalClientOrderRepository.saveAll(nonUpatedOrders);
+        generalClientOrderRepository.saveAll(nonUpatedOrders); /*Afin de ne pas enregistrer en double */
         return generalClientOrderRepository.findAllByTourId(tourId);
 
 
@@ -110,7 +114,7 @@ public class TourService {
     /**
      * modify the general delivery order for customers
      *  @param tourId               the id of the tour
-     * @param generalClientsOrders the order
+     * @param generalClientsOrders the given order to update
      * @return updated order
      */
     public List<GeneralClientOrder> modifyTourOrder(int tourId, List<GeneralClientOrder> generalClientsOrders) throws NotFoundException, ConflictException {
@@ -123,7 +127,7 @@ public class TourService {
             if (existingOrder != null && existingOrder.getTourId() != tourId) {
                 Client client = clientRepository.getReferenceById(existingOrder.getClientId());
                 client.setTour(tourId);
-                clientService.updateOne( client);
+                clientService.updateOne( client); //cette méthode modifie déjà l'entité "GeneralClientOrder" en database
             };
 
         }
