@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import vinci.be.backend.exceptions.BusinessException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.*;
