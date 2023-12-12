@@ -2,15 +2,13 @@ package vinci.be.backend.models;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "general_clients_orders")
 @Table(name="general_clients_orders")
 

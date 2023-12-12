@@ -7,10 +7,7 @@ import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.GeneralClientOrder;
 import vinci.be.backend.models.Tour;
-import vinci.be.backend.repositories.ClientRepository;
-import vinci.be.backend.repositories.GeneralClientOrderRepository;
-import vinci.be.backend.repositories.OrderRepository;
-import vinci.be.backend.repositories.TourRepository;
+import vinci.be.backend.repositories.*;
 
 import java.util.List;
 
@@ -19,11 +16,14 @@ public class TourService {
     private final TourRepository tourRepository;
     private final ClientRepository clientRepository;
     private final GeneralClientOrderRepository generalClientOrderRepository;
+    private final ExecutionClientOrderRepository executionClientOrderRepository;
 
-    public TourService(TourRepository tourRepository, ClientRepository clientRepository, GeneralClientOrderRepository generalClientOrderRepository) {
+    public TourService(TourRepository tourRepository, ClientRepository clientRepository, GeneralClientOrderRepository generalClientOrderRepository, ExecutionClientOrderRepository executionClientOrderRepository) {
         this.tourRepository = tourRepository;
         this.clientRepository = clientRepository;
         this.generalClientOrderRepository = generalClientOrderRepository;
+
+        this.executionClientOrderRepository = executionClientOrderRepository;
     }
 
     /**
@@ -84,6 +84,8 @@ public class TourService {
         for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
             if (!clientRepository.existsById(generalClientOrder.getClientId()))
                 throw new NotFoundException("Client does not exists");
+            GeneralClientOrder test = generalClientOrderRepository.findByClientId(generalClientOrder.getClientId());
+            if (test != null && test.getTourId() != tourId) throw new ConflictException("Client already in an other tour");
         }
 
         generalClientOrderRepository.saveAll(generalClientsOrders);
@@ -93,19 +95,28 @@ public class TourService {
 
     /**
      * modify the general delivery order for customers
-     *
-     * @param tourId               the id of the tour
+     *  @param tourId               the id of the tour
      * @param generalClientsOrders the order
+     * @return updated order
      */
-    public void modifyTourOrder(int tourId, List<GeneralClientOrder> generalClientsOrders) throws NotFoundException {
+    public List<GeneralClientOrder> modifyTourOrder(int tourId, List<GeneralClientOrder> generalClientsOrders) throws NotFoundException, ConflictException {
         if (!tourRepository.existsById(tourId)) throw new NotFoundException("Tour does not exists");
         for (GeneralClientOrder generalClientOrder : generalClientsOrders) {
-            if (!clientRepository.existsById(generalClientOrder.getClientId()))
-                throw new NotFoundException("Client does not exists");
-        }
-        generalClientOrderRepository.deleteAll(generalClientOrderRepository.findAllByTourId(tourId));
-        generalClientOrderRepository.saveAll(generalClientsOrders);
+            if (!clientRepository.existsById(generalClientOrder.getClientId())) throw new NotFoundException("Client does not exists");
 
+            GeneralClientOrder test = generalClientOrderRepository.findByClientId(generalClientOrder.getClientId());
+            if (test != null && test.getTourId() != tourId) throw new ConflictException("Client already in an other tour");
+
+        }
+        for (GeneralClientOrder order : generalClientsOrders) {
+            GeneralClientOrder savedOrder = generalClientOrderRepository.findByClientId(order.getClientId());
+            savedOrder.setOrder(order.getOrder());
+            savedOrder.setTourId(order.getTourId());
+            savedOrder.setClientId(order.getClientId());
+            generalClientOrderRepository.save(savedOrder);
+
+        }
+        return generalClientOrderRepository.findAllByTourId(tourId);
     }
 
 

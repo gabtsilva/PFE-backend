@@ -9,7 +9,9 @@ public interface GeneralClientOrderRepository extends JpaRepository<GeneralClien
 
     boolean deleteAllByTourId(int tourId);
     List<GeneralClientOrder> findAllByTourId(int tourId);
+    GeneralClientOrder findByClientId(int clientId);
 
     boolean existsByTourId(int tourId);
+
 
 }
