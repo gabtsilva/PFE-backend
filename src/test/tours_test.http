@@ -12,6 +12,14 @@ Content-Type: application/json
   "name": "Tour Three"
 }
 
+### Create Tour Order
+POST http://localhost:8080/tour/4/createTourOrder
+Content-Type: application/json
+
+[
+  {"clientId": 1, "tourId": 4, "order": 1}
+]
+
 ### Update One Tour
 PUT http://localhost:8080/tour/1
 Content-Type: application/json
@@ -30,18 +38,6 @@ Content-Type: application/json
 {"clientId": 3, "tourId": 3, "order": 1},
 {"clientId": 4, "tourId": 3, "order": 2}
 ]
-
-
-### Create Tour Order with a client from an other tour
-POST http://localhost:8080/tour/3/createTourOrder
-Content-Type: application/json
-
-[
-  {"clientId": 3, "tourId": 3, "order": 1},
-  {"clientId": 4, "tourId": 3, "order": 2},
-  {"clientId": 1, "tourId": 3, "order": 3}
-]
-
 
 ### Create Tour Order with wrong order (2 same orders)
 POST http://localhost:8080/tour/2/createTourOrder
@@ -75,15 +71,5 @@ Content-Type: application/json
   "tour": 1
 }
 
-###Modify Tour Order to add this updated client
-PUT http://localhost:8080/tour/1/modifyTourOrder
-Content-Type: application/json
-
-[
-{"clientId":2,"tourId":1,"order":1},
-  {"clientId":1,"tourId":1,"order":2}
-]
-
-
 ### Read Tour Order
-GET http://localhost:8080/tour/2/getTourOrder
+GET http://localhost:8080/tour/4/getTourOrder

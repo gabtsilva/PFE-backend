@@ -18,6 +18,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final TourRepository tourRepository;
     private final GeneralClientOrderRepository generalClientOrderRepository;
+
     public ClientService(ClientRepository clientRepository, TourRepository tourRepository, GeneralClientOrderRepository generalClientOrderRepository) {
         this.clientRepository = clientRepository;
         this.tourRepository = tourRepository;
@@ -52,7 +53,8 @@ public class ClientService {
      * @return true if the client is successfully created, false if a client with the same ID already exists.
      */
     public void createOne(Client client) throws NotFoundException, ConflictException {
-        if (!tourRepository.existsById(client.getTour())) throw new NotFoundException("La tournée du client n'existe pas");
+        if (!tourRepository.existsById(client.getTour()))
+            throw new NotFoundException("La tournée du client n'existe pas");
         if (clientRepository.existsById(client.getId())) throw new ConflictException("La client existe déjà");
         clientRepository.save(client);
     }
@@ -63,22 +65,30 @@ public class ClientService {
      * @param client The client object with updated information.
      * @return true if the client is successfully updated, false if the client with the provided ID does not exist.
      */
-    public boolean updateOne(Client client) throws NotFoundException, ConflictException {
-        if (!tourRepository.existsById(client.getTour())) throw new NotFoundException("La tournée du client n'existe pas");
+    public boolean updateOne( Client client) throws NotFoundException, ConflictException {
+        if (!tourRepository.existsById(client.getTour()))
+            throw new NotFoundException("La tournée du client n'existe pas");
         if (!clientRepository.existsById(client.getId())) throw new NotFoundException("La client n'existe pas");
-        Client savedClient = clientRepository.getReferenceById(client.getId());
+        GeneralClientOrder clientOrder = generalClientOrderRepository.findByClientId(client.getId());
 
         //Si on change le client de tournée
-        if (savedClient.getTour() != client.getTour()) {
-            GeneralClientOrder clientOrder = generalClientOrderRepository.findByClientId(client.getId());
+        if (clientOrder.getTourId() != client.getTour()) {
+
+            System.out.println(clientOrder.getTourId());
             clientOrder.setTourId(client.getTour());
+            System.out.println(clientOrder.getTourId());
+
             //On met l'ordre du client dans sa nouvelle tournée à la plus grande par défaut
             //si dans la tournée 1 il y a 2 clients, le client qu'on update sera à l'ordre 3
-            int maxOrder =  generalClientOrderRepository.findMaxOrderByTourId(client.getTour()).getOrder();
-            clientOrder.setOrder(maxOrder + 1);
+            int maxOrderNumber = 0;
+            GeneralClientOrder maxOrder = generalClientOrderRepository.findMaxOrderByTourId(client.getTour());
+            if (maxOrder != null) maxOrderNumber = maxOrder.getOrder();
+            clientOrder.setOrder(maxOrderNumber + 1);
+
             generalClientOrderRepository.save(clientOrder);
 
         }
+
         clientRepository.save(client);
         return true;
     }
