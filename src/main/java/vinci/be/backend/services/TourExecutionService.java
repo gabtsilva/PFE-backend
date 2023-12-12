@@ -1,5 +1,7 @@
 package vinci.be.backend.services;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import jakarta.transaction.Transactional;
@@ -209,4 +211,20 @@ public class TourExecutionService {
         return executionClientOrderRepository.findAllByTourExecutionId(tourExecutionId);
     }
 
+  public List<TourExecution> getAllTourExecutionForToday(LocalDate executionDate) {
+    System.out.println(executionDate);
+    List<TourExecution> results = new ArrayList<>();
+    for (Object[] row : tourExecutionRepository.getAllTourExecutionForLocalDate(executionDate)) {
+      TourExecution tourExecution = new TourExecution();
+      tourExecution.setId((int) row[0]);
+      tourExecution.setTourId((int) row[1]);
+      tourExecution.setState((String) row[2]);
+      tourExecution.setVehicleId((int) row[3]);
+      tourExecution.setExecutionDate(((Date) row[4]).toLocalDate()); // Conversion de java.sql.Date en java.time.LocalDate
+      tourExecution.setDeliveryPerson((String) row[5]);
+      results.add(tourExecution);
+
+    }
+    return results;
+    }
 }
