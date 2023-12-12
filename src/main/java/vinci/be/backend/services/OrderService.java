@@ -110,10 +110,7 @@ public class OrderService {
 
         //il existe déjà une ligne de commande pour cet article
         if(orderLine != null) {
-            if(quantity < 0 && quantity > orderLine.getPlannedQuantity()){
-                throw new BusinessException("Vous tentez de soustraire une quantité trop grande");
-            }
-            orderLine.setPlannedQuantity(orderLine.getPlannedQuantity() + quantity);
+            orderLine.setPlannedQuantity(quantity);
             orderLineRepository.save(orderLine);
         }else{
             orderLine = new OrderLine(quantity, 0,0 ,articleId, clientId);
@@ -191,7 +188,7 @@ public class OrderService {
         if(orderLine == null) {
             throw new NotFoundException("Le client n'a pas cet article dans sa commande");
         }else{
-            orderLine.setChangedQuantity(orderLine.getChangedQuantity() + quantity);
+            orderLine.setChangedQuantity(quantity);
             orderLineRepository.save(orderLine);
         }
     }
