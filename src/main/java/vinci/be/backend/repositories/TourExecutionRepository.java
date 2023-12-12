@@ -77,4 +77,10 @@ public interface TourExecutionRepository extends JpaRepository<TourExecution, In
   @Modifying
   @Query(value = "UPDATE snappies.execution_clients_orders eco SET delivered = :delivred FROM snappies.general_clients_orders gco WHERE eco.general_client_order = gco.general_client_order_id AND eco.tour_execution_id = :idExecutionTournee AND gco.client_id = :clientId ",nativeQuery = true)
   void updateRealiser(@Param("idExecutionTournee") int idExecutionTournee,@Param("clientId") int clientId, @Param("delivred") boolean delivred);
+
+  @Query(value = "SELECT t.tour_execution_id, t.tour_id, t.state, t.vehicle_id, t.execution_date, t.delivery_person FROM snappies.tours_executions t WHERE t.execution_date = :executionDate", nativeQuery = true)
+  List<Object[]> getAllTourExecutionForLocalDate(@Param("executionDate") LocalDate executionDate);
+
 }
+
+

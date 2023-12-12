@@ -86,3 +86,6 @@ Content-Type: application/json
 }
 ]
 
+
+### get all tour exec for today
+GET http://localhost:8080/tour/tourExecution

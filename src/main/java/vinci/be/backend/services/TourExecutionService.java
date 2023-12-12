@@ -1,5 +1,7 @@
 package vinci.be.backend.services;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import jakarta.transaction.Transactional;
@@ -23,13 +25,14 @@ public class TourExecutionService {
 
     private final VehicleRepository vehicleRepository;
     private final ClientRepository clientRepository;
+    private final GeneralClientOrderRepository generalClientOrderRepository;
 
     private final ExecutionClientOrderRepository executionClientOrderRepository;
-    private  final GeneralClientOrderRepository generalClientOrderRepository;
 
     public TourExecutionService(TourExecutionRepository tourExecutionRepository,
                                 TourRepository tourRepository, UserRepository userRepository,
-                                VehicleRepository vehicleRepository, ArticleRepository articleRepository, SurplusRepository surplusRepository, ClientRepository clientRepository, ExecutionClientOrderRepository executionClientOrderRepository, GeneralClientOrderRepository generalClientOrderRepository) {
+                                VehicleRepository vehicleRepository, ArticleRepository articleRepository, SurplusRepository surplusRepository, ClientRepository clientRepository, ExecutionClientOrderRepository executionClientOrderRepository,
+                                GeneralClientOrderRepository generalClientOrderRepository) {
         this.tourExecutionRepository = tourExecutionRepository;
         this.tourRepository = tourRepository;
         this.userRepository = userRepository;
@@ -125,7 +128,7 @@ public class TourExecutionService {
       article.setId((Integer) row[0]);
       article.setName((String) row[1]);
       article.setPlanned_quantity((Double) row[2]);
-      article.setTotal_with_surplus((Double) row[3]);
+      article.setTotal_with_surplus( roundToNearestHalfOrOne((Double) row[3]));
       results.add(article);
     }
     return results;
@@ -205,6 +208,7 @@ public class TourExecutionService {
      * @param tourExecutionId the id of the tour
      * @return tour execution order
      */
+    @Transactional
     public List<ExecutionClientOrder> readTourExecutionOrder(int tourExecutionId) throws NotFoundException {
         if (!tourExecutionRepository.existsById(tourExecutionId)) throw new NotFoundException("Tour execution does not exists");
         return executionClientOrderRepository.findAllByTourExecutionId(tourExecutionId);
@@ -230,4 +234,29 @@ public class TourExecutionService {
         return null;
 
     }
+
+
+  public List<TourExecution> getAllTourExecutionForToday(LocalDate executionDate) {
+    System.out.println(executionDate);
+    List<TourExecution> results = new ArrayList<>();
+    for (Object[] row : tourExecutionRepository.getAllTourExecutionForLocalDate(executionDate)) {
+      TourExecution tourExecution = new TourExecution();
+      tourExecution.setId((int) row[0]);
+      tourExecution.setTourId((int) row[1]);
+      tourExecution.setState((String) row[2]);
+      tourExecution.setVehicleId((int) row[3]);
+      tourExecution.setExecutionDate(((Date) row[4]).toLocalDate()); // Conversion de java.sql.Date en java.time.LocalDate
+      tourExecution.setDeliveryPerson((String) row[5]);
+      results.add(tourExecution);
+
+    }
+    return results;
+    }
+
+
+
+  private static double roundToNearestHalfOrOne(double number) {
+    double roundedValue = Math.round(number * 2) / 2.0; // Multiplie par 2 pour effectuer l'arrondi à 0,5, puis divise par 2 pour obtenir la valeur arrondie
+    return Math.max(roundedValue, 1.0); // Prend la valeur la plus grande entre la valeur arrondie et 1
+  }
 }
