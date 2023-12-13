@@ -47,7 +47,8 @@ CREATE TABLE snappies.orders(
 
 CREATE TABLE snappies.articles(
                                   article_id serial PRIMARY KEY,
-                                  article_name varchar(100) NOT NULL CHECK (article_name <> '')
+                                  article_name varchar(100) NOT NULL CHECK (article_name <> ''),
+                                  pourcentage integer not null CHECK ( pourcentage >= 0 )
 );
 
 CREATE TABLE snappies.orders_lines(
@@ -59,12 +60,6 @@ CREATE TABLE snappies.orders_lines(
                                       PRIMARY KEY (order_id, article_id)
 );
 
-CREATE TABLE snappies.surplus(
-                                 article_id integer NOT NULL REFERENCES snappies.articles(article_id),
-                                 tour_execution_id integer NOT NULL REFERENCES snappies.tours_executions(tour_execution_id),
-                                 percentage integer NOT NULL CHECK (percentage >=0),
-                                 PRIMARY KEY (article_id, tour_execution_id)
-);
 
 CREATE TABLE snappies.general_clients_orders(
                                                 general_client_order_id SERIAL PRIMARY KEY,
@@ -86,7 +81,7 @@ INSERT INTO snappies.users(email, firstname, lastname, phone_number, password, i
 VALUES
     ('admin', 'Admin',  'User', '123456789', '$2a$10$iXDbSUmi5x1T84NgO6r0FuEPiDWLBhMFnbTmK5E4x5VtZecm1m6um', true),
     ('user', 'User',  'One', '987654321', '$2a$10$EzyRNcYwzu5DXUGoXnm.9u0IxS1TyZnR09wEosKM99ZZ7GWBemZ0S', false),
-    ('user2', 'User',  'One', '987654321', '$2a$10$EzyRNcYwzu5DXUGoXnm.9u0IxS1TyZnR09wEosKM99ZZ7GWBemZ0S', false);
+    ('user2', 'User2',  'One2', '987654321', '$2a$10$EzyRNcYwzu5DXUGoXnm.9u0IxS1TyZnR09wEosKM99ZZ7GWBemZ0S', false);
 
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES
@@ -98,9 +93,10 @@ INSERT INTO snappies.tours(tour_name) VALUES
 INSERT INTO snappies.clients(client_address, client_name, phone_number, children_quantity, tour)
 VALUES
     ('123 Main St, City1', 'Client One', '111222333', 2, 1),
-    ('456 Oak St, City2', 'Client Two', '444555666', 3, 2),
-    ('La bas', 'Client Three', '5984', 10, 3),
-    ('Ici', 'Client Four', '48487', 10, 3);
+    ('456 Oak St, City2', 'Client Two', '444555666', 3, 1),
+    ('La bas', 'Client Three', '5984', 10, 1),
+    ('Ici', 'Client Four', '48487', 10, 2),
+    ('ou Ca ?','Client FIF','5555555', 555,2);
 
 -- Insertion des véhicules
 INSERT INTO snappies.vehicles(vehicle_name, plate, max_quantity)
@@ -112,64 +108,76 @@ VALUES
 INSERT INTO snappies.tours_executions(execution_date, state, delivery_person, vehicle_id, tour_id)
 VALUES
     ('2023-12-13', 'prévue', null, 1, 1),
-    ('2023-12-13', 'commencée', 'user', 2, 2);
+    ('2023-12-13', 'commencée', 'user', 2, 2),
+    ('2023-12-13', 'prévue', null, 1,1);
+
+-- Insertion des articles
+INSERT INTO snappies.articles(article_name,pourcentage) VALUES
+                                                            ('Article 1',10),
+                                                            ('Article 2',20),
+                                                            ('Article 3',50);
 
 -- Insertion des commandes
 INSERT INTO snappies.orders(client_id)
 VALUES
     (1),
-    (2);
-
--- Insertion des articles
-INSERT INTO snappies.articles(article_name) VALUES
-                                                ('Article 1'),
-                                                ('Article 2');
+    (2),
+    (3),
+    (4),
+    (5);
 
 -- Insertion des lignes de commande
 INSERT INTO snappies.orders_lines(order_id, article_id, planned_quantity, delivered_quantity, changed_quantity)
 VALUES
-    (1, 1, 5, 3, 2),
-    (1, 2, 10, 8, 2), -- Corrigé le changement de quantité
-    (2, 1, 8, 6, 1),
-    (2, 2, 15, 12, 4);
+    (1, 1, 5, 0, 2),--tour 1
+    (1,2,10,0,15),--tour 1
+    (2,1,10,0,10),--tour 1
+    (2,3,2,0,2),--tour 1
+    (3,1,20,0,15),--tour 1
+
+    (4,2,20,20,20),--tour 2
+    (5,3,2,0,2) ; -- tour 2
 
 -- Insertion des commandes clients
 INSERT INTO snappies.general_clients_orders(client_order, client_id, tour_id)
 VALUES
     (1, 1, 1),
-    (1, 2, 2),
-    (1, 3, 3),
-    (2, 4, 3);
+    (2,2,1),
+    (3,3,1),
+    (1,4,2),
+    (2,5,2);
+
 
 -- Insertion des lignes de commande d'exécution clients
 INSERT INTO snappies.execution_clients_orders(delivered, general_client_order, tour_execution_id)
 VALUES
-    (true, 1, 1), -- Ajouté le tour_execution_id
-    (false, 2, 2);
+    (false, 1, 1),
+    (false,2,1),
+    (false,3,1),
+    (false,4,2),
+    (false,5,2);
 
--- Insertion des lignes de surplus
-INSERT INTO snappies.surplus(article_id, tour_execution_id, percentage)
-VALUES
-    (1, 1, 5),
-    (2, 1, 8),
-    (1, 2, 3),
-    (2, 2, 6);
+
+
+
+
 /*
+
 SELECT
-    art.article_id,
-    art.article_name,
-    SUM(ol.planned_quantity) AS total_planned_quantity,
-    SUM(ol.planned_quantity) * (1 + COALESCE(MAX(s.percentage), 0) / 100.0) AS total_with_surplus
+    a.article_id AS "articleId",
+    a.article_name AS "articleName",
+    SUM(ol.planned_quantity) AS "totalPlannedQuantity",
+    SUM(ol.changed_quantity) AS "totalChangedQuantity",
+    COALESCE(MAX(a.pourcentage), 0) AS "surplusPercentage"
 FROM
-    snappies.articles art
-        INNER JOIN snappies.orders_lines ol ON art.article_id = ol.article_id
-        INNER JOIN snappies.orders ord ON ol.order_id = ord.order_id
-        INNER JOIN snappies.general_clients_orders gco ON ord.client_id = gco.client_id
+    snappies.articles a
+        INNER JOIN snappies.orders_lines ol ON a.article_id = ol.article_id
+        INNER JOIN snappies.orders o ON ol.order_id = o.order_id
+        INNER JOIN snappies.general_clients_orders gco ON o.client_id = gco.client_id
         INNER JOIN snappies.execution_clients_orders eco ON gco.general_client_order_id = eco.general_client_order
-        INNER JOIN snappies.tours_executions tex ON eco.tour_execution_id = tex.tour_execution_id
-        LEFT JOIN snappies.surplus s ON art.article_id = s.article_id AND tex.tour_execution_id = s.tour_execution_id
 WHERE
-        tex.tour_execution_id = 1 -- Remplacez 1 par l'ID de l'exécution de tournée spécifique
+        eco.tour_execution_id = 2 -- Remplacez [VotreTourExecutionId] par l'ID spécifique du tour d'exécution
 GROUP BY
-    art.article_id, art.article_name;
+    a.article_id;
+
 */
