@@ -205,7 +205,7 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
       return new ResponseEntity<>(executionClientOrders, HttpStatus.OK);
   }
 
-  @GetMapping("/tourExecution/deliveryPerson/{idDeliveryPerson}")
+  @GetMapping("/tourExecution/today/deliveryPerson/{idDeliveryPerson}")
   public ResponseEntity<List<TourExecution>>  getTourExecDeliverPersonForToday(@PathVariable String idDeliveryPerson){
     List<TourExecution> result ;
     LocalDate executionDate = LocalDate.now();

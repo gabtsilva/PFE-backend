@@ -92,4 +92,7 @@ GET http://localhost:8080/tour/tourExecution
 
 
 ###get exec for delivery
-GET http://localhost:8080/tourExecution/deliveryPerson/user1@example.com
+GET http://localhost:8080/tourExecution/today/deliveryPerson/user1@example.com
+
+###get exec for state
+GET http://localhost:8080/tourExecution//today/state/prevue
