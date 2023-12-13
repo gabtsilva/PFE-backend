@@ -73,6 +73,9 @@ public class TourExecutionController {
     if (tourExecution.invalid()) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    if (tourExecution.getExecutionDate() == null){
+      tourExecution.setExecutionDate(LocalDate.now());
+    }
     try {
       tourExecutionService.createOneExecution(tourId, tourExecution);
     } catch (NotFoundException notFoundException) {
