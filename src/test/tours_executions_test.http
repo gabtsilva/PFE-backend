@@ -57,13 +57,13 @@ POST http://localhost:8080/tour/1/tourExecution/end
 
 
 ### get all articlss for tourExex
-GET http://localhost:8080//tour/1/tourExecution/allArticles
+GET http://localhost:8080//tour/2/tourExecution/allArticles
 
 ### get all articlss  by client for tourExex
-GET http://localhost:8080//tour/1/tourExecution/allArticles/client/1
+GET http://localhost:8080//tour/2/tourExecution/allArticles/client/1
 
 ### get all client for tourExex
-GET http://localhost:8080//tour/1/tourExecution/allClients
+GET http://localhost:8080//tour/2/tourExecution/allClients
 
 ### update deliverd articles
 POST http://localhost:8080//tour/1/tourExecution/distributeArticle/client/1
