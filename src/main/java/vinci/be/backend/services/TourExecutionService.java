@@ -286,5 +286,14 @@ public class TourExecutionService {
   }
 
 
-
+  public List<ClientDelivered> getClientDeliveredBool(int tourExecutionId) {
+    List<ClientDelivered> results = new ArrayList<>();
+    for (Object[] row : tourExecutionRepository.getClientDeliveredBool(tourExecutionId)) {
+      ClientDelivered clientDelivered  = new ClientDelivered();
+      clientDelivered.setName((String) row[0]);
+      clientDelivered.setDelivred((boolean) row[1]);
+      results.add(clientDelivered);
+    }
+    return results;
+  }
 }

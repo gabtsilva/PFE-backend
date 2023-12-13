@@ -235,4 +235,16 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
     return new ResponseEntity<>(tourExecutionList,HttpStatus.OK);
   }
 
+  @GetMapping( "/tourExecution/{tourExecutionId}/getClientDeliveredBool")
+  public ResponseEntity<List<ClientDelivered> > getClientDeliveredBool(@PathVariable int tourExecutionId){
+    List<ClientDelivered> result ;
+    try {
+      result = tourExecutionService.getClientDeliveredBool(tourExecutionId);
+    }catch (Exception e){
+      System.out.println(e.getMessage());
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return new ResponseEntity<>(result,HttpStatus.OK);
+  }
+
 }

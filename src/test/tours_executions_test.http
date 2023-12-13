@@ -96,3 +96,6 @@ GET http://localhost:8080/tourExecution/today/deliveryPerson/user2
 
 ###get exec for state
 GET http://localhost:8080/tourExecution/today/state/finie
+
+### get passer chez client ( bool )
+GET http://localhost:8080/tourExecution/1/getClientDeliveredBool
