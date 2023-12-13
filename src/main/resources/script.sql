@@ -35,8 +35,8 @@ CREATE TABLE snappies.tours_executions(
                                           tour_execution_id SERIAL PRIMARY KEY,
                                           execution_date date NOT NULL,
                                           state varchar(20) NOT NULL  CHECK ( state in ('prévue', 'commencée', 'finie') ),
-                                          delivery_person varchar(50) NOT NULL REFERENCES snappies.users(email),
-                                          vehicle_id integer NOT NULL REFERENCES snappies.vehicles(vehicle_id),
+                                          delivery_person varchar(50) REFERENCES snappies.users(email),
+                                          vehicle_id integer REFERENCES snappies.vehicles(vehicle_id),
                                           tour_id integer NOT NULL REFERENCES snappies.tours(tour_id)
 );
 
@@ -84,8 +84,9 @@ CREATE TABLE snappies.execution_clients_orders(
 -- Insertion des utilisateurs
 INSERT INTO snappies.users(email, firstname, lastname, phone_number, password, is_admin)
 VALUES
-    ('admin@example.com', 'Admin',  'User', '123456789', '$2a$10$iXDbSUmi5x1T84NgO6r0FuEPiDWLBhMFnbTmK5E4x5VtZecm1m6um', true),
-    ('user1@example.com', 'User',  'One', '987654321', '$2a$10$EzyRNcYwzu5DXUGoXnm.9u0IxS1TyZnR09wEosKM99ZZ7GWBemZ0S', false);
+    ('admin', 'Admin',  'User', '123456789', '$2a$10$iXDbSUmi5x1T84NgO6r0FuEPiDWLBhMFnbTmK5E4x5VtZecm1m6um', true),
+    ('user', 'User',  'One', '987654321', '$2a$10$EzyRNcYwzu5DXUGoXnm.9u0IxS1TyZnR09wEosKM99ZZ7GWBemZ0S', false),
+    ('user2', 'User',  'One', '987654321', '$2a$10$EzyRNcYwzu5DXUGoXnm.9u0IxS1TyZnR09wEosKM99ZZ7GWBemZ0S', false);
 
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES
@@ -110,8 +111,8 @@ VALUES
 -- Insertion des exécutions de tour
 INSERT INTO snappies.tours_executions(execution_date, state, delivery_person, vehicle_id, tour_id)
 VALUES
-    ('2023-01-01', 'prévue', 'admin@example.com', 1, 1),
-    ('2023-02-01', 'commencée', 'user1@example.com', 2, 2);
+    ('2023-12-13', 'prévue', null, 1, 1),
+    ('2023-12-13', 'commencée', 'user', 2, 2);
 
 -- Insertion des commandes
 INSERT INTO snappies.orders(client_id)
@@ -136,7 +137,9 @@ VALUES
 INSERT INTO snappies.general_clients_orders(client_order, client_id, tour_id)
 VALUES
     (1, 1, 1),
-    (1, 2, 2);
+    (1, 2, 2),
+    (1, 3, 3),
+    (2, 4, 3);
 
 -- Insertion des lignes de commande d'exécution clients
 INSERT INTO snappies.execution_clients_orders(delivered, general_client_order, tour_execution_id)
@@ -151,7 +154,7 @@ VALUES
     (2, 1, 8),
     (1, 2, 3),
     (2, 2, 6);
-
+/*
 SELECT
     art.article_id,
     art.article_name,
@@ -169,3 +172,4 @@ WHERE
         tex.tour_execution_id = 1 -- Remplacez 1 par l'ID de l'exécution de tournée spécifique
 GROUP BY
     art.article_id, art.article_name;
+*/
