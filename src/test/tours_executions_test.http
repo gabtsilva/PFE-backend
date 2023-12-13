@@ -95,4 +95,4 @@ GET http://localhost:8080/tour/tourExecution
 GET http://localhost:8080/tourExecution/today/deliveryPerson/user1@example.com
 
 ###get exec for state
-GET http://localhost:8080/tourExecution/today/state/prevue
+GET http://localhost:8080/tourExecution/today/state/finie

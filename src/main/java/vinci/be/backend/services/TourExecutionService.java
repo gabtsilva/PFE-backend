@@ -132,7 +132,7 @@ public class TourExecutionService {
           double changedQtyBase = (Double) row[3];
           article.setPlanned_quantity(changedQtyBase);
           double totalAvecSurplus = changedQtyBase * (1 + (Double) row[4]);
-          article.setTotal_with_surplus(totalAvecSurplus);
+          article.setTotal_with_surplus( roundToNearestHalfOrOne( totalAvecSurplus));
           results.add(article);
         }
         return results;
