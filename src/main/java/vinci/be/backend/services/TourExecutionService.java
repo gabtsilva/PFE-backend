@@ -229,9 +229,10 @@ public class TourExecutionService {
             executionClientOrder.setGeneralClientOrderId(generalOrder.getId());
             executionClientOrder.setTourExecutionId(tourExecutionId);
             executionClientOrder.setDelivered(false);
+            executionClientOrderRepository.save(executionClientOrder);
 
         }
-        return null;
+        return executionClientOrderRepository.findAllByTourExecutionId(tourId);
 
     }
 

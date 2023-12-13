@@ -25,6 +25,18 @@ Content-Type: application/json
   "tour": 1
 }
 
+### Create One
+POST http://localhost:8080/client
+Content-Type: application/json
+
+{
+  "address": "123 Main St, City1",
+  "name": "Client Three",
+  "phoneNumber": "111222333",
+  "childrenQuantity": 2,
+  "tour": 4
+}
+
 
 ### Create One user with a tour that doesn't exist
 POST http://localhost:8080/client
