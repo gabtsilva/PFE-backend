@@ -217,4 +217,22 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
     return new ResponseEntity<>(result,HttpStatus.OK);
   }
 
+
+  @GetMapping("/tourExecution/today/state/{state}")
+  public ResponseEntity<List<TourExecution>> getAllTourExecutionForTodayInState(@PathVariable String state){
+    if (state.equals("prevue")){
+      state = "prévue";
+    } else if (state.equals("commencee")){
+      state = "commencée";
+    } else if (state.equals("finie")) {
+    }else {
+      return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    List<TourExecution> tourExecutionList;
+    LocalDate executionDate = LocalDate.now();
+    tourExecutionList = tourExecutionService.getTourByStateForDate(executionDate, state);
+    return new ResponseEntity<>(tourExecutionList,HttpStatus.OK);
+  }
+
 }

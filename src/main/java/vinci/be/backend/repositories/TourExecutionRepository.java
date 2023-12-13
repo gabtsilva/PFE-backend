@@ -83,6 +83,11 @@ public interface TourExecutionRepository extends JpaRepository<TourExecution, In
       + "AND (TO_DATE(:executionDate, 'YYYY-MM-DD') IS NULL OR execution_date = COALESCE(TO_DATE(:executionDate, 'YYYY-MM-DD'), execution_date))", nativeQuery = true)
   List<Object[]> getAllTourExecutionForLocalDate(@Param("executionDate") LocalDate executionDate, @Param("deliveryPerson") String deliveryPerson);
 
+  @Query(value = "SELECT t.tour_execution_id, t.tour_id, t.state, t.vehicle_id, t.execution_date, t.delivery_person\n"
+      + "FROM snappies.tours_executions t\n"
+      + "WHERE (t.state = COALESCE(:state, t.state))\n"
+      + "AND (TO_DATE(:executionDate, 'YYYY-MM-DD') IS NULL OR execution_date = COALESCE(TO_DATE(:executionDate, 'YYYY-MM-DD'), execution_date))", nativeQuery = true)
+  List<Object[]> getAllTourExecutionForLocalDateAndState(LocalDate executionDate, String state);
 }
 
 

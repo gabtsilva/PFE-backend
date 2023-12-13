@@ -252,12 +252,27 @@ public class TourExecutionService {
     }
     return results;
   }
+  public List<TourExecution> getTourByStateForDate(LocalDate executionDate, String state) {
+    List<TourExecution> results = new ArrayList<>();
+    for (Object[] row : tourExecutionRepository.getAllTourExecutionForLocalDateAndState(executionDate,state)) {
+      TourExecution tourExecution = new TourExecution();
+      tourExecution.setId((int) row[0]);
+      tourExecution.setTourId((int) row[1]);
+      tourExecution.setState((String) row[2]);
+      tourExecution.setVehicleId((int) row[3]);
+      tourExecution.setExecutionDate(((Date) row[4]).toLocalDate()); // Conversion de java.sql.Date en java.time.LocalDate
+      tourExecution.setDeliveryPerson((String) row[5]);
+      results.add(tourExecution);
 
+    }
+    return results;
+  }
 
   private static double roundToNearestHalfOrOne(double number) {
     double roundedValue = Math.round(number * 2) / 2.0; // Multiplie par 2 pour effectuer l'arrondi à 0,5, puis divise par 2 pour obtenir la valeur arrondie
     return Math.max(roundedValue, 1.0); // Prend la valeur la plus grande entre la valeur arrondie et 1
   }
+
 
 
 }
