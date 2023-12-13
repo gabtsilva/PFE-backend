@@ -28,7 +28,7 @@ PATCH http://localhost:8080/tour/1/tourExecution/deliveryPerson
 Content-Type: application/json
 
 {
-  "email": "user2@example.com",
+  "email": "user2",
   "firstname": "User",
   "lastname": "two",
   "phoneNumber": "987654321",
@@ -92,7 +92,7 @@ GET http://localhost:8080/tour/tourExecution
 
 
 ###get exec for delivery
-GET http://localhost:8080/tourExecution/today/deliveryPerson/user1@example.com
+GET http://localhost:8080/tourExecution/today/deliveryPerson/user2
 
 ###get exec for state
 GET http://localhost:8080/tourExecution/today/state/finie

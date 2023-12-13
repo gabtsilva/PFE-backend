@@ -97,6 +97,9 @@ public class TourExecutionService {
     if (tourExecution == null){
       throw new NotFoundException("tour not found");
     }
+
+    tourExecution.setState(state);
+    tourExecutionRepository.save(tourExecution);/*
     String actualSate = tourExecution.getState();
     if (actualSate.equals("prévue") && state.equals("commencée")){
       tourExecution.setState(state);
@@ -107,6 +110,7 @@ public class TourExecutionService {
     }else {
     throw new IllegalArgumentException("not in good state");
     }
+    */
   }
 
   public void addSurplus(int tourExecutionId, Surplus surplus) throws NotFoundException {
