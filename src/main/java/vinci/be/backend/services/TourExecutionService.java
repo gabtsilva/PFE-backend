@@ -118,20 +118,28 @@ public class TourExecutionService {
   }
 
   public List<AllArticlesTourExecution> getAllArticles(int tourExecutionId) throws NotFoundException {
-    TourExecution tourExecution = tourExecutionRepository.getReferenceById(tourExecutionId);
-    if (tourExecution == null){
-      throw new NotFoundException("tour not found");
-    }
-    List<AllArticlesTourExecution> results = new ArrayList<>();
-    for (Object[] row : tourExecutionRepository.getAllArticles(tourExecutionId)) {
-      AllArticlesTourExecution article = new AllArticlesTourExecution();
-      article.setId((Integer) row[0]);
-      article.setName((String) row[1]);
-      article.setPlanned_quantity((Double) row[2]);
-      article.setTotal_with_surplus( roundToNearestHalfOrOne((Double) row[3]));
-      results.add(article);
-    }
-    return results;
+      try {
+        TourExecution tourExecution = tourExecutionRepository.getReferenceById(tourExecutionId);
+        if (tourExecution == null) {
+          throw new NotFoundException("tour not found");
+        }
+        List<AllArticlesTourExecution> results = new ArrayList<>();
+        for (Object[] row : tourExecutionRepository.getAllArticles(tourExecutionId)) {
+          AllArticlesTourExecution article = new AllArticlesTourExecution();
+          article.setId((Integer) row[0]);
+          article.setName((String) row[1]);
+          double planedQtyBase = (Double) row[2];
+          double changedQtyBase = (Double) row[3];
+          article.setPlanned_quantity(changedQtyBase);
+          double totalAvecSurplus = changedQtyBase * (1 + (Double) row[4]);
+          article.setTotal_with_surplus(totalAvecSurplus);
+          results.add(article);
+        }
+        return results;
+      }catch (Exception e){
+        System.out.println(e.getMessage());
+      }
+      return null;
   }
 
   public List<Client> getAllClients(int tourExecutionId)

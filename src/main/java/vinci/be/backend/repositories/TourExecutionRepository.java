@@ -19,22 +19,21 @@ public interface TourExecutionRepository extends JpaRepository<TourExecution, In
   List<TourExecution> findByTourIdAndDeliveryPersonAndState(int tourId, String userMail, String state);
 
   @Query(value = "SELECT\n"
-      + "    art.article_id,\n"
-      + "    art.article_name,\n"
-      + "    SUM(ol.planned_quantity) AS total_planned_quantity,\n"
-      + "    SUM(ol.planned_quantity) * (1 + COALESCE(MAX(s.percentage), 0) / 100.0) AS total_with_surplus\n"
+      + "    a.article_id AS \"articleId\",\n"
+      + "    a.article_name AS \"articleName\",\n"
+      + "    SUM(ol.planned_quantity) AS \"totalPlannedQuantity\",\n"
+      + "    SUM(ol.changed_quantity) AS \"totalChangedQuantity\",\n"
+      + "    COALESCE(MAX(a.pourcentage), 0) AS \"surplusPercentage\"\n"
       + "FROM\n"
-      + "    snappies.articles art\n"
-      + "        INNER JOIN snappies.orders_lines ol ON art.article_id = ol.article_id\n"
-      + "        INNER JOIN snappies.orders ord ON ol.order_id = ord.order_id\n"
-      + "        INNER JOIN snappies.general_clients_orders gco ON ord.client_id = gco.client_id\n"
-      + "        INNER JOIN snappies.execution_clients_orders eco ON gco.general_client_order_id = eco.general_client_order\n"
-      + "        INNER JOIN snappies.tours_executions tex ON eco.tour_execution_id = tex.tour_execution_id\n"
-      + "        LEFT JOIN snappies.surplus s ON art.article_id = s.article_id AND tex.tour_execution_id = s.tour_execution_id\n"
+      + "    snappies.articles a\n"
+      + "    INNER JOIN snappies.orders_lines ol ON a.article_id = ol.article_id\n"
+      + "    INNER JOIN snappies.orders o ON ol.order_id = o.order_id\n"
+      + "    INNER JOIN snappies.general_clients_orders gco ON o.client_id = gco.client_id\n"
+      + "    INNER JOIN snappies.execution_clients_orders eco ON gco.general_client_order_id = eco.general_client_order\n"
       + "WHERE\n"
-      + "        tex.tour_execution_id = :idExecutionTournee -- Remplacez 1 par l'ID de l'exécution de tournée spécifique\n"
+      + "    eco.tour_execution_id = :idExecutionTournee -- Remplacez [VotreTourExecutionId] par l'ID spécifique du tour d'exécution\n"
       + "GROUP BY\n"
-      + "    art.article_id, art.article_name;",
+      + "    a.article_id;",
       nativeQuery = true)
   List<Object[]> getAllArticles(@Param("idExecutionTournee") int idExecutionTournee);
 
