@@ -100,6 +100,30 @@ public interface TourExecutionRepository extends JpaRepository<TourExecution, In
       + "WHERE\n"
       + "    eco.tour_execution_id = :tourExecutionId" ,nativeQuery = true)
   List<Object[]> getClientDeliveredBool(@Param("tourExecutionId") int tourExecutionId);
+
+
+
+
+  @Query(value = "SELECT\n"
+      + "    a.article_id AS \"articleId\",\n"
+      + "    a.article_name AS \"articleName\",\n"
+      + "    SUM(ol.planned_quantity) AS \"totalPlannedQuantity\",\n"
+      + "    SUM(ol.changed_quantity) AS \"totalChangedQuantity\",\n"
+      + "    SUM(ol.delivered_quantity) AS \"delivered qty \", \n"
+      + "    COALESCE(MAX(a.pourcentage), 0) AS \"surplusPercentage\"\n"
+      + "FROM\n"
+      + "    snappies.articles a\n"
+      + "    INNER JOIN snappies.orders_lines ol ON a.article_id = ol.article_id\n"
+      + "    INNER JOIN snappies.orders o ON ol.order_id = o.order_id\n"
+      + "    INNER JOIN snappies.general_clients_orders gco ON o.client_id = gco.client_id\n"
+      + "    INNER JOIN snappies.execution_clients_orders eco ON gco.general_client_order_id = eco.general_client_order\n"
+      + "WHERE\n"
+      + "    eco.tour_execution_id = :idExecutionTournee -- Remplacez [VotreTourExecutionId] par l'ID spécifique du tour d'exécution\n"
+      + "GROUP BY\n"
+      + "    a.article_id;",
+      nativeQuery = true)
+  List<Object[]> getAllArticlesALL(@Param("idExecutionTournee") int idExecutionTournee);
+
 }
 
 
