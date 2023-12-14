@@ -48,11 +48,11 @@ public class UserController {
         return new ResponseEntity<>(deliveryMen, HttpStatus.OK);
 
     }
-/*
+
     @PostMapping("/user")
-    public ResponseEntity<Void> createOne(@RequestBody UserWithPassword userWithPassword) {
-        if (userWithPassword.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        boolean created  = userService.createOne(userWithPassword);
+    public ResponseEntity<Void> createOne(@RequestBody User user) {
+        if (user.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        boolean created  = userService.createOne(user);
         if (created) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -61,7 +61,7 @@ public class UserController {
     }
 
 
- */
+
 
     @PutMapping("/user/{email}")
     public ResponseEntity<Void> updateOne(@PathVariable String email, @RequestBody User user) {
