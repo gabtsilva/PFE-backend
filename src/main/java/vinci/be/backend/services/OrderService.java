@@ -114,7 +114,7 @@ public class OrderService {
             orderLine.setChangedQuantity(quantity);
             orderLineRepository.save(orderLine);
         }else{
-            orderLine = new OrderLine(quantity, 0,0 ,articleId, clientId);
+            orderLine = new OrderLine(quantity, 0,quantity ,articleId, clientId);
             orderLineRepository.save(orderLine);
         }
     }
