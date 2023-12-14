@@ -4,6 +4,7 @@
 
 ### Read all
 GET http://localhost:8080/user
+
 ### Get One
 GET http://localhost:8080/user/user1@example.com
 
@@ -13,16 +14,12 @@ POST http://localhost:8080/user
 Content-Type: application/json
 
 {
-  "user_data" : {
-    "mail": "ju",
-    "firstname": "ju",
-    "lastname": "ju",
-    "phoneNumber": "5589825",
-    "isAdmin" : true
-
-  },
-  "password" : "ju"
-
+  "email": "ju",
+  "firstname": "ju",
+  "lastname": "ju",
+  "phoneNumber": "5589825",
+  "isAdmin": true,
+  "password": "ju"
 }
 
 
@@ -36,8 +33,7 @@ Content-Type: application/json
   "firstname": "Roy",
   "lastname": "Agbassah",
   "phoneNumber": "5589825",
-  "isAdmin" : true
-
+  "isAdmin": true
 }
 
 ###Get all delivery men
