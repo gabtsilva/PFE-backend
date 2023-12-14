@@ -38,6 +38,6 @@ public class TourExecution {
 
   public boolean invalid(){
     return (!state.equals(TourState.COMMENCEE.getLabel()) && !state.equals(TourState.PREVUE.getLabel()) && !state.equals(TourState.TERMINEE.getLabel()))
-        || deliveryPerson == null || deliveryPerson.isEmpty() || deliveryPerson.isBlank();
+        ||  deliveryPerson.isEmpty() || deliveryPerson.isBlank();
   }
 }
