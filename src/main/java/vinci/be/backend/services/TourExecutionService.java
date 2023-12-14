@@ -283,7 +283,7 @@ public class TourExecutionService {
   }
 
   private static double roundToNearestHalfOrOne(double number) {
-    double roundedValue = Math.round(number * 2) / 2.0; // Multiplie par 2 pour effectuer l'arrondi à 0,5, puis divise par 2 pour obtenir la valeur arrondie
+    double roundedValue = Math.ceil(number * 2) / 2.0; // Multiplie par 2 pour effectuer l'arrondi à 0,5, puis divise par 2 pour obtenir la valeur arrondie
     return Math.max(roundedValue, 1.0); // Prend la valeur la plus grande entre la valeur arrondie et 1
   }
 

@@ -67,13 +67,15 @@ CREATE TABLE snappies.general_clients_orders(
                                                 client_id integer NOT NULL REFERENCES snappies.clients(client_id),
                                                 tour_id integer NOT NULL  REFERENCES snappies.tours(tour_id),
                                                 unique(tour_id, client_id)
+
 );
 
 CREATE TABLE snappies.execution_clients_orders(
                                                   execution_client_order_id SERIAL PRIMARY KEY,
                                                   delivered boolean NOT NULL DEFAULT false,
                                                   general_client_order integer REFERENCES snappies.general_clients_orders(general_client_order_id),
-                                                  tour_execution_id integer NOT NULL  REFERENCES snappies.tours_executions(tour_execution_id)
+                                                  tour_execution_id integer NOT NULL  REFERENCES snappies.tours_executions(tour_execution_id),
+                                                  unique (general_client_order, tour_execution_id)
 );
 
 -- Insertion des utilisateurs
@@ -85,18 +87,21 @@ VALUES
 
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES
-                                          ('Tour A'),
-                                          ('Tour B'),
-                                          ('Tour C');
+                                          ('Villes de la région de Charleroi'),
+                                          ('La Hulpe)'),
+                                          ('Bruxelles');
 
 -- Insertion des clients
 INSERT INTO snappies.clients(client_address, client_name, phone_number, children_quantity, tour)
 VALUES
-    ('123 Main St, City1', 'Client One', '111222333', 2, 1),
-    ('456 Oak St, City2', 'Client Two', '444555666', 3, 1),
-    ('La bas', 'Client Three', '5984', 10, 1),
-    ('Ici', 'Client Four', '48487', 10, 2),
-    ('ou Ca ?','Client FIF','5555555', 555,2);
+    ('Rue Francisco Ferrer 19 boite 3, 6181 Gouy-Lez-Piéton', 'Rêverie', '04123456', 12, 1),
+    ('Rue de la Vielle Place 51, 6001 Marcinelle','Les ptits loups','04123456',15 ,1),
+    ('Chaussée de Nivelles 212, 6041 gosselies','L arbre à cabane','04123456',8, 1),
+    ('Rue de Tamines 18, 6224 Wanfercée-Baulet','Les lutins','04123456',22, 1),
+    ('Rue des Combattants, 59, 1310 La Hulpe','Les Tiffins','04123456',12, 2),
+    ('Rue Souveraine 48, 1050 Bruxelles','Cardinal Mercier','04123456',21, 3),
+    ('Av. Ducpétiaux 16, 1060 Saint-Gilles','Les Poussins','04123456',7, 3),
+    ('Chaussée de Boisfort 40, 1050 Ixelles','Saint Joseph','04123456',11, 3);
 
 -- Insertion des véhicules
 INSERT INTO snappies.vehicles(vehicle_name, plate, max_quantity)
@@ -107,14 +112,18 @@ VALUES
 -- Insertion des exécutions de tour
 INSERT INTO snappies.tours_executions(execution_date, state, delivery_person, vehicle_id, tour_id)
 VALUES
-    ('2023-12-13', 'prévue', null, 1, 1),
-    ('2023-12-13', 'prévue', null, 2, 2);
+    ('2023-12-14', 'prévue', null, 1, 1),
+    ('2023-12-14', 'prévue', null, 2, 2),
+    ('2023-12-14', 'prévue', null, 1, 3);
 
 -- Insertion des articles
 INSERT INTO snappies.articles(article_name,pourcentage) VALUES
-                                                            ('Article 1',0.1),
-                                                            ('Article 2',0.2),
-                                                            ('Article 3',0.5);
+                                                            ('Langes S',0.1),
+                                                            ('Langes M',0.2),
+                                                            ('Langes L',0.5),
+                                                            ('Inserts', 0.1),
+                                                            ('Sacs-poubelle', 0.5),
+                                                            ('Gants de toilette', 0.2);
 
 -- Insertion des commandes
 INSERT INTO snappies.orders(client_id)
@@ -123,64 +132,83 @@ VALUES
     (2),
     (3),
     (4),
-    (5);
+    (5),
+    (6),
+    (7),
+    (8);
 
 -- Insertion des lignes de commande
 INSERT INTO snappies.orders_lines(order_id, article_id, planned_quantity, delivered_quantity, changed_quantity)
 VALUES
-    (1, 1, 5, 0, 2),--tour 1
-    (1,2,10,0,15),--tour 1
-    (2,1,10,0,10),--tour 1
-    (2,3,2,0,2),--tour 1
-    (3,1,20,0,15),--tour 1
+    (1, 1, 1, 0, 1),
+    (1,2,3,0,3),
+    (1,3,1,0,1),
+    (1,4,1,0,1),
+    (1,5,10,0,10),
+    (1,6,2,0,2),
 
-    (4,2,20,20,20),--tour 2
-    (5,3,2,0,2) ; -- tour 2
+    (2,2,3,0,3),
+    (2,3,1,0,1),
+    (2,5,6,0,6),
+
+    (3,1,1,0,1),
+    (3,2,2,0,2),
+    (3,3,1,0,1),
+    (3,4,1,0,1),
+    (3,5,8,0,8),
+
+    (4,1,1,0,1),
+    (4,2,5,0,5),
+    (4,3,2,0,2),
+    (4,4,2,0,2),
+    (4,5,12,0,12),
+    (4,6,1,0,1),
+
+    (5,1,1,0,1),
+    (5,2,3,0,3),
+    (5,3,2,0,2),
+    (5,4,2,0,2),
+    (5,5,12,0,12),
+
+    (6,1,0.5,0,0.5),
+    (6,2,5,0,5),
+    (6,3,1,0,1),
+    (6,4,1,0,1),
+    (6,5,14,0,14),
+
+    (7,2,1,0,1),
+    (7,3,0.5,0,0.5),
+    (7,5,4,0,4),
+
+    (8,1,1,0,1),
+    (8,2,3,0,3),
+    (8,3,1.5,0,1.5),
+    (8,4,1,0,1),
+    (8,5,14,0,14) ; -- tour 2
 
 -- Insertion des commandes clients
 INSERT INTO snappies.general_clients_orders(client_order, client_id, tour_id)
 VALUES
-    (1, 1, 1),
+    (1,1,1),
     (2,2,1),
     (3,3,1),
-    (1,4,2),
-    (2,5,2);
+    (4,4,1),
+    (1,5,2),
+    (1,6,3),
+    (2,7,3),
+    (3,8,3);
 
 
 -- Insertion des lignes de commande d'exécution clients
 INSERT INTO snappies.execution_clients_orders(delivered, general_client_order, tour_execution_id)
 VALUES
-    (false, 1, 1),
+    (false,1,1),
     (false,2,1),
     (false,3,1),
-    (false,4,2),
-    (false,5,2);
+    (false,4,1),
+    (false,5,2),
+    (false,6,3),
+    (false,7,3),
+    (false,8,3);
 
 
-
-
-
-
-
-
-
-/*
-
-SELECT
-    a.article_id AS "articleId",
-    a.article_name AS "articleName",
-    SUM(ol.planned_quantity) AS "totalPlannedQuantity",
-    SUM(ol.changed_quantity) AS "totalChangedQuantity",
-    COALESCE(MAX(a.pourcentage), 0) AS "surplusPercentage"
-FROM
-    snappies.articles a
-        INNER JOIN snappies.orders_lines ol ON a.article_id = ol.article_id
-        INNER JOIN snappies.orders o ON ol.order_id = o.order_id
-        INNER JOIN snappies.general_clients_orders gco ON o.client_id = gco.client_id
-        INNER JOIN snappies.execution_clients_orders eco ON gco.general_client_order_id = eco.general_client_order
-WHERE
-        eco.tour_execution_id = 2 -- Remplacez [VotreTourExecutionId] par l'ID spécifique du tour d'exécution
-GROUP BY
-    a.article_id;
-
-*/
