@@ -88,7 +88,7 @@ VALUES
 -- Insertion des tours
 INSERT INTO snappies.tours(tour_name) VALUES
                                           ('Villes de la région de Charleroi'),
-                                          ('La Hulpe)'),
+                                          ('La Hulpe'),
                                           ('Bruxelles');
 
 -- Insertion des clients
@@ -118,12 +118,12 @@ VALUES
 
 -- Insertion des articles
 INSERT INTO snappies.articles(article_name,pourcentage) VALUES
-                                                            ('Langes S',0.1),
+                                                            ('Langes S',0.2),
                                                             ('Langes M',0.2),
-                                                            ('Langes L',0.5),
+                                                            ('Langes L',0.2),
                                                             ('Inserts', 0.1),
-                                                            ('Sacs-poubelle', 0.5),
-                                                            ('Gants de toilette', 0.2);
+                                                            ('Sacs-poubelle', 0.2),
+                                                            ('Gants de toilette', 0.1);
 
 -- Insertion des commandes
 INSERT INTO snappies.orders(client_id)
@@ -210,5 +210,3 @@ VALUES
     (false,6,3),
     (false,7,3),
     (false,8,3);
-
-
