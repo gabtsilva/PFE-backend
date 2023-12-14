@@ -313,7 +313,7 @@ public class TourExecutionService {
             ad.setArticleName(ac.getArticleName());
             ad.setQtyBase( ac.getChangedQuantity());
             ad.setQtyLivre( ac.getDeliveredQuantity());
-            ad.setQtySurplusRestant(roundToNearestHalfOrOne((ac.getChangedQuantity() * (1 + ac.getPlannedQuantity() )- ac.getDeliveredQuantity())));
+            ad.setQtySurplusRestant((ac.getChangedQuantity() * (1 + ac.getPlannedQuantity() )- ac.getDeliveredQuantity()));
             articlesDelivreds.add(ad);
         }
 
