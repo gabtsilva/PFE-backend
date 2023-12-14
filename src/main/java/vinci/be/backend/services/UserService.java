@@ -2,6 +2,7 @@ package vinci.be.backend.services;
 
 
 import jakarta.transaction.Transactional;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import sun.misc.Unsafe;
 import vinci.be.backend.models.UnsafeCredentials;
@@ -59,22 +60,23 @@ public class UserService {
         return deliveryMen;
     }
 
-/*
+
     /**
      * Creates a new user in the repository if the provided user mail does not already exist.
      *
-     * @param userWithPassword The user object to be created.
+     * @param user The user object to be created.
      * @return true if the user is successfully created, false if a user with the same mail already exists.
+     * */
 
-    public boolean createOne(UserWithPassword userWithPassword) {
-        if (userRepository.existsById(userWithPassword.getUser().getEmail())) return false;
-        UnsafeCredentials unsafeCredentials = new UnsafeCredentials(userWithPassword.getUser().getEmail(), userWithPassword.getPassword(), false);
-        authenticationService.createOne(unsafeCredentials);
-        userRepository.save(userWithPassword.getUser());
+    public boolean createOne(User user) {
+        if (userRepository.existsById(user.getEmail())) return false;
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        user.setPassword(hashedPassword);
+        userRepository.save(user);
         return true;
     }
 
- */
+
 
     /**
      * Updates an existing user in the repository if the provided user mail already exists.
@@ -87,4 +89,6 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
+
+
 }

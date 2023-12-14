@@ -23,9 +23,11 @@ public class Article {
     @Column(name = "article_name", nullable = false)
     private String name;
 
+    @Column(name = "pourcentage", nullable = false)
+    private double pourcentage;
 
     public boolean invalid() {
-        return name == null || name.isBlank() || name.isEmpty() ;
+        return name == null || name.isBlank() || name.isEmpty() || pourcentage < 0 ;
     }
 
 }

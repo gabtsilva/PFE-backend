@@ -28,7 +28,7 @@ PATCH http://localhost:8080/tour/1/tourExecution/deliveryPerson
 Content-Type: application/json
 
 {
-  "mail": "user2@example.com",
+  "email": "user2",
   "firstname": "User",
   "lastname": "two",
   "phoneNumber": "987654321",
@@ -60,8 +60,76 @@ POST http://localhost:8080/tour/1/tourExecution/end
 GET http://localhost:8080//tour/1/tourExecution/allArticles
 
 ### get all articlss  by client for tourExex
-GET http://localhost:8080//tour/1/tourExecution/allArticles/client/1
+GET http://localhost:8080//tour/2/tourExecution/allArticles/client/1
 
 ### get all client for tourExex
-GET http://localhost:8080//tour/1/tourExecution/allClients
+GET http://localhost:8080//tour/2/tourExecution/allClients
+
+### update deliverd articles
+POST http://localhost:8080//tour/1/tourExecution/distributeArticle/client/1
+Content-Type: application/json
+
+[
+  {
+  "articleId": 1,
+  "articleName": "Article 1",
+  "plannedQuantity": 12,
+  "deliveredQuantity": 20,
+  "changedQuantity": 8
+  },
+{
+"articleId": 2,
+"articleName": "Article 2",
+"plannedQuantity": 4,
+"deliveredQuantity": 20,
+"changedQuantity": 8
+}
+]
+
+
+### get all tour exec for today
+GET http://localhost:8080/tour/tourExecution
+
+
+###get exec for delivery
+GET http://localhost:8080/tourExecution/today/deliveryPerson/user2
+
+###get exec for state
+GET http://localhost:8080/tourExecution/today/state/finie
+
+### get passer chez client ( bool )
+GET http://localhost:8080/tourExecution/1/getClientDeliveredBool
+
+
+
+### get All articles qty base , qty livrée , qty surplus restant
+GET http://localhost:8080/tour/tourExecution/2/remainigAllArticles
+
+/*
+[
+{
+articleid :
+articleName :
+qtyBase :
+qtyLivre :
+qtySurplusRestant :
+}]
+
+*/
+
+### get All client delivery articles
+
+GET http://localhost:8080/tour/tourExecution/2/client/1/delivredArticles
+
+[
+{
+clientId :
+clientName :
+articles : {
+articleName :
+articlesBaseQty :
+articleslivredQty :
+}
+}
+]
 

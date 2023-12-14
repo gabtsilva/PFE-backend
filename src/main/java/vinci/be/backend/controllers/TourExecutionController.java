@@ -1,5 +1,7 @@
 package vinci.be.backend.controllers;
 
+import java.time.LocalDate;
+import java.util.Date;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,6 +40,7 @@ public class TourExecutionController {
 
   }
 
+
   @GetMapping("/tour/{tourId}/user/{userMail}/state/{state}")
   public ResponseEntity<List<TourExecution>> readPlannedExecutionByDeliveryManForATour(@PathVariable int tourId, @PathVariable String userMail, @PathVariable String state) {
     ArrayList<TourExecution> toursExeuction;
@@ -55,12 +58,23 @@ public class TourExecutionController {
 
   }
 
+  @GetMapping("/tour/tourExecution")
+  public ResponseEntity<List<TourExecution>> getAllTourExecutionForToday(){
+    List<TourExecution> tourExecutionList;
+    LocalDate executionDate = LocalDate.now();
+    tourExecutionList = tourExecutionService.getTourByidDeliveryPersonForDate(null,executionDate);
+    return new ResponseEntity<>(tourExecutionList,HttpStatus.OK);
+  }
+
   @PostMapping("/tour/{tourId}/tourExecution")
   public ResponseEntity<TourExecution> createOne(@PathVariable int tourId, @RequestBody TourExecution tourExecution) {
     //tourExecution.setExecutionDate(tourExecution.getExecutionDate());
     tourExecution.invalid();
     if (tourExecution.invalid()) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    if (tourExecution.getExecutionDate() == null){
+      tourExecution.setExecutionDate(LocalDate.now());
     }
     try {
       tourExecutionService.createOneExecution(tourId, tourExecution);
@@ -100,11 +114,9 @@ public class TourExecutionController {
 
   @PostMapping("/tour/{tourExecutionId}/tourExecution/begin")
   public ResponseEntity<String> beginTour(@PathVariable int tourExecutionId) throws NotFoundException {
-    System.out.println("je rentre");
     try {
       tourExecutionService.updateState(tourExecutionId,"commencée");
     }catch (Exception e){
-      System.out.println("je catch");
       return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return new ResponseEntity<>(HttpStatus.OK);
@@ -166,6 +178,21 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
     }
   }
 
+  @PostMapping("/tour/{tourExecutionId}/tourExecution/distributeArticle/client/{clientId}")
+  public ResponseEntity<Void> distributeArticle(@PathVariable int tourExecutionId, @PathVariable int clientId, @RequestBody List<ArticlesCommande> articlesCommandeList ){
+    for (ArticlesCommande ac:articlesCommandeList) {
+      if (ac.invalid()){
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+    try {
+      tourExecutionService.updateComandeClientTourExecuution(tourExecutionId,clientId,articlesCommandeList);
+      return new ResponseEntity<>(HttpStatus.OK);
+    }catch (Exception e){
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 
   @GetMapping("/tourExecution/{tourExecutionId}/getClientDeliveryOrder")
   public ResponseEntity<List<ExecutionClientOrder>> getClientDeliveryOrder(@PathVariable int tourExecutionId){
@@ -179,8 +206,62 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
       }
 
       return new ResponseEntity<>(executionClientOrders, HttpStatus.OK);
+  }
+
+  @GetMapping("/tourExecution/today/deliveryPerson/{idDeliveryPerson}")
+  public ResponseEntity<List<TourExecution>>  getTourExecDeliverPersonForToday(@PathVariable String idDeliveryPerson){
+    List<TourExecution> result ;
+    LocalDate executionDate = LocalDate.now();
+    try {
+      result = tourExecutionService.getTourByidDeliveryPersonForDate(idDeliveryPerson,executionDate);
+    }catch (Exception e){
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return new ResponseEntity<>(result,HttpStatus.OK);
+  }
 
 
+  @GetMapping("/tourExecution/today/state/{state}")
+  public ResponseEntity<List<TourExecution>> getAllTourExecutionForTodayInState(@PathVariable String state){
+    if (state.equals("prevue")){
+      state = "prévue";
+    } else if (state.equals("commencee")){
+      state = "commencée";
+    } else if (state.equals("finie")) {
+    }else {
+      return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    List<TourExecution> tourExecutionList;
+    LocalDate executionDate = LocalDate.now();
+    tourExecutionList = tourExecutionService.getTourByStateForDate(executionDate, state);
+    return new ResponseEntity<>(tourExecutionList,HttpStatus.OK);
+  }
+
+  @GetMapping( "/tourExecution/{tourExecutionId}/getClientDeliveredBool")
+  public ResponseEntity<List<ClientDelivered> > getClientDeliveredBool(@PathVariable int tourExecutionId){
+    List<ClientDelivered> result ;
+    try {
+      result = tourExecutionService.getClientDeliveredBool(tourExecutionId);
+    }catch (Exception e){
+      System.out.println(e.getMessage());
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return new ResponseEntity<>(result,HttpStatus.OK);
+  }
+
+
+
+  @GetMapping("/tour/tourExecution/{tourExecutionId}/remainigAllArticles")
+  public ResponseEntity<List<ArticlesDelivred>> getAllArticlesQty(@PathVariable int tourExecutionId){
+    if (tourExecutionId < 0) return new ResponseEntity< >(HttpStatus.BAD_REQUEST);
+    List<ArticlesDelivred> results;
+    try {
+      results = tourExecutionService.getAllArticlesQty(tourExecutionId);
+    }catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return new ResponseEntity<>(results,HttpStatus.OK);
   }
 
 }
