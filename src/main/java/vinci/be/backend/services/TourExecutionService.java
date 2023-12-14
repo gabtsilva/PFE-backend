@@ -242,6 +242,7 @@ public class TourExecutionService {
             executionClientOrder.setGeneralClientOrderId(generalOrder.getId());
             executionClientOrder.setTourExecutionId(tourExecutionId);
             executionClientOrder.setDelivered(false);
+            if (!executionClientOrderRepository.existsByTourIdANDGeneralClientOrder(tourId, generalOrder.getId()))
             executionClientOrderRepository.save(executionClientOrder);
 
         }
