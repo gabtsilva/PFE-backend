@@ -111,6 +111,7 @@ public class OrderService {
         //il existe déjà une ligne de commande pour cet article
         if(orderLine != null) {
             orderLine.setPlannedQuantity(quantity);
+            orderLine.setChangedQuantity(quantity);
             orderLineRepository.save(orderLine);
         }else{
             orderLine = new OrderLine(quantity, 0,0 ,articleId, clientId);
