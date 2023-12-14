@@ -48,7 +48,7 @@ CREATE TABLE snappies.orders(
 CREATE TABLE snappies.articles(
                                   article_id serial PRIMARY KEY,
                                   article_name varchar(100) NOT NULL CHECK (article_name <> ''),
-                                  pourcentage integer not null CHECK ( pourcentage >= 0 )
+                                  pourcentage float not null CHECK ( pourcentage >= 0 )
 );
 
 CREATE TABLE snappies.orders_lines(
@@ -108,14 +108,13 @@ VALUES
 INSERT INTO snappies.tours_executions(execution_date, state, delivery_person, vehicle_id, tour_id)
 VALUES
     ('2023-12-13', 'prévue', null, 1, 1),
-    ('2023-12-13', 'commencée', 'user', 2, 2),
-    ('2023-12-13', 'prévue', null, 1,1);
+    ('2023-12-13', 'prévue', null, 2, 2);
 
 -- Insertion des articles
 INSERT INTO snappies.articles(article_name,pourcentage) VALUES
-                                                            ('Article 1',10),
-                                                            ('Article 2',20),
-                                                            ('Article 3',50);
+                                                            ('Article 1',0.1),
+                                                            ('Article 2',0.2),
+                                                            ('Article 3',0.5);
 
 -- Insertion des commandes
 INSERT INTO snappies.orders(client_id)
@@ -156,6 +155,10 @@ VALUES
     (false,3,1),
     (false,4,2),
     (false,5,2);
+
+
+
+
 
 
 

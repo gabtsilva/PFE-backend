@@ -99,3 +99,37 @@ GET http://localhost:8080/tourExecution/today/state/finie
 
 ### get passer chez client ( bool )
 GET http://localhost:8080/tourExecution/1/getClientDeliveredBool
+
+
+
+### get All articles qty base , qty livrée , qty surplus restant
+GET http://localhost:8080/tour/tourExecution/2/remainigAllArticles
+
+/*
+[
+{
+articleid :
+articleName :
+qtyBase :
+qtyLivre :
+qtySurplusRestant :
+}]
+
+*/
+
+### get All client delivery articles
+
+GET http://localhost:8080/tour/tourExecution/2/client/1/delivredArticles
+
+[
+{
+clientId :
+clientName :
+articles : {
+articleName :
+articlesBaseQty :
+articleslivredQty :
+}
+}
+]
+

@@ -250,4 +250,18 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
     return new ResponseEntity<>(result,HttpStatus.OK);
   }
 
+
+
+  @GetMapping("/tour/tourExecution/{tourExecutionId}/remainigAllArticles")
+  public ResponseEntity<List<ArticlesDelivred>> getAllArticlesQty(@PathVariable int tourExecutionId){
+    if (tourExecutionId < 0) return new ResponseEntity< >(HttpStatus.BAD_REQUEST);
+    List<ArticlesDelivred> results;
+    try {
+      results = tourExecutionService.getAllArticlesQty(tourExecutionId);
+    }catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return new ResponseEntity<>(results,HttpStatus.OK);
+  }
+
 }

@@ -296,4 +296,8 @@ public class TourExecutionService {
     }
     return results;
   }
+
+  public List<ArticlesDelivred> getAllArticlesQty(int tourExecutionId) {
+      return null;
+  }
 }
