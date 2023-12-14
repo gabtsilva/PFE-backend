@@ -380,6 +380,24 @@ public class TourExecutionService {
         }
         return results;
     }
-  }
+
+    public List<ClientDelivredQty> getdeliveredArticlesByClient(int tourExecutionId)
+        throws NotFoundException {
+        List<ClientDelivredQty> results = new ArrayList<>();
+        for (Client c :this.getAllClients(tourExecutionId)) {
+            ClientDelivredQty clientDelivredQty = new ClientDelivredQty();
+            clientDelivredQty.setClientId(c.getId());
+            clientDelivredQty.setClientName(c.getName());
+
+            List<ArticlesCommande> articles = new ArrayList<>();
+            for ( ArticlesCommande acBase :this.getAllArticlesByClients(tourExecutionId,c.getId())) {
+                articles.add(acBase);
+            }
+            clientDelivredQty.setArticles(articles);
+            results.add(clientDelivredQty);
+        }
+        return results;
+    }
+}
 
 

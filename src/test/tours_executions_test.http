@@ -119,7 +119,7 @@ qtySurplusRestant :
 
 ### get All client delivery articles
 
-GET http://localhost:8080/tour/tourExecution/2/client/1/delivredArticles
+GET http://localhost:8080/tour/tourExecution/1/client/delivredArticles
 
 [
 {
