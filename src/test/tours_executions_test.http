@@ -103,7 +103,7 @@ GET http://localhost:8080/tourExecution/1/getClientDeliveredBool
 
 
 ### get All articles qty base , qty livrée , qty surplus restant
-GET http://localhost:8080/tour/tourExecution/2/remainigAllArticles
+GET http://localhost:8080/tour/tourExecution/1/remainigAllArticles
 
 /*
 [

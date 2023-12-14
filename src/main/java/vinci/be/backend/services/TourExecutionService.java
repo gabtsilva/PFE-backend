@@ -295,6 +295,31 @@ public class TourExecutionService {
     }
 
     public List<ArticlesDelivred> getAllArticlesQty(int tourExecutionId) throws NotFoundException {
+        List<ArticlesDelivred> articlesDelivreds = new ArrayList<>();
+        List<ArticlesCommande> articlesCommandeList = new ArrayList<>();
+        for (Object[] row: tourExecutionRepository.getAllArticlesALL(tourExecutionId)){
+            ArticlesCommande ac = new ArticlesCommande();
+            ac.setArticleId( (int) row[0]);
+            ac.setArticleName( (String) row[1]);
+            ac.setChangedQuantity( (double) row[3]);
+            ac.setDeliveredQuantity( ( double) row[4]);
+            ac.setPlannedQuantity( (double) row[5]);
+            articlesCommandeList.add(ac);
+        }
+
+        for (ArticlesCommande ac:articlesCommandeList ) {
+            ArticlesDelivred ad = new ArticlesDelivred();
+            ad.setArticleId( ac.getArticleId());
+            ad.setArticleName(ac.getArticleName());
+            ad.setQtyBase( ac.getChangedQuantity());
+            ad.setQtyLivre( ac.getDeliveredQuantity());
+            ad.setQtySurplusRestant(ac.getChangedQuantity() - ac.getDeliveredQuantity());
+            articlesDelivreds.add(ad);
+        }
+
+        return articlesDelivreds;
+    }
+    public List<ArticlesDelivred> getAllArticlesQtyBis(int tourExecutionId) throws NotFoundException {
         List<AllArticlesTourExecution> allArticles = this.getAllArticles(tourExecutionId);
         List<Client> clients = this.getAllClients(tourExecutionId);
         List<ClientDelivered> deliveredClientsBoolList = this.getClientDeliveredBool(tourExecutionId);
