@@ -259,6 +259,7 @@ public ResponseEntity<List<AllArticlesTourExecution>> getAllArticles(@PathVariab
     try {
       results = tourExecutionService.getAllArticlesQty(tourExecutionId);
     }catch (Exception e) {
+      System.out.println(e.getMessage());
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return new ResponseEntity<>(results,HttpStatus.OK);
