@@ -2,12 +2,15 @@ package vinci.be.backend.services;
 
 
 import org.springframework.stereotype.Service;
+import vinci.be.backend.controllers.TourController;
+import vinci.be.backend.controllers.TourExecutionController;
 import vinci.be.backend.exceptions.ConflictException;
 import vinci.be.backend.exceptions.NotFoundException;
 import vinci.be.backend.models.Client;
 import vinci.be.backend.models.GeneralClientOrder;
 import vinci.be.backend.repositories.ClientRepository;
 import vinci.be.backend.repositories.GeneralClientOrderRepository;
+import vinci.be.backend.repositories.TourExecutionRepository;
 import vinci.be.backend.repositories.TourRepository;
 
 import java.util.List;
@@ -19,10 +22,15 @@ public class ClientService {
     private final TourRepository tourRepository;
     private final GeneralClientOrderRepository generalClientOrderRepository;
 
-    public ClientService(ClientRepository clientRepository, TourRepository tourRepository, GeneralClientOrderRepository generalClientOrderRepository) {
+    private final TourExecutionRepository tourExecutionRepository;
+    private final TourExecutionService tourExecutionService;
+
+    public ClientService(ClientRepository clientRepository, TourRepository tourRepository, GeneralClientOrderRepository generalClientOrderRepository, TourExecutionRepository tourExecutionRepository, TourExecutionService tourExecutionService) {
         this.clientRepository = clientRepository;
         this.tourRepository = tourRepository;
         this.generalClientOrderRepository = generalClientOrderRepository;
+        this.tourExecutionRepository = tourExecutionRepository;
+        this.tourExecutionService = tourExecutionService;
     }
 
     /**
@@ -64,6 +72,7 @@ public class ClientService {
         int maxOrder = generalClientOrderRepository.findMaxClientOrderValueByTourId(createdClient.getTour()).orElse(0);
         generalClientOrder.setOrder(++maxOrder);
         generalClientOrderRepository.save(generalClientOrder);
+        tourExecutionService.createClientExecutionOrder(client.getTour(), tourExecutionRepository.findByTourIdAndState(client.getTour(),"prévue").stream().sorted((o1, o2) -> o1.getExecutionDate().compareTo(o2.getExecutionDate())).findFirst().get().getId());
     }
 
     /**

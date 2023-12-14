@@ -49,7 +49,9 @@ public class TourExecutionService {
         if (!tourRepository.existsById(tourId))
             throw new NotFoundException("Tour does not exist");
         tourExecutionRepository.existsByExecutionDateAndTourId(tourExecution.getExecutionDate(), tourId);
-        tourExecutionRepository.save(tourExecution);
+        TourExecution tourExecution1 = tourExecutionRepository.save(tourExecution);
+        //tourExecutionRepository.createExecClientOrders(tourExecution1.getId(), tourId, );
+
     }
 
   public List<TourExecution> readExecutionByStateForATour(int tourId, String state) throws  NotFoundException {
@@ -233,9 +235,8 @@ public class TourExecutionService {
      * @param tourExecutionId the id of the tour
      * @return tour execution order
      */
-    public List<ExecutionClientOrder> createClientExecutionOrder(int tourExecutionId) throws NotFoundException {
-        if (!tourExecutionRepository.existsById(tourExecutionId)) throw new NotFoundException("Tour execution does not exists");
-        int tourId = tourExecutionRepository.findById(tourExecutionId).get().getTourId();
+    public List<ExecutionClientOrder> createClientExecutionOrder(int tourId, int tourExecutionId) throws NotFoundException {
+        if (!tourRepository.existsById(tourExecutionId)) throw new NotFoundException("Tour execution does not exists");
         for (GeneralClientOrder generalOrder : generalClientOrderRepository.findAllByTourId(tourId)) {
             ExecutionClientOrder executionClientOrder = new ExecutionClientOrder();
             executionClientOrder.setGeneralClientOrderId(generalOrder.getId());
