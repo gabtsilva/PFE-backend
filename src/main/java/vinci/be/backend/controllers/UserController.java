@@ -51,7 +51,9 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<Void> createOne(@RequestBody User user) {
+        System.out.println("user : " + user);
         if (user.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        System.out.println("user : " + user);
         boolean created  = userService.createOne(user);
         if (created) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -65,6 +67,7 @@ public class UserController {
 
     @PutMapping("/user/{email}")
     public ResponseEntity<Void> updateOne(@PathVariable String email, @RequestBody User user) {
+        System.out.println("user : " + user);
         if (!email.equals(user.getEmail()) )return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (user.invalid()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         boolean found  = userService.updateOne(user);

@@ -279,7 +279,7 @@ public class TourExecutionService {
 
     private static double roundToNearestHalfOrOne(double number) {
         double roundedValue = Math.round(number * 2) / 2.0; // Multiplie par 2 pour effectuer l'arrondi à 0,5, puis divise par 2 pour obtenir la valeur arrondie
-        return Math.max(roundedValue, 1.0); // Prend la valeur la plus grande entre la valeur arrondie et 1
+        return Math.max(roundedValue, 0); // Prend la valeur la plus grande entre la valeur arrondie et 1
     }
 
 
@@ -313,7 +313,7 @@ public class TourExecutionService {
             ad.setArticleName(ac.getArticleName());
             ad.setQtyBase( ac.getChangedQuantity());
             ad.setQtyLivre( ac.getDeliveredQuantity());
-            ad.setQtySurplusRestant((ac.getChangedQuantity() * (1 + ac.getPlannedQuantity() )- ac.getDeliveredQuantity()));
+            ad.setQtySurplusRestant( roundToNearestHalfOrOne ((ac.getChangedQuantity() * (1 + ac.getPlannedQuantity() )- ac.getDeliveredQuantity())));
             articlesDelivreds.add(ad);
         }
 

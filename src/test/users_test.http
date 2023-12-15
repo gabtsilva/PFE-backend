@@ -18,7 +18,7 @@ Content-Type: application/json
   "firstname": "ju",
   "lastname": "ju",
   "phoneNumber": "5589825",
-  "isAdmin": true,
+  "admin": false,
   "password": "ju"
 }
 
@@ -29,11 +29,11 @@ PUT http://localhost:8080/user/ju
 Content-Type: application/json
 
 {
-  "mail": "ju",
+  "email": "ju",
   "firstname": "Roy",
   "lastname": "Agbassah",
   "phoneNumber": "5589825",
-  "isAdmin": true
+  "admin": true
 }
 
 ###Get all delivery men

@@ -31,10 +31,10 @@ public class User {
     private String password;
 
     @Column(name="is_admin", nullable=false)
-    private boolean isAdmin;
+    private boolean admin;
 
 
-    public boolean isDeliveryMan() {return !isAdmin;}
+    public boolean isDeliveryMan() {return !admin;}
 
     public boolean invalid() {
         return  email == null || email.isBlank() || email.isEmpty()

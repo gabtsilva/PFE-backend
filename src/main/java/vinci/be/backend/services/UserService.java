@@ -72,6 +72,7 @@ public class UserService {
         if (userRepository.existsById(user.getEmail())) return false;
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         user.setPassword(hashedPassword);
+        System.out.println("user : " + user);
         userRepository.save(user);
         return true;
     }
@@ -85,7 +86,12 @@ public class UserService {
      * @return true if the user is successfully updated, false if the user with the provided mail does not exist.
      */
     public boolean updateOne(User user) {
-        if (!userRepository.existsById(user.getEmail())) return false;
+      //  if (!userRepository.findById(user.getEmail())) return false;
+        User userOld = userRepository.findById(user.getEmail()).orElse(null);
+        if (userOld == null){
+            return false;
+        }
+        user.setPassword(userOld.getPassword());
         userRepository.save(user);
         return true;
     }

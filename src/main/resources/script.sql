@@ -112,9 +112,9 @@ VALUES
 -- Insertion des exécutions de tour
 INSERT INTO snappies.tours_executions(execution_date, state, delivery_person, vehicle_id, tour_id)
 VALUES
-    ('2023-12-14', 'prévue', null, 1, 1),
-    ('2023-12-14', 'prévue', null, 2, 2),
-    ('2023-12-14', 'prévue', null, 1, 3);
+    ('2023-12-15', 'prévue', null, 1, 1),
+    ('2023-12-15', 'prévue', null, 2, 2),
+    ('2023-12-15', 'prévue', null, 1, 3);
 
 -- Insertion des articles
 INSERT INTO snappies.articles(article_name,pourcentage) VALUES
