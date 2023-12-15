@@ -319,52 +319,6 @@ public class TourExecutionService {
 
         return articlesDelivreds;
     }
-    public List<ArticlesDelivred> getAllArticlesQtyBis(int tourExecutionId) throws NotFoundException {
-        List<AllArticlesTourExecution> allArticles = this.getAllArticles(tourExecutionId);
-        List<Client> clients = this.getAllClients(tourExecutionId);
-        List<ClientDelivered> deliveredClientsBoolList = this.getClientDeliveredBool(tourExecutionId);
-        Set<String> deliveredNames = new HashSet<>();
-        List<ArticlesDelivred> articlesDelivreds = new ArrayList<>();
-        for (ClientDelivered deliveredClient : deliveredClientsBoolList) {
-            if (deliveredClient.getDelivered()) deliveredNames.add(deliveredClient.getName());
-        }
-        for (AllArticlesTourExecution article : allArticles) {
-            Article articleEntity = articleRepository.getReferenceById(article.getId());
-            ArticlesDelivred remaining = new ArticlesDelivred();
-            remaining.setArticleId(article.getId());
-            remaining.setQtyBase(article.getPlanned_quantity());
-            remaining.setArticleName(article.getName());
-            remaining.setQtyLivre(0);
-            remaining.setQtySurplusRestant(article.getPlanned_quantity() * articleEntity.getPourcentage());
-            for (Client client : clients) {
-                Order clientOrder = orderService.readOne(client.getId());
-                OrderLineIdentifier pk = new OrderLineIdentifier(article.getId(), clientOrder.getId());
-                OrderLine orderLine = orderLineRepository.findById(pk).orElse(null);
-                if (deliveredNames.contains(client.getName())) {
-                    System.out.printf(orderLine.toString());
-                    System.out.println(String.valueOf(orderLine.getDeliveredQuantity()));
-                    System.out.println(String.valueOf(orderLine.getChangedQuantity()));
-                    System.out.println(String.valueOf(remaining.getQtyLivre()));
-                    System.out.println(String.valueOf(remaining.getQtySurplusRestant()));
-                    System.out.println(remaining.getQtyLivre() + orderLine.getDeliveredQuantity());
-                    System.out.println(remaining.getQtySurplusRestant() - 2);
-                    try{
-                        remaining.setQtyLivre(remaining.getQtyLivre() + orderLine.getDeliveredQuantity());
-                        remaining.setQtySurplusRestant(remaining.getQtySurplusRestant() - 2 );
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-            articlesDelivreds.add(remaining);
-
-        }
-
-        return articlesDelivreds;
-
-
-    }
     public List<TourExecution> getTourByStateForDate(LocalDate executionDate, String state) {
         List<TourExecution> results = new ArrayList<>();
         for (Object[] row : tourExecutionRepository.getAllTourExecutionForLocalDateAndState(executionDate,state)) {
